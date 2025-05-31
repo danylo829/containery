@@ -34,10 +34,11 @@ jobs:
         run: echo "tag=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
 
       - name: Get tag message
-        id: tagmsg
+        id: tag
         run: |
+          TAG_MESSAGE=$(git tag -l --format='%(contents)' ${{ github.ref_name }})
           echo "message<<EOF" >> $GITHUB_OUTPUT
-          git for-each-ref refs/tags/${{ github.ref_name }} --format='%(contents)' >> $GITHUB_OUTPUT
+          echo "$TAG_MESSAGE" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Build & push Docker image
@@ -58,6 +59,6 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
-          body: ${{ steps.tagmsg.outputs.message }}
+          body: ${{ steps.tag.outputs.message }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
