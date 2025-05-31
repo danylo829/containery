@@ -33,7 +33,7 @@ jobs:
         id: tag
         run: |
           echo "tag=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
-          echo "message=$(git tag -l --format='%(contents)' ${{ github.ref_name }})" >> "$GITHUB_OUTPUT"
+          echo "message=$(git tag -l --format='%(contents)')" >> "$GITHUB_OUTPUT"
 
       - name: Build & push Docker image
         uses: docker/build-push-action@v6
