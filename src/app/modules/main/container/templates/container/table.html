@@ -34,7 +34,7 @@
                     <td><span>{{ row.status }}</span></td>
                     <td><a href="{{ url_for('main.image.info', id=row.imageID) }}">{{ row.image }}</a></td>
                     <td>
-                        <div class="actions">
+                        <div class="actions disable-on-load">
                             <div>
                                 <a class="processes-btn" href="{{ url_for('main.container.processes', id=row.id) }}" title="View Processes">
                                     {% include 'icons/processes.svg' %}

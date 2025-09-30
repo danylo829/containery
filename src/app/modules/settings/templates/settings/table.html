@@ -23,7 +23,7 @@
                 <td>
                     <div class="cell-wrapper">
                         {{ form.dashboard_refresh_interval(class="setting-input") }}
-                        <div class="actions">
+                        <div class="actions disable-on-load">
                             <div>
                                 <a class="settings-revert-icon" onclick="resetSetting('dashboard_refresh_interval')" title="Revert Changes">
                                     {% include 'icons/revert.svg' %}
@@ -44,7 +44,7 @@
                 <td>
                     <div class="cell-wrapper">
                         {{ form.session_timeout(class="setting-input") }}
-                        <div class="actions">
+                        <div class="actions disable-on-load">
                             <div>
                                 <a class="settings-revert-icon" onclick="resetSetting('session_timeout')" title="Revert Changes">
                                     {% include 'icons/revert.svg' %}
@@ -59,7 +59,7 @@
                 <td>
                     <div class="cell-wrapper">
                         {{ form.password_min_length(class="setting-input") }}
-                        <div class="actions">
+                        <div class="actions disable-on-load">
                             <div>
                                 <a class="settings-revert-icon" onclick="resetSetting('password_min_length')" title="Revert Changes">
                                     {% include 'icons/revert.svg' %}

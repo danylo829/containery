@@ -4,6 +4,9 @@
     {% assets "dashboard_info_js" %}
         <script src="{{ ASSET_URL }}" defer></script>
     {% endassets %}
+    {% assets "dashboard_css" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}">
+    {% endassets %}
 {% endblock %}
 
 {% block content %}
@@ -66,7 +69,7 @@
                     </tbody>
                 </table>
             </div>
-            <button class="full prune-btn">Clean All</button>
+            <button class="full prune-btn disable-on-load">Clean All</button>
         </div>
         
         <!-- Host Overview Card -->

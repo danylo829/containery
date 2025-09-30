@@ -15,7 +15,7 @@
         <div class="user-details">
             <h1>{{ user.username }}</h1>
         </div>
-        <div class="actions">
+        <div class="actions disable-on-load">
             <a id="delete-btn" data-id="{{ user.id }}" title="Delete User">
                 {% include 'icons/delete.svg' %}
             </a>
@@ -26,7 +26,7 @@
         {% for role in user.get_roles() %}
             <div class="role-item" id="role-item-{{ role.id }}">
                 <span class="role-badge">{{ role.name }}</span>
-                <div class="actions">
+                <div class="actions disable-on-load">
                     <div>
                         <a class="delete-role" data-role-id="{{ role.id }}" title="Remove Role">
                             {% include 'icons/dnd.svg' %} 
