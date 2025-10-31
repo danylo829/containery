@@ -1,0 +1,37 @@
+.flash-messages {
+    position: fixed;
+    bottom: 5vh;
+    right: 100px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 20vw;
+}
+
+.flash-message {
+    background-color: var(--accent-color);
+    color: var(--bg-color);
+    padding: 1rem;
+    border-radius: 10px;
+    font-size: large;
+    box-shadow: 0 0 10px 6px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    animation: slideUp 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) forwards, fadeOut 0.5s 3.5s ease-in-out forwards;
+    text-align: center;
+}
+
+.flash-message.info {
+    background-color: var(--info-bg);
+    color: var(--info-text);
+}
+
+.flash-message.success {
+    background-color: var(--success-bg);
+    color: var(--success-text);
+}
+
+.flash-message.error {
+    background-color: var(--error-bg);
+    color: var(--error-text);
+}

@@ -4,6 +4,9 @@
     {% assets "container_logs_js" %}
         <script src="{{ ASSET_URL }}" defer></script>
     {% endassets %}
+    {% assets "container_logs_css" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}">
+    {% endassets %}
 {% endblock %}
 
 {% block content %}

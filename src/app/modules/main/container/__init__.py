@@ -29,8 +29,22 @@ def register_assets(assets):
         output=f"dist/js/{module_name}_terminal.%(version)s.js",
     )
 
+    terminal_css = Bundle(
+        "styles/terminal.css",
+        filters='rcssmin',
+        output=f"dist/css/{module_name}_terminal.%(version)s.css",
+    )
+
+    logs_css = Bundle(
+        "styles/logs.css",
+        filters='rcssmin',
+        output=f"dist/css/{module_name}_logs.%(version)s.css",
+    )
+
     assets.register(f"{module_name}_actions_js", actions_js)
     assets.register(f"{module_name}_logs_js", logs_js)
+    assets.register(f"{module_name}_logs_css", logs_css)
     assets.register(f"{module_name}_terminal_js", terminal_js)
+    assets.register(f"{module_name}_terminal_css", terminal_css)
 
 from . import routes

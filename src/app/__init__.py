@@ -85,15 +85,21 @@ class ApplicationFactory:
             "styles/common.css",
             "styles/colors.css",
             "styles/base.css",
+            "styles/inputs.css",
+            "styles/spinner.css",
+            "styles/sidebar.css",
             "styles/modal.css",
+            "styles/flash.css",
             "styles/icons.css",
-            "styles/search-box.css",
+            "styles/animations.css",
+            "styles/mobile.css",
             filters="rcssmin",
             output="dist/css/app.%(version)s.css"
         )
 
         app_js = Bundle(
             "js/base.js",
+            "js/sidebar.js",
             "js/modal.js",
             "js/table.js",
             "js/scrollbar.js",

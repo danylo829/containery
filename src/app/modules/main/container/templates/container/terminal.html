@@ -7,6 +7,9 @@
     {% assets "container_terminal_js" %}
         <script src="{{ ASSET_URL }}" defer></script>
     {% endassets %}
+    {% assets "container_terminal_css" %}
+        <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
+    {% endassets %}
 {% endblock %}
 
 {% block content %}

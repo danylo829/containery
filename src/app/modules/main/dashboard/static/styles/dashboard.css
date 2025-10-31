@@ -1,3 +1,70 @@
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.dashboard-button {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border: 1px solid grey;
+    border-radius: 10px;
+    padding: 2rem;
+    font-size: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    flex: 1 1;
+    transition: border 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.dashboard-button:hover {
+    border: 1px solid var(--accent-color);
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.usage-row {
+    display: flex;
+}
+
+.cpu-usage, .ram-usage, .load-average, .io-operations {
+    flex: 1;
+    padding: 0 1rem;
+}
+
+.stat-table {
+    border-collapse: collapse;
+    table-layout: unset;
+}
+
+.stat-table td {
+    width: 50%;
+}
+
+.progress-bar {
+    position: relative;
+    height: 20px;
+    background-color: var(--bg-color);
+    border: 1px solid var(--accent-color);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress {
+    height: 100%;
+    background-color: var(--accent-color);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.usage-text {
+    text-align: center;
+    font-size: 1rem;
+    color: var(--text-color);
+}
+
 .update-notification {
     width: 100vw;
     flex: unset;

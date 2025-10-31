@@ -1,0 +1,76 @@
+@media all and (min-width:0px) and (max-width: 650px) {
+    .sidebar {
+        width: 100%;
+        position: fixed;
+        z-index: 2;
+        height: -webkit-fill-available;
+        backdrop-filter: blur(10px);
+        background-color: var(--bg-color-transparent);
+    }
+
+    .sidebar.closed {
+        background-color: var(--bg-color-box);
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .sidebar + .main-content {
+        position: absolute;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        transform: translateX(0);
+        overflow: hidden;
+        width: 100vw;
+        margin-inline: unset;
+    }
+    
+    .sidebar.closed + .main-content {
+        transform: translateX(15vw);
+        width: 85vw;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .flash-messages {
+        left: 25vw;
+        max-width: unset;
+    }
+
+    .nav-menu li, .nav-menu li:hover {
+        border: none;
+    }
+
+    .actions div {
+        gap: unset;
+    }
+
+    .search-box input {
+        max-width: 50%;
+    }
+
+    .content-box form .table-box {
+        width: unset;
+        min-width: unset;
+    }
+
+    a, button {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+
+    .table-actions {
+        gap: unset;
+    }
+
+    .breadcrumbs span:last-child {
+        max-width: 100px;
+    }
+
+    table {
+        table-layout: auto;
+    }
+
+    .table-box td {
+        white-space: nowrap;
+    }
+
+    .table-box::-webkit-scrollbar {
+        display: none;
+    }
+}

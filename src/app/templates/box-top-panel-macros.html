@@ -1,12 +1,7 @@
 {# templates/box-top-panel-macros.html #}
 {% macro box_top_panel(extra_actions='') %}
 <div class="search-box">
-    <div class="search-input">
-        <input type="text" id="search" placeholder="Search">
-        <button type="reset" id="search-reset" title="Clear search">
-            {% include 'icons/clear.svg' %}
-        </button>
-    </div>
+    <input type="search" id="search" placeholder="Search">
     <div class="actions disable-on-load">
         {{ extra_actions | safe }}
         <a id="refresh-page-btn" title="Refresh">

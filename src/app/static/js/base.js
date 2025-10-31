@@ -38,26 +38,6 @@ function handleError(error) {
 
 document.querySelector('#user-icon').addEventListener('click', function() {
     document.querySelector('.user-panel').classList.toggle('open');
-});  
-
-document.getElementById('menu-toggle').addEventListener('click', function () {
-    const sidebar = document.querySelector('.sidebar');
-    const body = document.querySelector('body');
-    sidebar.classList.toggle('closed');
-
-    if (sidebar.classList.contains('closed')) {
-        body.style.overflow = 'auto';
-    } else {
-        body.style.overflow = 'hidden';
-    }
-
-    fetch('/toggle-sidebar', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken
-        }
-    });
 });
 
 const flashMessage = localStorage.getItem('flash_message');

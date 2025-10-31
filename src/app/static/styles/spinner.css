@@ -1,0 +1,12 @@
+.loading-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--accent-color);
+}
+
+.loading-spinner.hidden *{
+    opacity: 0;
+    transition: all 0.3s ease;
+}
