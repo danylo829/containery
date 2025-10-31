@@ -92,3 +92,71 @@
 .nav-text {
     margin-left: 1rem;
 }
+
+/* Mobile Bottom Navigation */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        min-width: unset;
+        border-radius: 0;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+        
+    }
+    
+    .sidebar.closed {
+        width: 100%;
+        min-width: unset;
+    }
+    
+    /* Hide desktop-only elements */
+    .sidebar-header,
+    .sidebar .bottom,
+    .menu-toggle {
+        display: none;
+    }
+    
+    .nav-menu ul {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        width: 100%;
+    }
+    
+    .nav-menu li {
+        flex: 1;
+    }
+    
+    .nav-menu li a {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem;
+        margin: 0;
+        gap: 0.25rem;
+        min-width: 60px;
+        border-radius: 12px;
+    }
+
+    .nav-menu li.active a {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    /* Optional: Show only icons on very small screens */
+    @media (max-width: 480px) {
+        .nav-text {
+            display: none;
+        }
+        
+        .nav-menu li a {
+            min-width: 48px;
+            padding: 0.75rem 0.5rem;
+        }
+    }
+}

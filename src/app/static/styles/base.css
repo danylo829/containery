@@ -234,11 +234,10 @@ form table tr {
 
 .content-card .table-box {
     max-height: 40vh;
-    overflow-x: hidden;
 }
 
 .table-box {
-    max-height: calc(100vh - 200px);;
+    max-height: calc(100vh - 200px);
     overflow-y: auto;
 }
 
