@@ -65,3 +65,9 @@
     height: 15%;
     margin-bottom: 3vh;
 }
+
+@media all and (min-width:0px) and (max-width: 650px) {
+    .permissions-grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
