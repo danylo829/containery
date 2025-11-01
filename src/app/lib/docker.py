@@ -161,8 +161,8 @@ class Docker:
     def get_processes(self, container_id):
         return self.perform_request(f'/containers/{container_id}/top')
 
-    def get_logs(self, container_id, stdout=True, stderr=True):
-        path = f'/containers/{container_id}/logs?stdout={str(stdout).lower()}&stderr={str(stderr).lower()}'
+    def get_logs(self, container_id, stdout=True, stderr=True, tail='all'):
+        path = f'/containers/{container_id}/logs?stdout={str(stdout).lower()}&stderr={str(stderr).lower()}&tail={tail}'
         response, status_code = self.perform_request(path)
         messages = []
         offset = 0

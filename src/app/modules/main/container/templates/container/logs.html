@@ -11,8 +11,17 @@
 
 {% block content %}
 <div class="content-box">
+    <div class="search-box">
+    <div class="lines-input">
+        <span>Lines</span>
+        <input type="number" id="log-lines" value="{{ tail }}" min="0" max="5000" step="10">
+    </div>
+    <a id="refresh-page-btn" title="Refresh">
+        {% include 'icons/restart.svg' %}
+    </a>
+    </div>
     <div class="log-box">
-        <textarea id="log-textarea" class="{{ 'constrained' if PersonalSettings.get_setting(current_user.id, 'constrain_tables_view') == 'true' else '' }}" readonly>{{ log_text }}</textarea>
+        <textarea id="log-textarea" readonly>{{ log_text }}</textarea>
     </div>
 </div>
 {% endblock %}

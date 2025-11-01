@@ -129,7 +129,10 @@ def info(id):
 @container.route('/<id>/logs', methods=['GET'])
 @permission(Permissions.CONTAINER_INFO)
 def logs(id):
-    response, status_code = docker.get_logs(id)
+    tail = request.args.get('tail', '100')
+    if int(tail) < 0:
+        tail = '100'
+    response, status_code = docker.get_logs(id, tail=tail)
     logs = []
     if status_code not in range(200, 300):
         message = response.text if hasattr(response, 'text') else str(response)
@@ -150,9 +153,8 @@ def logs(id):
         {"name": "Logs", "url": None},
     ]
     page_title = 'Container Logs'
-    
-    return render_template('container/logs.html', log_text=log_text, breadcrumbs=breadcrumbs, page_title=page_title)
 
+    return render_template('container/logs.html', tail=tail, log_text=log_text, breadcrumbs=breadcrumbs, page_title=page_title)
 
 @container.route('/<id>/processes', methods=['GET'])
 @permission(Permissions.CONTAINER_INFO)
