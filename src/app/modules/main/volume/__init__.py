@@ -15,7 +15,7 @@ from . import routes
 
 def register_assets(assets):
     js = Bundle(
-        "js/actions.js",
+        "js/volume_actions.js",
         "js/volume_list_actions.js",
         filters='rjsmin',
         output=f"dist/js/{module_name}.%(version)s.js",
