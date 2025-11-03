@@ -1,6 +1,12 @@
 {% extends "main.html" %}
 {% from 'box-top-panel-macros.html' import box_top_panel %}
 
+{% block custom_header %}
+{% assets "user_css" %}
+  <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
+{% endassets %}
+{% endblock %}
+
 {% block content %}
 <div class="content-box">
     {% set extra_buttons %}
@@ -31,7 +37,13 @@
                 {% for user in users %}
                 <tr>
                     <td><a href="{{ url_for('user.view_profile', id=user.id) }}">{{ user.username }}</a></td>
-                    <td>{{ user.get_roles_str() }}</td>
+                    <td>
+                        <div class="role-badge-container">
+                            {% for role in user.get_roles() %}
+                                <span class="role-badge">{{ role.name }}</span>
+                            {% endfor %}
+                        </div>
+                    </td>
                     <td>{{ common.format_unix_timestamp(user.created_at) }}</td>
                 </tr>
                 {% endfor %}

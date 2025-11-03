@@ -21,14 +21,20 @@ def register_assets(assets):
         filters="rcssmin",
         output="dist/css/user.%(version)s.css"
     )
-    js = Bundle(
-        "js/user_profile.js",
+    js_role = Bundle(
         "js/role.js",
         filters='rjsmin',
-        output=f"dist/js/{module_name}.%(version)s.js",
+        output=f"dist/js/role.%(version)s.js",
+    )
+
+    js_user_profile = Bundle(
+        "js/user_profile.js",
+        filters='rjsmin',
+        output=f"dist/js/user_profile.%(version)s.js",
     )
 
     assets.register(f"{module_name}_css", css)
-    assets.register(f"{module_name}_js", js)
+    assets.register(f"{module_name}_js_role", js_role)
+    assets.register(f"{module_name}_js_user_profile", js_user_profile)
 
 from . import routes

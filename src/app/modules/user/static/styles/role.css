@@ -48,6 +48,12 @@
     gap: 5rem;
 }
 
+.role-badge-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
 .role-badge {
     display: inline-block;
     background-color: var(--accent-color);

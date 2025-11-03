@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
             formData.append('user_id', userId);
             formData.append('role_id', roleId);
 
-            fetch('/user/remove_role', {
+            fetch('/user/role/remove', {
                 method: 'DELETE',
                 headers: {
                     'X-CSRFToken': csrfToken,

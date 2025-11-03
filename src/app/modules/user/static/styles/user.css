@@ -26,3 +26,7 @@
 #view-role {
     table-layout: fixed;
 }
+
+input[type="submit"] {
+    margin-top: 0;
+}
