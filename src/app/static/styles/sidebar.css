@@ -45,8 +45,8 @@
 }
 
 .sidebar.closed {
-    width: 4rem;
-    min-width: 4rem;
+    width: 4.125rem;
+    min-width: 4.125rem;
 }
 
 .sidebar.closed .bottom{
