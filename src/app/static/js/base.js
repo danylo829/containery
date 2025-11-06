@@ -61,9 +61,18 @@ if (flashMessage) {
     localStorage.removeItem('flash_type');
 }
 
-const resresh_btn = document.getElementById('refresh-page-btn');
-if (resresh_btn != null) {
-    resresh_btn.addEventListener('click', function() {
+document.querySelectorAll('select').forEach((selectEl) => {
+  new SlimSelect({
+    select: selectEl,
+    settings: {
+      showSearch: selectEl.classList.contains('enable-search')
+    }
+  });
+});
+
+const refresh_btn = document.getElementById('refresh-page-btn');
+if (refresh_btn != null) {
+    refresh_btn.addEventListener('click', function() {
         location.reload();
     });
 }

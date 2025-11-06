@@ -7,14 +7,14 @@
     <title>Containery</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='icons/favicon.svg') }}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='icons/apple-touch-icon.png') }}">
+    {% block custom_header %}
+    {% endblock %}
     {% assets "app_css" %}
     <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
     {% endassets %}
     {% assets "app_js" %}
     <script src="{{ ASSET_URL }}" defer></script>
     {% endassets %}
-    {% block custom_header %}
-    {% endblock %}
 </head>
 <body class="{{ PersonalSettings.get_setting(current_user.id, 'theme').lower() }}">
     <div class="container">

@@ -1,16 +1,59 @@
-input[type="text"][disabled] {
-    border: 1px solid grey;
-    cursor: not-allowed;
+/* Base input styles */
+input,
+button.full {
+    width: 100%;
+    padding: 10px;
+    height: 5vh;
+    border: 1px solid var(--accent-color);
+    border-radius: 10px;
+    box-sizing: border-box;
+    background: var(--bg-color);
+    color: var(--text-color);
+    font-family: inherit;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
+/* Submit buttons and full-width buttons */
+input[type="submit"],
+button.full {
+    background: var(--accent-color);
+    color: var(--bg-color);
+    border: none;
+    font-size: medium;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover,
+button.full:hover {
+    background: var(--accent-color-darken);
+}
+
+/* Disabled states */
+input[type="text"][disabled],
 input[type="submit"][disabled],
 input[type="submit"][disabled]:hover,
 button[disabled] {
     border: 1px solid grey;
-    cursor: not-allowed;
     background-color: grey;
+    cursor: not-allowed;
 }
 
+input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    height: 16px;
+    width: 16px;
+    background: url('data:image/svg+xml;utf8,<svg fill="gray" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 6L18 18M6 18L18 6" stroke="gray" stroke-width="2" stroke-linecap="round"/></svg>') no-repeat center;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+input[type="search"]::-webkit-search-cancel-button:hover {
+    opacity: 1;
+}
+
+/* Custom checkbox toggle */
 input[type="checkbox"] {
     display: none;
 }
@@ -23,9 +66,9 @@ input[type="checkbox"] + label {
     background-color: var(--bg-color);
     border: 1px solid var(--accent-color);
     border-radius: 20px;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     vertical-align: middle;
     cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 input[type="checkbox"] + label:before {
@@ -51,9 +94,12 @@ input[type="checkbox"]:checked + label:before {
 
 input[type="checkbox"][disabled] + label {
     background-color: #ccc;
-    color: #999;
-    cursor: not-allowed;
     border: none;
+    cursor: not-allowed;
+}
+
+input[type="checkbox"][disabled] + label:before {
+    background-color: #ddd;
 }
 
 input[type="checkbox"][disabled]:checked + label {
@@ -65,80 +111,13 @@ input[type="checkbox"][disabled]:checked + label:before {
     transform: translateX(20px);
 }
 
-input[type="checkbox"][disabled] + label:before {
-    background-color: #ddd;
+/* Custom select library overrides */
+.ss-option:hover {
+    transition: background-color var(--ss-animation-timing) cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+    border-left: none !important;
 }
 
-input[type="submit"],
-button.full {
-    margin-top: 1rem;
-    background: var(--accent-color);
-    color: var(--bg-color);
-    border: none;
-    font-size: medium;
-    cursor: pointer;
-}
-
-input[type="submit"]:hover,
-button.full:hover {
-    background: var(--accent-color-darken);
-}
-
-input[type="search"]::-webkit-search-cancel-button {
-  -webkit-appearance: none; /* removes default "×" */
-  height: 16px;
-  width: 16px;
-  background: url('data:image/svg+xml;utf8,<svg fill="gray" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 6L18 18M6 18L18 6" stroke="gray" stroke-width="2" stroke-linecap="round"/></svg>') no-repeat center;
-  cursor: pointer;
-  opacity: 0.7;
-}
-input[type="search"]::-webkit-search-cancel-button:hover {
-  opacity: 1;
-}
-
-select {
-    appearance: none;
-    cursor: pointer;
-    position: relative;
-    display: inline-block;
-    padding-right: 2.5em; /* Space for the custom arrows */
-    background-image:
-        /* Down arrow */
-        linear-gradient(45deg, transparent 50%, gray 50%),
-        linear-gradient(135deg, gray 50%, transparent 50%),
-        /* Up arrow */
-        linear-gradient(135deg, transparent 50%, gray 50%),
-        linear-gradient(45deg, gray 50%, transparent 50%),
-        /* Right border */
-        linear-gradient(to right, #ccc, #ccc);
-    background-position:
-        /* Down arrow */
-        calc(100% - 18px) calc(50% + 4px),
-        calc(100% - 13px) calc(50% + 4px),
-        /* Up arrow */
-        calc(100% - 18px) calc(50% - 4px),
-        calc(100% - 13px) calc(50% - 4px),
-        /* Right border */
-        calc(100% - 2.5em) 0.5em;
-    background-size:
-        5px 5px,
-        5px 5px,
-        5px 5px,
-        5px 5px,
-        1px 1.5em;
-    background-repeat: no-repeat;
-}
-
-select:disabled {
-    border: 1px solid var(--bg-color);
-    cursor: not-allowed;
-}
-
-select:hover {
-    background-color: var(--bg-color-box);
-}
-
-select option {
-    background-color: var(--bg-color);
-    color: var(--text-color);
+.ss-content {
+    transition: transform var(--ss-animation-timing) cubic-bezier(0.25, 0.8, 0.25, 1), 
+                opacity var(--ss-animation-timing) cubic-bezier(0.25, 0.8, 0.25, 1) !important;
 }

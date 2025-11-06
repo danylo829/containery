@@ -66,8 +66,9 @@
 }
 
 .update-notification {
+    position: relative;
     width: 100vw;
-    flex: unset;
+    flex: unset !important;
     border: 1px solid var(--accent-color);
 }
 

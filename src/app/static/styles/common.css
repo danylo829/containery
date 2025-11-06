@@ -21,6 +21,12 @@
     background: transparent;
 }
 
+body {
+    /* Custom select global vars */
+    --ss-border-radius: 10px !important;
+    --ss-main-height: 5vh !important;
+}
+
 ul {
     list-style-type: none;
 }

@@ -37,6 +37,12 @@
         --accent-color: var(--accent-dark);
         --accent-color-darken: var(--accent-dark-darken);
         --info-bg: var(--accent-dark);
+
+        /* Custom select colors */
+        --ss-primary-color: var(--accent-color) !important;
+        --ss-border-color: var(--accent-color) !important;
+        --ss-bg-color: var(--bg-color) !important;
+        --ss-font-color: var(--text-color) !important;
     }
 }
 
@@ -50,6 +56,12 @@
         --accent-color: var(--accent-light);
         --accent-color-darken: var(--accent-light-darken);
         --info-bg: var(--accent-light);
+
+        /* Custom select colors */
+        --ss-primary-color: var(--accent-color) !important;
+        --ss-border-color: var(--accent-color) !important;
+        --ss-bg-color: var(--bg-color) !important;
+        --ss-font-color: var(--text-color) !important;
     }
 }
 
@@ -63,6 +75,12 @@ body.light {
     --accent-color: var(--accent-light);
     --accent-color-darken: var(--accent-light-darken);
     --info-bg: var(--accent-light);
+
+    /* Custom select colors */
+    --ss-primary-color: var(--accent-color) !important;
+    --ss-border-color: var(--accent-color) !important;
+    --ss-bg-color: var(--bg-color) !important;
+    --ss-font-color: var(--text-color) !important;
 }
 
 body.dark {
@@ -74,6 +92,12 @@ body.dark {
     --accent-color: var(--accent-dark);
     --accent-color-darken: var(--accent-dark-darken);
     --info-bg: var(--accent-dark);
+
+    /* Custom select colors */
+    --ss-primary-color: var(--accent-color) !important;
+    --ss-border-color: var(--accent-color) !important;
+    --ss-bg-color: var(--bg-color) !important;
+    --ss-font-color: var(--text-color) !important;
 }
 
 body.dark_mixed {
@@ -85,6 +109,12 @@ body.dark_mixed {
     --accent-color: var(--accent-dark);
     --accent-color-darken: var(--accent-dark-darken);
     --info-bg: var(--accent-dark);
+
+    /* Custom select colors */
+    --ss-primary-color: var(--accent-color) !important;
+    --ss-border-color: var(--accent-color) !important;
+    --ss-bg-color: var(--bg-color) !important;
+    --ss-font-color: var(--text-color) !important;
 }
 
 /* Status colors - consistent across all themes */

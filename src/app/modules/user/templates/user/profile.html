@@ -4,6 +4,8 @@
 {% assets "user_css" %}
   <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
 {% endassets %}
+<link rel="stylesheet" href="{{ url_for('static', filename='dist/lib/slim-select/slimselect.css') }}"/>
+<script src="{{ url_for('static', filename='dist/lib/slim-select/slimselect.js') }}" defer></script>
 {% endblock %}
 
 {% block content %}

@@ -7,6 +7,8 @@
 {% assets "user_js_user_profile" %}
 <script src="{{ ASSET_URL }}" defer></script>
 {% endassets %}
+<link rel="stylesheet" href="{{ url_for('static', filename='dist/lib/slim-select/slimselect.css') }}"/>
+<script src="{{ url_for('static', filename='dist/lib/slim-select/slimselect.js') }}" defer></script>
 {% endblock %}
 
 {% block content %}
