@@ -1,126 +1,97 @@
-body {
-    --info-bg: var(--accent-color);
-    --success-bg: var(--success-bg-base);
-    --error-bg: var(--error-bg-base);
+:root {
+    /* Base colors */
+    --accent-dark: #66bfff;
+    --accent-dark-darken: #33aaff;
+    --accent-light: #0077ff;
+    --accent-light-darken: #3392FF;
     
-    --accent-color-dark-theme: #66bfff;
-    --accent-color-dark-theme-darken: #33aaff;
+    --success: #28a745;
+    --error: #f44336;
+    --status-text: #ffffff;
     
-    --accent-color-light-theme: #0077ff;
-    --accent-color-light-theme-darken: #3392FF;
+    /* Dark theme */
+    --bg-dark: #121212;
+    --bg-box-dark: #282828;
+    --bg-transparent-dark: rgba(0, 0, 0, 0.4);
+    --text-dark: #f5f5f5;
+    
+    /* Light theme */
+    --bg-light: #f5f5f5;
+    --bg-darker-light: #d3d3d3;
+    --bg-transparent-light: rgba(255, 255, 255, 0.4);
+    --text-light: #333;
+    
+    /* Mixed dark theme */
+    --bg-mixed: #1b1f26;
+    --bg-box-mixed: #30343a;
+}
 
-    --info-bg-dark-theme: var(--accent-color-dark-theme);
-    --info-bg-light-theme: var(--accent-color-light-theme);
-
-    --status-text-dark-theme: #ffffff;
-    --status-text-light-theme: #ffffff;
-
-    --bg-color-dark-theme: #121212;
-    --bg-color-light-theme: #f5f5f5;
-
-    --bg-color-darker-dark-theme: #121212;
-    --bg-color-darker-light-theme: #d3d3d3;
-
-    --bg-color-box-dark-theme: #282828;
-    --bg-color-box-light-theme: #f5f5f5;
-
-    --bg-color-transparent-dark-theme: rgba(0, 0, 0, 0.4);
-    --bg-color-transparent-light-theme: rgba(255, 255, 255, 0.4);
-
-    --success-bg-main: #28a745;
-    --error-bg-main: #f44336;
+/* System theme - respects OS preference */
+@media (prefers-color-scheme: dark) {
+    body.system {
+        --bg-color: var(--bg-dark);
+        --bg-color-darker: var(--bg-dark);
+        --bg-color-box: var(--bg-box-dark);
+        --bg-color-transparent: var(--bg-transparent-dark);
+        --text-color: var(--text-dark);
+        --accent-color: var(--accent-dark);
+        --accent-color-darken: var(--accent-dark-darken);
+        --info-bg: var(--accent-dark);
+    }
 }
 
 @media (prefers-color-scheme: light) {
     body.system {
-        --bg-color: var(--bg-color-light-theme);
-        --bg-color-darker: var(--bg-color-darker-light-theme);
-        --bg-color-box: var(--bg-color-box-light-theme);
-        --bg-color-transparent: var(--bg-color-transparent-light-theme);
-        --text-color: #333;
-        --accent-color: var(--accent-color-light-theme);
-        --accent-color-darken: var(--accent-color-light-theme-darken);
-
-        --info-bg-base: var(--info-bg-light-theme);
-        --success-bg-base: var(--success-bg-main);
-        --error-bg-base: var(--error-bg-main);
-
-        --info-text: var(--status-text-light-theme);
-        --success-text: var(--status-text-light-theme);
-        --error-text: var(--status-text-light-theme);
+        --bg-color: var(--bg-light);
+        --bg-color-darker: var(--bg-darker-light);
+        --bg-color-box: var(--bg-light);
+        --bg-color-transparent: var(--bg-transparent-light);
+        --text-color: var(--text-light);
+        --accent-color: var(--accent-light);
+        --accent-color-darken: var(--accent-light-darken);
+        --info-bg: var(--accent-light);
     }
 }
 
-@media (prefers-color-scheme: dark) {
-    body.system {
-        --bg-color: var(--bg-color-dark-theme);
-        --bg-color-darker: var(--bg-color-darker-dark-theme);
-        --bg-color-box: var(--bg-color-box-dark-theme);
-        --bg-color-transparent: var(--bg-color-transparent-dark-theme);
-        --text-color: #f5f5f5;
-        --accent-color: var(--accent-color-dark-theme);
-        --accent-color-darken: var(--accent-color-dark-theme-darken);
-
-        --info-bg-base: var(--info-bg-dark-theme);
-        --success-bg-base: var(--success-bg-main);
-        --error-bg-base: var(--error-bg-main);
-
-        --info-text: var(--status-text-dark-theme);
-        --success-text: var(--status-text-dark-theme);
-        --error-text: var(--status-text-dark-theme);
-    }
-}
-
+/* Manual theme overrides */
 body.light {
-    --bg-color: var(--bg-color-light-theme);
-    --bg-color-transparent: rgba(255, 255, 255, 0.4);
-    --bg-color-darker: var(--bg-color-darker-light-theme);
-    --bg-color-box: var(--bg-color-box-light-theme);
-    --text-color: #333;
-    --accent-color: var(--accent-color-light-theme);
-    --accent-color-darken: var(--accent-color-light-theme-darken);
-
-    --info-bg-base: var(--info-bg-light-theme);
-    --success-bg-base: var(--success-bg-main);
-    --error-bg-base: var(--error-bg-main);
-
-    --info-text: var(--status-text-light-theme);
-    --success-text: var(--status-text-light-theme);
-    --error-text: var(--status-text-light-theme);
+    --bg-color: var(--bg-light);
+    --bg-color-darker: var(--bg-darker-light);
+    --bg-color-box: var(--bg-light);
+    --bg-color-transparent: var(--bg-transparent-light);
+    --text-color: var(--text-light);
+    --accent-color: var(--accent-light);
+    --accent-color-darken: var(--accent-light-darken);
+    --info-bg: var(--accent-light);
 }
 
 body.dark {
-    --bg-color: var(--bg-color-dark-theme);
-    --bg-color-darker: var(--bg-color-darker-dark-theme);
-    --bg-color-box: var(--bg-color-box-dark-theme);
-    --bg-color-transparent: var(--bg-color-transparent-dark-theme);
-    --text-color: #f5f5f5;
-    --accent-color: var(--accent-color-dark-theme);
-    --accent-color-darken: var(--accent-color-dark-theme-darken);
-
-    --info-bg-base: var(--info-bg-dark-theme);
-    --success-bg-base: var(--success-bg-main);
-    --error-bg-base: var(--error-bg-main);
-
-    --info-text: var(--status-text-dark-theme);
-    --success-text: var(--status-text-dark-theme);
-    --error-text: var(--status-text-dark-theme);
+    --bg-color: var(--bg-dark);
+    --bg-color-darker: var(--bg-dark);
+    --bg-color-box: var(--bg-box-dark);
+    --bg-color-transparent: var(--bg-transparent-dark);
+    --text-color: var(--text-dark);
+    --accent-color: var(--accent-dark);
+    --accent-color-darken: var(--accent-dark-darken);
+    --info-bg: var(--accent-dark);
 }
 
 body.dark_mixed {
-    --bg-color: #1b1f26;
-    --bg-color-darker: var(--bg-color-darker-dark-theme);
-    --bg-color-box: #30343a;
-    --bg-color-transparent: var(--bg-color-transparent-dark-theme);
-    --text-color: #f5f5f5;
-    --accent-color: var(--accent-color-dark-theme);
-    --accent-color-darken: var(--accent-color-dark-theme-darken);
+    --bg-color: var(--bg-mixed);
+    --bg-color-darker: var(--bg-dark);
+    --bg-color-box: var(--bg-box-mixed);
+    --bg-color-transparent: var(--bg-transparent-dark);
+    --text-color: var(--text-dark);
+    --accent-color: var(--accent-dark);
+    --accent-color-darken: var(--accent-dark-darken);
+    --info-bg: var(--accent-dark);
+}
 
-    --info-bg-base: var(--info-bg-dark-theme);
-    --success-bg-base: var(--success-bg-main);
-    --error-bg-base: var(--error-bg-main);
-
-    --info-text: var(--status-text-dark-theme);
-    --success-text: var(--status-text-dark-theme);
-    --error-text: var(--status-text-dark-theme);
+/* Status colors - consistent across all themes */
+body {
+    --success-bg: var(--success);
+    --error-bg: var(--error);
+    --success-text: var(--status-text);
+    --error-text: var(--status-text);
+    --info-text: var(--status-text);
 }
