@@ -1,4 +1,4 @@
-@media all and (min-width:0px) and (max-width: 650px) {
+@media (max-width: 768px) {
     .content {
         margin-bottom: 10vh;
     }
