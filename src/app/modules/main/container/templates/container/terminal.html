@@ -3,7 +3,7 @@
 {% block custom_header %}
     <link rel="stylesheet" href="{{ url_for('static', filename='dist/lib/xterm/xterm.css') }}"/>
     <script src="{{ url_for('static', filename='dist/lib/xterm/xterm.js') }}" defer></script>
-    <script src="{{ url_for('static', filename='dist/lib/socket.io/socket.io.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='dist/lib/socket.io/socket.io.min.js') }}" defer></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='dist/lib/slim-select/slimselect.css') }}"/>
     <script src="{{ url_for('static', filename='dist/lib/slim-select/slimselect.js') }}" defer></script>
     {% assets "container_terminal_js" %}

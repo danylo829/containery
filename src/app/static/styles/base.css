@@ -96,8 +96,15 @@ body {
     align-items: center;
 }
 
-.search-box input {
-    width: unset;
+.search-box .inputs-box {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    width: 20vw;
+}
+
+.search-box .inputs-box:has(#search:only-child) {
+    width: 10vw;
 }
 
 .table-actions {

@@ -20,10 +20,6 @@
         gap: unset;
     }
 
-    .search-box input {
-        max-width: 50%;
-    }
-
     .content-box form .table-box {
         width: unset;
         min-width: unset;
@@ -51,5 +47,10 @@
 
     .table-box::-webkit-scrollbar {
         display: none;
+    }
+
+    .search-box .inputs-box {
+        flex-direction: column;
+        width: 50vw;
     }
 }

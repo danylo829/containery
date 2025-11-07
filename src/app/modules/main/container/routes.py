@@ -38,8 +38,6 @@ def container_info (id):
 
     labels = container_details["Config"].get("Labels", {})
 
-    volumes = [mount["Source"] for mount in container_details.get("Mounts", [])]
-
     container_info = {
         'general_info': general_info,
         'image': image,
@@ -80,8 +78,35 @@ def get_list():
         containers = response.json()
 
     rows = []
+    composes = set()
     if containers is not None:
         for container in containers:
+            compose_param = request.args.get('compose')
+            labels = container["Labels"]
+            # Collect compose projects
+            if "com.docker.compose.project" in labels:
+                composes.add(labels["com.docker.compose.project"])
+            
+            is_part_of_compose = "com.docker.compose.project" in labels
+            container_compose = labels.get("com.docker.compose.project")
+            
+            # Filter by compose project
+            if compose_param:
+                compose_filters = [c.strip() for c in compose_param.split(',')]
+                
+                matches = False
+                
+                if "none" in compose_filters and not is_part_of_compose:
+                    # Container is standalone and "none" is selected
+                    matches = True
+                
+                if is_part_of_compose and container_compose in compose_filters:
+                    # Container belongs to a selected compose project
+                    matches = True
+                
+                if not matches:
+                    continue
+            
             row = {
                 'id': container['Id'],
                 'name': container['Names'][0].strip('/'),
@@ -99,7 +124,7 @@ def get_list():
     ]
     page_title = "Container List"
 
-    return render_template('container/table.html', rows=rows, breadcrumbs=breadcrumbs, page_title=page_title)
+    return render_template('container/table.html', rows=rows, composes=composes, breadcrumbs=breadcrumbs, page_title=page_title)
 
 @container.route('/<id>', methods=['GET'])
 @permission(Permissions.CONTAINER_INFO)

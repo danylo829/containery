@@ -2,6 +2,8 @@
 {% from 'box-top-panel-macros.html' import box_top_panel %}
 
 {% block custom_header %}
+<link rel="stylesheet" href="{{ url_for('static', filename='dist/lib/slim-select/slimselect.css') }}"/>
+<script src="{{ url_for('static', filename='dist/lib/slim-select/slimselect.js') }}" defer></script>
 {% assets "container_actions_js" %}
 <script src="{{ ASSET_URL }}" defer></script>
 {% endassets %}
@@ -16,7 +18,19 @@
             </a>
         {% endif %}
     {% endset %}
-    {{ box_top_panel(extra_buttons) }}
+    {% set extra_inputs %}
+        {% set selected_composes = request.args.get('compose', '').split(',') if request.args.get('compose') else [] %}
+        <select name="compose" id="compose" multiple>
+            <option value="none" {% if "none" in selected_composes %}selected{% endif %}>Non compose containers</option>
+            {% for item in composes %}
+                <option value="{{ item }}"
+                    {% if item in selected_composes %}selected{% endif %}>
+                    {{ item }}
+                </option>
+            {% endfor %}
+        </select>
+    {% endset %}
+    {{ box_top_panel(extra_buttons, extra_inputs) }}
     <div class="table-box">
         <table id="container-table">
             <thead>

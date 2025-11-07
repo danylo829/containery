@@ -1,7 +1,10 @@
 {# templates/box-top-panel-macros.html #}
-{% macro box_top_panel(extra_actions='') %}
+{% macro box_top_panel(extra_actions='', extra_inputs='') %}
 <div class="search-box">
-    <input type="search" id="search" placeholder="Search">
+    <div class="inputs-box">
+        <input type="search" id="search" placeholder="Search">
+        {{ extra_inputs | safe }}
+    </div>
     <div class="actions disable-on-load">
         {{ extra_actions | safe }}
         <a id="refresh-page-btn" title="Refresh">

@@ -1,11 +1,14 @@
 {% extends "main.html" %}
 
 {% block custom_header %}
+<link rel="stylesheet" href="{{ url_for('static', filename='dist/lib/slim-select/slimselect.css') }}"/>
+<script src="{{ url_for('static', filename='dist/lib/slim-select/slimselect.js') }}" defer></script>
+{% assets "user_js_profile" %}
+  <script src="{{ ASSET_URL }}" defer></script>
+{% endassets %}
 {% assets "user_css" %}
   <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
 {% endassets %}
-<link rel="stylesheet" href="{{ url_for('static', filename='dist/lib/slim-select/slimselect.css') }}"/>
-<script src="{{ url_for('static', filename='dist/lib/slim-select/slimselect.js') }}" defer></script>
 {% endblock %}
 
 {% block content %}
@@ -74,7 +77,7 @@
                 <tr>
                     <td><strong>Theme</strong></td>
                     <td>
-                        {{ settings_form.theme() }}
+                        {{ settings_form.theme(id="theme-select") }}
                     </td>
                 </tr>
             </table>
