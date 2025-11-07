@@ -1,6 +1,20 @@
 {% extends "main.html" %}
 
 {% block custom_header %}
+<link rel="stylesheet" href="{{ url_for('static', filename='dist/lib/slim-select/slimselect.css') }}"/>
+<script src="{{ url_for('static', filename='dist/lib/slim-select/slimselect.js') }}" defer></script>
+
+<!-- No need separate js file to init custom select -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        new SlimSelect({
+            select: '#role-select',
+            settings: {
+                showSearch: false
+            },
+        });
+    });
+</script>
 {% endblock %}
 
 {% block content %}
@@ -25,7 +39,7 @@
                 <tr>
                     <td><strong>{{ add_user_form.role.label.text }}</strong></td>
                     <td>
-                        {{ add_user_form.role() }}
+                        {{ add_user_form.role(id='role-select') }}
                     </td>
                 </tr>
             </table>
