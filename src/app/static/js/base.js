@@ -67,3 +67,17 @@ if (refresh_btn != null) {
         location.reload();
     });
 }
+
+function disableAllActions() {
+    const disable_on_load = document.querySelectorAll('.disable-on-load');
+    disable_on_load.forEach(element => {
+        element.classList.add('disabled');
+    });
+}
+
+function enableAllActions() {
+    const disable_on_load = document.querySelectorAll('.disable-on-load');
+    disable_on_load.forEach(element => {
+        element.classList.remove('disabled');
+    });
+}

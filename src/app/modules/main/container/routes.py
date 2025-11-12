@@ -1,4 +1,5 @@
-from flask import render_template, url_for, request
+from flask import render_template, url_for, request, jsonify
+from flask_login import current_user
 from flask_socketio import emit
 
 import json
@@ -6,7 +7,7 @@ import json
 from app.core.extensions import docker
 from app.lib.common import format_docker_timestamp
 
-from app.modules.user.models import Permissions
+from app.modules.user.models import Permissions, PersonalSettings
 from app.core.decorators import permission
 
 from app.core.extensions import socketio
@@ -77,6 +78,9 @@ def get_list():
     else:
         containers = response.json()
 
+    container_columns_setting = PersonalSettings.get_setting(current_user.id, 'container_list_columns', json_format=True)
+    container_quick_actions_setting = PersonalSettings.get_setting(current_user.id, 'container_list_quick_actions', json_format=True)
+
     rows = []
     composes = set()
     if containers is not None:
@@ -108,11 +112,16 @@ def get_list():
                     continue
             
             row = {
-                'id': container['Id'],
-                'name': container['Names'][0].strip('/'),
-                'status': container['Status'],
-                'image': container['Image'],
-                'imageID': container['ImageID']
+                'id': container.get('Id', 'Unknown'),
+                'name': container.get('Names', ['Unknown'])[0].strip('/') if container.get('Names') else 'Unknown',
+                'status': container.get('Status', 'Unknown'),
+                'image': container.get('Image', 'Unknown'),
+                'imageID': container.get('ImageID', 'Unknown'),
+                'ports': [
+                    f"{port.get('PrivatePort', 'Unknown')} -> {port.get('PublicPort', 'Unknown')}" 
+                    for port in container.get('Ports', []) 
+                    if all(key in port for key in ['PrivatePort', 'PublicPort', 'IP']) and port.get('IP') != '::'
+                ] if container.get('Ports') else [],
             }
             rows.append(row)
 
@@ -124,7 +133,53 @@ def get_list():
     ]
     page_title = "Container List"
 
-    return render_template('container/table.html', rows=rows, composes=composes, breadcrumbs=breadcrumbs, page_title=page_title)
+    return render_template('container/table.html', 
+                           rows=rows, 
+                           composes=composes, 
+                           container_columns_setting=container_columns_setting,
+                           container_quick_actions_setting=container_quick_actions_setting,
+                           breadcrumbs=breadcrumbs, 
+                           page_title=page_title)
+
+@container.route('/list/settings', methods=['GET', 'POST'])
+def column_settings():
+    if request.method == 'GET':
+        container_list_columns = PersonalSettings.get_setting(current_user.id, 'container_list_columns', json_format=True)
+        container_list_quick_actions = PersonalSettings.get_setting(current_user.id, 'container_list_quick_actions', json_format=True)
+    
+        return render_template('container/list_settings.html', container_list_columns=container_list_columns, container_list_quick_actions=container_list_quick_actions)
+    
+    elif request.method == 'POST':
+        data = request.get_json(force=True)
+
+        if not isinstance(data, dict):
+            return jsonify({"success": False, "error": "Invalid data format"}), 400
+
+        columns = data.get('columns')
+        quick_actions = data.get('quick_actions')
+
+        if columns is not None:
+            if not isinstance(columns, list):
+                return jsonify({"success": False, "error": "Invalid columns format"}), 400
+
+        if quick_actions is not None:
+            if not isinstance(quick_actions, list):
+                return jsonify({"success": False, "error": "Invalid quick actions format"}), 400
+
+        PersonalSettings.set_setting(
+            current_user.id,
+            'container_list_columns',
+            columns if columns is not None else PersonalSettings.defaults['container_list_columns']['default'],
+            json_format=True
+        )
+        PersonalSettings.set_setting(
+            current_user.id,
+            'container_list_quick_actions',
+            quick_actions if quick_actions is not None else PersonalSettings.defaults['container_list_quick_actions']['default'],
+            json_format=True
+        )
+
+        return jsonify({"success": True})
 
 @container.route('/<id>', methods=['GET'])
 @permission(Permissions.CONTAINER_INFO)
@@ -215,7 +270,7 @@ def processes(id):
 
 @container.route('/<id>/terminal', methods=['GET'])
 @permission(Permissions.CONTAINER_EXEC)
-def console(id):
+def terminal(id):
     breadcrumbs = [
         {"name": "Dashboard", "url": url_for('main.dashboard.index')},
         {"name": "Containers", "url": url_for('main.container.get_list')},

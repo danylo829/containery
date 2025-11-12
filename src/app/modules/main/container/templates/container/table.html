@@ -7,11 +7,17 @@
 {% assets "container_actions_js" %}
 <script src="{{ ASSET_URL }}" defer></script>
 {% endassets %}
+{% assets "container_list_css" %}
+<link rel="stylesheet" href="{{ ASSET_URL }}" />
+{% endassets %}
 {% endblock %}
 
 {% block content %}
 <div class="content-box">
     {% set extra_buttons %}
+        <a class="settings-btn" title="Open list settings">
+            {% include 'icons/wrench.svg' %}
+        </a>
         {% if current_user.has_permission(Permissions.CONTAINER_DELETE) %}
             <a class="prune-btn" title="Prune unused containers">
                 {% include 'icons/prune.svg' %}
@@ -21,7 +27,7 @@
     {% set extra_inputs %}
         {% set selected_composes = request.args.get('compose', '').split(',') if request.args.get('compose') else [] %}
         <select name="compose" id="compose" multiple>
-            <option value="none" {% if "none" in selected_composes %}selected{% endif %}>Non compose containers</option>
+            <option value="none" {% if "none" in selected_composes %}selected{% endif %}>Individual containers</option>
             {% for item in composes %}
                 <option value="{{ item }}"
                     {% if item in selected_composes %}selected{% endif %}>
@@ -32,40 +38,79 @@
     {% endset %}
     {{ box_top_panel(extra_buttons, extra_inputs) }}
     <div class="table-box">
+        {% set columns = container_columns_setting %}
         <table id="container-table">
             <thead>
                 <tr>
-                    <th data-sort="name">Container</th>
-                    <th data-sort="status">Status</th>
-                    <th data-sort="image">Image</th>
-                    <th></th>
+                    {% for col in columns if col.enabled %}
+                        <th data-sort="{{ col.name | lower | replace(' ', '_') }}">
+                            {{ col.name }}
+                        </th>
+                    {% endfor %}
                 </tr>
             </thead>
+
             <tbody id="container-list">
                 {% for row in rows %}
                 <tr>
-                    <td><a href="{{ url_for('main.container.info', id=row.id) }}">{{ row.name }}</a></td>
-                    <td><span>{{ row.status }}</span></td>
-                    <td><a href="{{ url_for('main.image.info', id=row.imageID) }}">{{ row.image }}</a></td>
-                    <td>
-                        <div class="actions disable-on-load">
-                            <div>
-                                <a class="processes-btn" href="{{ url_for('main.container.processes', id=row.id) }}" title="View Processes">
-                                    {% include 'icons/processes.svg' %}
+                    {% for col in columns if col.enabled %}
+                        {% set col_property = col.name | lower | replace(' ', '_') %}
+                        {% if col_property == 'name' %}
+                            <td>
+                                <a href="{{ url_for('main.container.info', id=row.id) }}">
+                                    {{ row.get(col_property) }}
                                 </a>
-                                <a class="logs-btn" href="{{ url_for('main.container.logs', id=row.id) }}" title="View Logs">
-                                    {% include 'icons/logs.svg' %}
+                            </td>
+
+                        {% elif col_property == 'image' %}
+                            <td>
+                                <a href="{{ url_for('main.image.info', id=row.imageID) }}">
+                                    {{ row.get(col_property) }}
                                 </a>
-                                <a class="terminal-btn" href="{{ url_for('main.container.console', id=row.id) }}" title="Open Terminal">
-                                    {% include 'icons/terminal.svg' %}
-                                </a>
-                            </div>
-                        </div>
-                    </td>
+                            </td>
+
+                        {% elif col_property == 'ports' %}
+                            {% if row.get(col_property) %}
+                                <td>
+                                    <div class="port-list">
+                                        {% for port in row.get(col_property) %}
+                                            <div>
+                                                <span>{{ port }}</span>
+                                            </div>
+                                            {% if not loop.last %}
+                                                <hr />
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                            {% else %}
+                                <td><span>N/A</span></td>
+                            {% endif %}
+
+                        {% elif col_property == 'quick_actions' %}
+                            <td>
+                                <div class="quick-actions actions disable-on-load">
+                                    {% for action in container_quick_actions_setting if action.enabled %}
+                                        {% set action_name = action.name | lower | replace(' ', '-') %}
+                                        {% if action_name in ['logs', 'terminal', 'processes'] %}
+                                        <a class="{{ action_name }}-btn" href="{{ url_for('main.container.' ~ action_name, id=row.id) }}">
+                                        {% else %}
+                                        <a class="{{ action_name }}-btn" data-id="{{ row.id }}">
+                                        {% endif %}
+                                            {% include 'icons/' ~ action_name ~ '.svg' %}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                        {% else %}
+                            <td><span>{{ row.get(col_property) | default('N/A') }}</span></td>
+                        {% endif %}
+                    {% endfor %}
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+
     </div>
 </div>
 {% endblock %}

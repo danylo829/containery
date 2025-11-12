@@ -1,0 +1,66 @@
+.container-list-modal-content {
+  width: min-content;
+  max-width: 95vw;
+}
+
+.draggable-modal-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.draggable-list {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--bg-color-darker);
+  border-radius: 10px;
+  flex-wrap: nowrap;
+}
+
+.draggable-item {
+  flex: 0 0 auto;
+  width: 6rem;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: var(--bg-color-box);
+  font-size: small;
+  font-weight: 500;
+  user-select: none;
+  cursor: grab;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.draggable-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.container-list-settings-buttons {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.quick-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.quick-action-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.quick-action-item span {
+  font-size: 0.875rem;
+}

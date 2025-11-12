@@ -159,10 +159,6 @@ tr:last-child {
     border-bottom: none;
 }
 
-tbody tr:only-child {
-    border-bottom: 1px solid var(--accent-color);
-}
-
 th, td {
     padding: 0.75rem;
     text-align: left;
@@ -294,6 +290,18 @@ a#logout:hover {
     display: flex;
     align-items: center;
     gap: 1rem;
+}
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    justify-content: start;
+    gap: unset;
+}
+
+.quick-actions a {
+      width: auto; /* avoid 100% or flex behavior */
+  justify-self: start; /* overrides grid stretch */
 }
 
 .actions div {

@@ -53,17 +53,13 @@ function openModal(url, method, question, returnUrl) {
     const cancelBtn = confirmationModal.querySelector('#cancelBtn');
     const modalQuestion = confirmationModal.querySelector('#modalQuestion');
 
-    const disable_on_load = document.querySelector('.disable-on-load');
-
     modalQuestion.textContent = question;
 
     confirmBtn.addEventListener('click', function () {
         const spinner = document.querySelector('.loading-spinner');
         spinner.classList.remove('hidden');
 
-        if (disable_on_load) {
-            disable_on_load.classList.add('disabled');
-        }
+        disableAllActions();
 
         closeModal();
 

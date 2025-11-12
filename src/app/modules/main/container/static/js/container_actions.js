@@ -10,7 +10,8 @@ document.querySelectorAll('.start-btn').forEach(button => {
         const containerId = this.getAttribute('data-id');
 
         spinner.classList.remove('hidden');
-        actions.classList.add('disabled');
+
+        disableAllActions();
 
         fetch(`/container/api/${containerId}/start`, {
             method: 'POST',
@@ -29,7 +30,8 @@ document.querySelectorAll('.restart-btn').forEach(button => {
         const containerId = this.getAttribute('data-id');
 
         spinner.classList.remove('hidden');
-        actions.classList.add('disabled');
+
+        disableAllActions();
 
         fetch(`/container/api/${containerId}/restart`, {
             method: 'POST',
@@ -48,7 +50,8 @@ document.querySelectorAll('.stop-btn').forEach(button => {
         const containerId = this.getAttribute('data-id');
 
         spinner.classList.remove('hidden');
-        actions.classList.add('disabled');
+
+        disableAllActions();
 
         fetch(`/container/api/${containerId}/stop`, {
             method: 'POST',

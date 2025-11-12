@@ -231,7 +231,8 @@ a.action:hover {
     transform: rotate(-90deg);
 }
 
-/* Prune */
+/* Prune & Draggable List Modal*/
+
 @keyframes brush-wiggle {
     0% { transform: rotate(0deg); }
     20% { transform: rotate(-6deg); }
@@ -240,11 +241,13 @@ a.action:hover {
     100% { transform: rotate(0deg); }
 }
 
-#prune-icon #brush {
+#prune-icon #brush,
+#settings-icon #wrench {
     transform-origin: 12px 9px;
     transition: filter 0.3s;
 }
 
-#prune-icon:hover #brush {
+#prune-icon:hover #brush,
+#settings-icon:hover #wrench {
     animation: brush-wiggle 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
 }

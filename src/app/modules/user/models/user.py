@@ -1,7 +1,10 @@
-from app.core.extensions import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+
 from time import time
+import json
+
+from app.core.extensions import db
 from .role import Role, UserRole
 
 class User(UserMixin, db.Model):
@@ -29,10 +32,6 @@ class User(UserMixin, db.Model):
         user = cls(username=username, password_hash=generate_password_hash(password))
         db.session.add(user)
         db.session.commit()
-
-        # Set default personal settings
-        for key, config in PersonalSettings.defaults.items():
-            PersonalSettings.set_setting(user.id, key, config['default'])
         
         return user
 
@@ -107,15 +106,45 @@ class PersonalSettings(db.Model):
             'options': ['light', 'dark', 'dark_mixed', 'system'],
             'default': 'system',
         },
+        'container_list_columns': {
+            'default': [
+                {'name': 'Name',           'enabled': True},
+                {'name': 'Status',         'enabled': True},
+                {'name': 'Image',          'enabled': True},
+                {'name': 'Quick actions',  'enabled': True},
+                {'name': 'Ports',          'enabled': False},
+                {'name': 'Created',        'enabled': False},
+            ]
+        },
+        'container_list_quick_actions': {
+            'default': [
+                {'name': 'Start',     'enabled': False},
+                {'name': 'Stop',      'enabled': False},
+                {'name': 'Restart',   'enabled': False},
+                {'name': 'Delete',    'enabled': False},
+                {'name': 'Processes', 'enabled': True},
+                {'name': 'Logs',      'enabled': True},
+                {'name': 'Terminal',  'enabled': True},
+            ]
+        },
     }
 
     @classmethod
-    def get_setting(cls, user_id, key):
+    def get_setting(cls, user_id, key, json_format=False):
         setting = cls.query.filter_by(user_id=user_id, key=key).first()
-        return setting.value if setting else None
+        if not setting:
+            default_config = cls.defaults.get(key)
+            if default_config:
+                return default_config['default']
+            return None
+        if json_format:
+            return json.loads(setting.value)
+        return setting.value
 
     @classmethod
-    def set_setting(cls, user_id, key, value):
+    def set_setting(cls, user_id, key, value, json_format=False):
+        if json_format:
+            value = json.dumps(value)
         setting = cls.query.filter_by(user_id=user_id, key=key).first()
         if setting:
             setting.value = value

@@ -53,4 +53,12 @@
         flex-direction: column;
         width: 50vw;
     }
+
+    .search-box .inputs-box:has(#search:only-child) {
+        width: unset;
+    }
+
+    .container-list-modal-content {
+        max-width: 70vw !important;
+    }
 }
