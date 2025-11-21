@@ -155,6 +155,14 @@ class ApplicationFactory:
                 timeout = 1800  # fallback default
             app.permanent_session_lifetime = timedelta(seconds=timeout)
 
+    def migrations(self, app):
+        with app.app_context():
+            try:
+                print("Migrating personal settings...")
+                PersonalSettings.migrate_all()
+            except Exception as e:
+                print(f"Migration failed: {e}")
+
     def create_app(self):
         """
         Create and configure the Flask application.
@@ -164,11 +172,12 @@ class ApplicationFactory:
         app = Flask(__name__)
         app.config.from_object('app.config.Config')
 
-        self.configure_extensions(app)
+        self.configure_extensions(app)            
 
         # Check if the application is running in a CLI context
         # Prevents entaire app building in entrypoint
         if not ('flask' in argv[0]):
+            self.migrations(app)
             self.configure_base_assets(app)
             self.configure_context_processors(app)
             self.configure_error_pages(app)

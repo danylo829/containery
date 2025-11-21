@@ -5,7 +5,7 @@ from flask_socketio import emit
 import json
 
 from app.core.extensions import docker
-from app.lib.common import format_docker_timestamp
+from app.lib.common import format_docker_timestamp, format_unix_timestamp
 
 from app.modules.user.models import Permissions, PersonalSettings
 from app.core.decorators import permission
@@ -81,6 +81,8 @@ def get_list():
     container_columns_setting = PersonalSettings.get_setting(current_user.id, 'container_list_columns', json_format=True)
     container_quick_actions_setting = PersonalSettings.get_setting(current_user.id, 'container_list_quick_actions', json_format=True)
 
+    # return containers
+
     rows = []
     composes = set()
     if containers is not None:
@@ -115,6 +117,8 @@ def get_list():
                 'id': container.get('Id', 'Unknown'),
                 'name': container.get('Names', ['Unknown'])[0].strip('/') if container.get('Names') else 'Unknown',
                 'status': container.get('Status', 'Unknown'),
+                'created': format_unix_timestamp(container.get('Created', '0')),
+                'state': container.get('State', 'Unknown'),
                 'image': container.get('Image', 'Unknown'),
                 'imageID': container.get('ImageID', 'Unknown'),
                 'ports': [

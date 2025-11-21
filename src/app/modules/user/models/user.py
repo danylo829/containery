@@ -6,6 +6,7 @@ import json
 
 from app.core.extensions import db
 from .role import Role, UserRole
+from .helpers import merge_named_list
 
 class User(UserMixin, db.Model):
     __tablename__ = 'usr_user'
@@ -114,6 +115,7 @@ class PersonalSettings(db.Model):
                 {'name': 'Quick actions',  'enabled': True},
                 {'name': 'Ports',          'enabled': False},
                 {'name': 'Created',        'enabled': False},
+                {'name': 'State',          'enabled': False}
             ]
         },
         'container_list_quick_actions': {
@@ -152,3 +154,28 @@ class PersonalSettings(db.Model):
             setting = cls(user_id=user_id, key=key, value=value)
             db.session.add(setting)
         db.session.commit()
+
+    @classmethod
+    def migrate_all(cls):
+        """Normalize list-type settings for all users against current defaults.
+
+        Generic merge: preserves user 'enabled' flags, removes
+        obsolete entries, appends new defaults, and fills missing keys inside
+        existing items without repeated list scans or in-loop removals.
+        """
+        list_setting_keys = [
+            'container_list_columns',
+            'container_list_quick_actions',
+        ]
+        default_cache = {
+            key: cls.defaults[key]['default'] for key in list_setting_keys
+        }
+        user_ids = [row[0] for row in db.session.query(User.id).all()]
+        for uid in user_ids:
+            for key in list_setting_keys:
+                default_list = default_cache[key]
+                current_list = cls.get_setting(uid, key, json_format=True)
+                if not isinstance(current_list, list):
+                    continue
+                merged = merge_named_list(current_list, default_list)
+                cls.set_setting(uid, key, merged, json_format=True)

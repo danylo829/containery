@@ -332,7 +332,8 @@ span.delete:hover {
 
 .status {
     padding: 5px 10px;
-    border-radius: 10px;
+    border-radius: 50em;
+    font-size: 0.9rem;
 }
 
 .status.running {

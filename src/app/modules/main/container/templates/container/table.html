@@ -102,6 +102,16 @@
                                     {% endfor %}
                                 </div>
                             </td>
+                        {% elif col_property == 'state' %}
+                            <td>
+                                {% if row.get(col_property) == 'running' %}
+                                    <span class="status running">Running</span>
+                                {% elif row.get(col_property) == 'exited' %}
+                                    <span class="status exited">Exited</span>
+                                {% else %}
+                                    <span class="status other">{{ row.get(col_property) | capitalize }}</span>
+                                {% endif %}
+                            </td>
                         {% else %}
                             <td><span>{{ row.get(col_property) | default('N/A') }}</span></td>
                         {% endif %}
