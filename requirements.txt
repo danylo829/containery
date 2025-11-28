@@ -7,7 +7,7 @@ Flask-Migrate==4.0.7
 Flask-Assets==2.1.0
 
 gunicorn==22.0.0
-eventlet==0.36.1
+gevent==25.9.1
 
 psutil==6.0.0
 requests==2.32.3

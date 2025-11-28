@@ -203,6 +203,7 @@ form table tr {
 
 .table-box td {
     white-space: normal;
+    overflow-wrap: anywhere;
 }
 
 a {

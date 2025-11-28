@@ -97,4 +97,8 @@ form.addEventListener('submit', (event) => {
     socket.on('exec_id', function(data) {
         execId = data.execId;
     });
+
+    socket.on('disconnect', () => {
+        xterm.write('\r\n\x1b[31mConnection lost.\x1b[0m\r\n');
+    });
 });

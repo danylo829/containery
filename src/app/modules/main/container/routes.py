@@ -327,3 +327,8 @@ def handle_resize_session(data):
     resize_exec_endpoint = f"/exec/{exec_id}/resize?h={rows}&w={cols}"
 
     response, status_code = docker.perform_request(path=resize_exec_endpoint, method='POST')
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    sid = request.sid
+    docker.cleanup_session(sid)
