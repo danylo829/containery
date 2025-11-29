@@ -1,3 +1,4 @@
+from ast import arg
 from flask import Flask
 
 from sys import argv
@@ -175,8 +176,10 @@ class ApplicationFactory:
         self.configure_extensions(app)            
 
         # Check if the application is running in a CLI context
-        # Prevents entaire app building in entrypoint
-        if not ('flask' in argv[0]):
+        # Prevents entaire app building in entrypoint or cli
+        entry = argv[0].lower()
+        cli_commands = ['flask', 'cli']
+        if not any(x in entry for x in cli_commands):
             self.migrations(app)
             self.configure_base_assets(app)
             self.configure_context_processors(app)
