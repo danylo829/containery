@@ -3,7 +3,7 @@ input,
 button.full {
     width: 100%;
     padding: 10px;
-    height: 5vh;
+    height: 3rem;
     border: 1px solid var(--accent-color);
     border-radius: 10px;
     box-sizing: border-box;
