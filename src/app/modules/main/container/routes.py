@@ -97,11 +97,13 @@ def get_list():
         if selected_docker_hosts_ids and str(host.id) not in selected_docker_hosts_ids:
             continue
         response, status_code = docker.get_containers(host=host)
-        response = response.json()
-        for container in response:
-            container['Host'] = host.id
         if status_code in range(200, 300):
+            response = response.json()
+            for container in response:
+                container['Host'] = host.id
             containers.extend(response)
+        else:
+            docker_hosts.remove(host)
 
     container_columns_setting = PersonalSettings.get_setting(current_user.id, 'container_list_columns', json_format=True)
     container_quick_actions_setting = PersonalSettings.get_setting(current_user.id, 'container_list_quick_actions', json_format=True)
