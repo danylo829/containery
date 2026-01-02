@@ -28,7 +28,7 @@ input[type="submit"],
 button.full {
     background: var(--accent-color);
     color: var(--bg-color);
-    border: none;
+    border: 1px solid var(--accent-color);
     font-size: medium;
     cursor: pointer;
 }

@@ -39,27 +39,6 @@ document.querySelector('#user-icon').addEventListener('click', function() {
     document.querySelector('.user-panel').classList.toggle('open');
 });
 
-const flashMessage = localStorage.getItem('flash_message');
-const flashType = localStorage.getItem('flash_type');
-
-if (flashMessage) {
-    let flashContainer = document.querySelector('.flash-messages');
-    if (!flashContainer) {
-        flashContainer = document.createElement('div');
-        flashContainer.className = 'flash-messages';
-        document.body.appendChild(flashContainer);
-    }
-
-    const flashElement = document.createElement('div');
-    flashElement.className = `flash-message ${flashType}`;
-    flashElement.textContent = flashMessage;
-
-    flashContainer.appendChild(flashElement);
-
-    localStorage.removeItem('flash_message');
-    localStorage.removeItem('flash_type');
-}
-
 const refresh_btn = document.getElementById('refresh-page-btn');
 if (refresh_btn != null) {
     refresh_btn.addEventListener('click', function() {
@@ -71,6 +50,7 @@ function disableAllActions() {
     const disable_on_load = document.querySelectorAll('.disable-on-load');
     disable_on_load.forEach(element => {
         element.classList.add('disabled');
+        element.setAttribute('disabled', 'disabled');
     });
 }
 
@@ -78,6 +58,7 @@ function enableAllActions() {
     const disable_on_load = document.querySelectorAll('.disable-on-load');
     disable_on_load.forEach(element => {
         element.classList.remove('disabled');
+        element.removeAttribute('disabled');
     });
 }
 

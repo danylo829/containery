@@ -76,3 +76,54 @@ function resetSetting(fieldName) {
     .then(response => handleResponse(response))
     .catch(error => handleError(error))
 }
+
+// Test Connection
+const testConnectionBtn = document.getElementById('test-connection-btn');
+if (testConnectionBtn) {
+    testConnectionBtn.addEventListener('click', async function(e) {
+        e.preventDefault();
+        const urlInput = document.getElementById('docker-host-url');
+        const url = urlInput.value;
+
+        if (!url) {
+            showFlashMessage('Please enter a URL first.', 'error');
+            return;
+        }
+
+        spinner.classList.remove('hidden');
+        disableAllActions();
+
+        // Wait a bit for UI update
+        await sleep(500);
+
+        fetch('/settings/docker-hosts/test-connection', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({
+                url: url
+            })
+        })
+        .then(response => {
+             if (response.ok) {
+                return response.json().then(data => {
+                    showFlashMessage(`Success: ${data.message} (v${data.version})`, 'success');
+                });
+             } else {
+                 return response.json().then(data => {
+                     showFlashMessage(`Error: ${data.message}`, 'error');
+                 });
+             }
+        })
+        .catch(error => {
+            showFlashMessage('An error occurred.', 'error');
+            console.error(error);
+        })
+        .finally(() => {
+            spinner.classList.add('hidden');
+            enableAllActions();
+        });
+    });
+}

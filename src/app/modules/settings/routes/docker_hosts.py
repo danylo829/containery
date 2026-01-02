@@ -107,3 +107,25 @@ def check_docker_host(host_id):
             return jsonify({'message': 'Docker host is not reachable.'}), 500
     except Exception as e:
         return jsonify({'message': f'Error checking docker host connection.'}), 500
+
+@settings.route('/docker-hosts/test-connection', methods=['POST'])
+@permission(Permissions.GLOBAL_SETTINGS_VIEW)
+def test_docker_host_connection():
+    data = request.json
+    url = data.get('url')
+    
+    if not url:
+        return jsonify({'message': 'URL is required.'}), 400
+    
+    # Create a temporary host object (not saved to DB)
+    host = DockerHost(url=url)
+    
+    try:
+        response, status = docker.info(host)
+
+        if status == 200:
+            return jsonify({'message': 'Connection successful.', 'version': response.json().get('ServerVersion')}), 200
+        else:
+            return jsonify({'message': 'Connection failed.'}), 500
+    except Exception as e:
+        return jsonify({'message': 'Error checking connection.'}), 500

@@ -98,6 +98,7 @@ class ApplicationFactory:
 
         app_js = Bundle(
             "js/base.js",
+            "js/flash.js",
             "js/sidebar.js",
             "js/modal.js",
             "js/table.js",

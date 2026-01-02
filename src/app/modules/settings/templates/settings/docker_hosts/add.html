@@ -21,14 +21,14 @@
 
         <div class="form-group">
             <label class="label-header" for="docker-host-url">CONNECTION URL</label>
-            {{ form.url(class="form-input", placeholder="unix:///var/run/docker.sock", id="docker-host-url") }}
+            {{ form.url(class="form-input", placeholder="unix:///var/run/docker.sock or http://docker-host:2375", id="docker-host-url") }}
             <div class="form-help-text">
                 Supported protocols: <span class="code">unix</span> (Local), <span class="code">http</span> / <span class="code">https</span> (Network).
             </div>
-            <a href="">Test connection</a>
+            <a href="#" id="test-connection-btn">Test connection</a>
         </div>
         
-        {{ form.submit() }}
+        {{ form.submit(class="disable-on-load") }}
     </form>
 </div>
 {% endblock %}
