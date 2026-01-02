@@ -25,6 +25,7 @@
         {% endif %}
     {% endset %}
     {% set extra_inputs %}
+        {% if composes | length > 0 %}
         <select name="compose" id="compose" multiple>
             <option value="none" {% if "none" in selected_composes %}selected{% endif %}>Individual containers</option>
             {% for item in composes %}
@@ -34,6 +35,8 @@
                 </option>
             {% endfor %}
         </select>
+        {% endif %}
+        {% if docker_hosts | length > 1 %}
         <select name="docker_host" id="docker_host" multiple>
             {% for item in docker_hosts %}
                 <option value="{{ item.id }}"
@@ -42,6 +45,7 @@
                 </option>
             {% endfor %}
         </select>
+        {% endif %}
     {% endset %}
     {{ box_top_panel(extra_buttons, extra_inputs) }}
     <div class="table-box">
