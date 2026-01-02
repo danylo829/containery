@@ -3,6 +3,7 @@ from flask import render_template, url_for
 import json
 
 from app.modules.user.models import Permissions
+from app.modules.settings.models import DockerHost
 from app.core.decorators import permission
 from app.lib.common import format_docker_timestamp, format_unix_timestamp
 
@@ -57,8 +58,17 @@ def image_name(id):
 @image.route('/list', methods=['GET'])
 @permission(Permissions.IMAGE_VIEW_LIST)
 def get_list():
-    response, status_code = docker.get_images()
+    hosts = DockerHost.query.filter_by(enabled=True).all()
     images = []
+
+    for host in hosts:
+        response, status_code = docker.get_images(host=host)
+        response = response.json()
+        for image in response:
+            image['Host'] = host.id
+        if status_code in range(200, 300):
+            images.extend(response)
+
     if status_code not in range(200, 300):
         message = response.text if hasattr(response, 'text') else str(response)
         try:
@@ -67,7 +77,7 @@ def get_list():
             pass
         return render_template('error.html', message=message, code=status_code), status_code
     else:
-        images = response.json()
+        images = response
 
     rows = []
     for image in images:

@@ -4,7 +4,7 @@ import random
 from werkzeug.security import generate_password_hash
 
 from app import ApplicationFactory
-from app.core.extensions import db
+from app.core.db import db
 from app.modules.user.models.user import User, PersonalSettings
 from app.modules.user.models.role import Role, RolePermission, UserRole
 from app.modules.user.models.permissions import Permissions, permission_names

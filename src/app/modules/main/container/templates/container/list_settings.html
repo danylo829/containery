@@ -1,9 +1,11 @@
 <div id="containerListSettingsModal" class="modal">
   <div class="modal-content container-list-modal-content">
-    <h2 class="draggable-modal-header">Settings</h2>
-
+    <h2 class="draggable-modal-header">Table Configuration</h2>
     <div class="container-list-settings-group">
-        <h3 class="container-list-settings-group-header">Columns</h3>
+        <div class="header-with-hint">
+            <h3 class="label-header">Visible columns</h3>
+            <span class="drag-hint">Drag to reorder</span>
+        </div>
 
         <div class="list draggable-list" id="columns-list">
         {% for item in container_list_columns %}
@@ -18,6 +20,11 @@
             />
             <label for="toggle-{{ item.name|replace(' ', '-')|lower }}"></label>
             <span>{{ item.name }}</span>
+            <div class="drag-handle">
+                <span class="handle-part">&#x22EF;</span>
+                <span class="handle-part">&#x22EF;</span>
+            </div>
+            
             </div>
         </div>
         {% endfor %}
@@ -25,10 +32,11 @@
     </div>
 
     <div class="container-list-settings-group">
-        <h3 class="container-list-settings-group-header">Quick Actions</h3>
+        <h3 class="label-header">Quick actions</h3>
         <div class="grid quick-actions-grid">
             {% for action in container_list_quick_actions %}
             <div class="flex quick-action-item">
+                <span>{{ action.name }}</span>
                 <input
                     type="checkbox"
                     id="quick-action-{{ action.name|replace(' ', '-')|lower }}"
@@ -38,12 +46,11 @@
                     {% if action.enabled %}checked{% endif %}
                 />
                 <label for="quick-action-{{ action.name|replace(' ', '-')|lower }}"></label>
-                <span>{{ action.name }}</span>
             </div>
             {% endfor %}
         </div>
     </div>
-
+    <hr>
     <div class="button-group container-list-settings-buttons">
       <button class="btn cancel">Cancel</button>
       <button class="btn confirm">Save</button>

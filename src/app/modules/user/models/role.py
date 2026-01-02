@@ -1,4 +1,4 @@
-from app.core.extensions import db
+from app.core.db import db
 
 class Role(db.Model):
     __tablename__ = 'usr_role'

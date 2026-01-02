@@ -9,9 +9,86 @@ services:
       - ./src:/containery
       - containery_data:/containery_data
       - /var/run/docker.sock:/var/run/docker.sock
+      - dind-local-socket:/var/run/dind
     env_file:
       - ./.env
+    depends_on:
+      - dind-local
+      - socket-proxy-1
+      - socket-proxy-2
+
+  # Local Unix Socket Host (DinD)
+  dind-local:
+    build: ./dind
+    hostname: dind-local
+    privileged: true
+    restart: "unless-stopped"
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    volumes:
+      - dind-local-socket:/var/run
+
+  # Network Host 1
+  dind-1:
+    build: ./dind
+    hostname: dind-1
+    privileged: true
+    restart: "unless-stopped"
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    volumes:
+      - dind-1-socket:/var/run
+
+  socket-proxy-1:
+    image: lscr.io/linuxserver/socket-proxy:latest
+    restart: "unless-stopped"
+    environment:
+      CONTAINERS: 1
+      IMAGES: 1
+      NETWORKS: 1
+      VOLUMES: 1
+      INFO: 1
+      SYSTEM: 1
+      EXEC: 1
+      POST: 1
+      DELETE: 1
+    volumes:
+      - dind-1-socket:/var/run
+    depends_on:
+      - dind-1
+
+  # Network Host 2
+  dind-2:
+    build: ./dind
+    hostname: dind-2
+    privileged: true
+    restart: "unless-stopped"
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    volumes:
+      - dind-2-socket:/var/run
+
+  socket-proxy-2:
+    image: lscr.io/linuxserver/socket-proxy:latest
+    restart: "unless-stopped"
+    environment:
+      CONTAINERS: 1
+      IMAGES: 1
+      NETWORKS: 1
+      VOLUMES: 1
+      INFO: 1
+      SYSTEM: 1
+      EXEC: 1
+      POST: 1
+      DELETE: 1
+    volumes:
+      - dind-2-socket:/var/run
+    depends_on:
+      - dind-2
 
 volumes:
   containery_data:
     name: containery_data
+  dind-local-socket:
+  dind-1-socket:
+  dind-2-socket:

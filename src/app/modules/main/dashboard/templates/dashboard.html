@@ -14,7 +14,7 @@
 
 {% block content %}
 <div class="content-card dashboard">
-    <h2>System Info</h2>
+    <h2>System Info on {{ docker_host_name }}</h2>
     <p><strong>OSType: </strong>{{ info['OSType'] }}</p>
     <p><strong>Operating System: </strong>{{ info['OperatingSystem'] }}</p>
     <p><strong>Hostname: </strong>{{ info['Name'] }}</p>

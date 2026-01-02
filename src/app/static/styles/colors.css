@@ -8,6 +8,8 @@
     --success: #28a745;
     --error: #f44336;
     --status-text: #ffffff;
+
+    --border-color: #2b303b;
     
     /* Dark theme */
     --bg-dark: #121212;
@@ -40,7 +42,7 @@
 
         /* Custom select colors */
         --ss-primary-color: var(--accent-color) !important;
-        --ss-border-color: var(--accent-color) !important;
+        --ss-border-color: var(--border-color) !important;
         --ss-bg-color: var(--bg-color) !important;
         --ss-font-color: var(--text-color) !important;
     }
@@ -59,7 +61,7 @@
 
         /* Custom select colors */
         --ss-primary-color: var(--accent-color) !important;
-        --ss-border-color: var(--accent-color) !important;
+        --ss-border-color: var(--border-color) !important;
         --ss-bg-color: var(--bg-color) !important;
         --ss-font-color: var(--text-color) !important;
     }
@@ -78,7 +80,7 @@ body.light {
 
     /* Custom select colors */
     --ss-primary-color: var(--accent-color) !important;
-    --ss-border-color: var(--accent-color) !important;
+    --ss-border-color: var(--border-color) !important;
     --ss-bg-color: var(--bg-color) !important;
     --ss-font-color: var(--text-color) !important;
 }
@@ -95,7 +97,7 @@ body.dark {
 
     /* Custom select colors */
     --ss-primary-color: var(--accent-color) !important;
-    --ss-border-color: var(--accent-color) !important;
+    --ss-border-color: var(--border-color) !important;
     --ss-bg-color: var(--bg-color) !important;
     --ss-font-color: var(--text-color) !important;
 }
@@ -112,7 +114,7 @@ body.dark_mixed {
 
     /* Custom select colors */
     --ss-primary-color: var(--accent-color) !important;
-    --ss-border-color: var(--accent-color) !important;
+    --ss-border-color: var(--border-color) !important;
     --ss-bg-color: var(--bg-color) !important;
     --ss-font-color: var(--text-color) !important;
 }

@@ -24,7 +24,7 @@
 body {
     /* Custom select global vars */
     --ss-border-radius: 10px !important;
-    --ss-main-height: 3rem !important;
+    --ss-main-height: 2.5rem !important;
 }
 
 ul {

@@ -16,7 +16,7 @@
 <div class="content-box">
     {% set extra_buttons %}
         <a class="settings-btn" title="Open list settings">
-            {% include 'icons/wrench.svg' %}
+            {% include 'icons/settings_sliders.svg' %}
         </a>
         {% if current_user.has_permission(Permissions.CONTAINER_DELETE) %}
             <a class="prune-btn" title="Prune unused containers">
@@ -25,13 +25,20 @@
         {% endif %}
     {% endset %}
     {% set extra_inputs %}
-        {% set selected_composes = request.args.get('compose', '').split(',') if request.args.get('compose') else [] %}
         <select name="compose" id="compose" multiple>
             <option value="none" {% if "none" in selected_composes %}selected{% endif %}>Individual containers</option>
             {% for item in composes %}
                 <option value="{{ item }}"
                     {% if item in selected_composes %}selected{% endif %}>
                     {{ item }}
+                </option>
+            {% endfor %}
+        </select>
+        <select name="docker_host" id="docker_host" multiple>
+            {% for item in docker_hosts %}
+                <option value="{{ item.id }}"
+                    {% if item.id | string in selected_docker_hosts_ids %}selected{% endif %}>
+                    {{ item.name }}
                 </option>
             {% endfor %}
         </select>

@@ -1,0 +1,34 @@
+{% extends "main.html" %}
+
+{% block custom_header %}
+{% assets "settings_css" %}
+<link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
+{% endassets %}
+{% assets "settings_js" %}
+<script src="{{ ASSET_URL }}" defer></script>
+{% endassets %}
+{% endblock %}
+
+{% block content %}
+<div class="content-box">
+    <form method="POST" action="{{ url_for('settings.add_docker_host') }}">
+        {{ form.hidden_tag() }}
+
+        <div class="form-group">
+            <label class="label-header" for="docker-host-name">DISPLAY NAME</label>
+            {{ form.name(class="form-input", placeholder="e.g. Production DB Cluster", id="docker-host-name") }}
+        </div>
+
+        <div class="form-group">
+            <label class="label-header" for="docker-host-url">CONNECTION URL</label>
+            {{ form.url(class="form-input", placeholder="unix:///var/run/docker.sock", id="docker-host-url") }}
+            <div class="form-help-text">
+                Supported protocols: <span class="code">unix</span> (Local), <span class="code">http</span> / <span class="code">https</span> (Network).
+            </div>
+            <a href="">Test connection</a>
+        </div>
+        
+        {{ form.submit() }}
+    </form>
+</div>
+{% endblock %}

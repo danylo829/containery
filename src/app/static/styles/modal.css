@@ -48,7 +48,8 @@
 .btn {
     padding: 10px 20px;
     cursor: pointer;
-    border-radius: 50em;
+    border-radius: 10px;
+    min-width: 6rem;
     background-color: var(--bg-color);
     color: var(--text-color);
     border: solid 1px grey;
@@ -63,6 +64,12 @@
 .btn.delete:hover {
     border: solid 1px var(--error-bg);
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.help-text {
+    font-size: 0.85rem;
+    color: #8b9bb4;
+    margin-top: 0.5rem;
 }
 
 @media all and (max-width: 650px) {

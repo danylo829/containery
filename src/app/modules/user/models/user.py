@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from time import time
 import json
 
-from app.core.extensions import db
+from app.core.db import db
 from .role import Role, UserRole
 from .helpers import merge_named_list
 

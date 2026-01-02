@@ -70,6 +70,7 @@ body {
 
 .content-card h2 {
     margin-top: 0;
+    margin-bottom: 0;
 }
 
 .breadcrumbs {
@@ -100,7 +101,7 @@ body {
     display: flex;
     gap: 1rem;
     align-items: center;
-    width: 20vw;
+    width: 40vw;
 }
 
 .search-box .inputs-box:has(#search:only-child) {
@@ -193,6 +194,7 @@ form table tr {
 }
 
 .content-card .table-box {
+    margin-bottom: 1rem;
     max-height: 40vh;
 }
 
@@ -357,6 +359,11 @@ span.delete:hover {
     color: var(--info-text)
 }
 
+.status.unknown {
+    background-color: gray;
+    color: var(--info-text)
+}
+
 .error-container {
     display: flex;
     flex-direction: column;
@@ -383,4 +390,12 @@ span.delete:hover {
 
 .error-text {
     font-size: x-large;
+}
+
+.label-header {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    margin-bottom: 0;
+    font-weight: 600;
+    letter-spacing: 0.05em;
 }

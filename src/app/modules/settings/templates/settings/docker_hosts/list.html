@@ -1,0 +1,45 @@
+{% extends "main.html" %}
+
+{% block custom_header %}
+{% assets "settings_css" %}
+<link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
+{% endassets %}
+{% assets "settings_js" %}
+<script src="{{ ASSET_URL }}" defer></script>
+{% endassets %}
+{% endblock %}
+
+{% block content %}
+{% for h in hosts %}
+<div class="content-card">
+    <div class="title">
+        <h2>{{ h.name }}</h2>
+        <div class="actions disable-on-load">
+            <a class="delete-btn" data-id="{{ h.id }}" title="Delete host">
+                {% include 'icons/delete.svg' %}
+            </a>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="info-row">
+            <label class="label-header" for="url-input">URL</label>
+            <input type="text" class="url-input" id="url-input" value="{{ h.url }}" data-id="{{ h.id }}" readonly>
+        </div>
+        <div class="info-row">
+            <label class="label-header" for="status-{{ h.id }}">Status</label>
+            <span id="status-{{ h.id }}" class="status value unknown">Unknown</span>
+        </div>
+    </div>
+    <hr>
+    <div class="section bottom">
+        <span>Enabled</span>
+        <input type="checkbox" class="enable-checkbox" name="enabled_{{ h.id }}" id="enabled_{{ h.id }}" data-id="{{ h.id }}" {% if h.enabled %}checked{% endif %}>
+        <label for="enabled_{{ h.id }}"></label>
+    </div>
+</div>
+{% endfor %}
+<a href="{{ url_for('settings.add_docker_host') }}" class="content-card add-new-host" title="Add new Docker host">
+    {% include 'icons/add.svg' %}
+</a>
+{% endblock %}

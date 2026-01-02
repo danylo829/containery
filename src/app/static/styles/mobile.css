@@ -61,4 +61,8 @@
     .container-list-modal-content {
         max-width: 70vw !important;
     }
+
+    .quick-actions-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
 }

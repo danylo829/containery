@@ -114,11 +114,12 @@
 #logout-icon:hover #arrow,
 #clear-icon:hover *,
 #prune-icon:hover *,
+#settings-sliders-icon:hover *,
 :is(.nav-menu li a:hover, .nav-menu li.active a, .buttons a:hover) #settings-icon *,
 :is(.nav-menu li a:hover, .nav-menu li.active a, .buttons a:hover) #networks-icon *,
 :is(.nav-menu li a:hover, .nav-menu li.active a, .buttons a:hover) #containers-icon *,
 :is(.nav-menu li a:hover, .nav-menu li.active a, .buttons a:hover) #users-icon * {
-    transition: transform 0.3s cubic-bezier(0.33, 2.2, 0.6, 1);
+    transition: all 0.3s cubic-bezier(0.33, 2.2, 0.6, 1);
 }
 
 /* Actions */
@@ -231,7 +232,15 @@ a.action:hover {
     transform: rotate(-90deg);
 }
 
-/* Prune & Draggable List Modal*/
+/* Settings Sliders */
+#settings-sliders-icon:hover #slider-1 {
+    cx: 16;
+}
+#settings-sliders-icon:hover #slider-2 {
+    cx: 8;
+}
+
+/* Prune & Wrench*/
 
 @keyframes brush-wiggle {
     0% { transform: rotate(0deg); }

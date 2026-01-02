@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint
 from flask_assets import Bundle
 from flask_login import login_required
 

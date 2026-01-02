@@ -8,6 +8,7 @@ from app.core.extensions import docker
 from app.lib.common import format_docker_timestamp, format_unix_timestamp
 
 from app.modules.user.models import Permissions, PersonalSettings
+from app.modules.settings.models import DockerHost
 from app.core.decorators import permission
 
 from app.core.extensions import socketio
@@ -15,7 +16,24 @@ from app.core.extensions import socketio
 from . import container
 
 def container_info (id):
-    response, status_code = docker.inspect_container(id)
+    docker_hosts = DockerHost.query.filter_by(enabled=True).all()
+    response = None
+    status_code = 404
+    
+    for host in docker_hosts:
+        resp, code = docker.inspect_container(id, host=host)
+        if code == 200:
+            response = resp
+            status_code = code
+            break
+        if code != 404:
+            # Keep the last error if not found
+            response = resp
+            status_code = code
+
+    if status_code == 404 and not response:
+        return "Container not found", 404
+
     container_details = []
     if status_code not in range(200, 300):
         return response, status_code
@@ -60,34 +78,38 @@ def container_info (id):
 
 def container_name (id):
     response, status_code = container_info(id)
-    return response['general_info']['name'] if status_code in range(200, 300) else "Unknown Container"
+    if status_code in range(200, 300) and isinstance(response, dict):
+        return response.get('general_info', {}).get('name', "Unknown Container")
+    else:
+        return "Unknown Container"
 
 @container.route('/list', methods=['GET'])
 @permission(Permissions.CONTAINER_VIEW_LIST)
 def get_list():
-    response, status_code = docker.get_containers()
-    containers = []
-    if status_code not in range(200, 300):
-        message = response.text if hasattr(response, 'text') else str(response)
-        try:
-            message = json.loads(message).get('message', message)
-        except json.JSONDecodeError:
-            pass
-        return render_template('error.html', message=message, code=status_code), status_code
+    selected_composes = [c.strip() for c in request.args.get('compose', '').split(',')] if request.args.get('compose') else []
+    selected_docker_hosts_ids = [d.strip() for d in request.args.get('docker_host', '').split(',')] if request.args.get('docker_host') else []
+    print(selected_docker_hosts_ids)
 
-    else:
-        containers = response.json()
+    docker_hosts = DockerHost.query.filter_by(enabled=True).all()
+    containers = []
+    
+    for host in docker_hosts:
+        if selected_docker_hosts_ids and str(host.id) not in selected_docker_hosts_ids:
+            continue
+        response, status_code = docker.get_containers(host=host)
+        response = response.json()
+        for container in response:
+            container['Host'] = host.id
+        if status_code in range(200, 300):
+            containers.extend(response)
 
     container_columns_setting = PersonalSettings.get_setting(current_user.id, 'container_list_columns', json_format=True)
     container_quick_actions_setting = PersonalSettings.get_setting(current_user.id, 'container_list_quick_actions', json_format=True)
-
-    # return containers
 
     rows = []
     composes = set()
     if containers is not None:
         for container in containers:
-            compose_param = request.args.get('compose')
             labels = container["Labels"]
             # Collect compose projects
             if "com.docker.compose.project" in labels:
@@ -97,16 +119,14 @@ def get_list():
             container_compose = labels.get("com.docker.compose.project")
             
             # Filter by compose project
-            if compose_param:
-                compose_filters = [c.strip() for c in compose_param.split(',')]
-                
+            if selected_composes:
                 matches = False
                 
-                if "none" in compose_filters and not is_part_of_compose:
+                if "none" in selected_composes and not is_part_of_compose:
                     # Container is standalone and "none" is selected
                     matches = True
                 
-                if is_part_of_compose and container_compose in compose_filters:
+                if is_part_of_compose and container_compose in selected_composes:
                     # Container belongs to a selected compose project
                     matches = True
                 
@@ -139,7 +159,10 @@ def get_list():
 
     return render_template('container/table.html', 
                            rows=rows, 
-                           composes=composes, 
+                           composes=composes,
+                           selected_composes=selected_composes,
+                           docker_hosts=docker_hosts,
+                           selected_docker_hosts_ids=selected_docker_hosts_ids,
                            container_columns_setting=container_columns_setting,
                            container_quick_actions_setting=container_quick_actions_setting,
                            breadcrumbs=breadcrumbs, 
@@ -308,7 +331,8 @@ def handle_start_session(data):
                                     exec_id=exec_id,
                                     sid=sid,
                                     socketio=socketio,
-                                    console_size=console_size)
+                                    console_size=console_size,
+                                    host=None)  # You might want to specify the host if needed
 @socketio.on('input')
 def handle_command(data):
     command = data['command']

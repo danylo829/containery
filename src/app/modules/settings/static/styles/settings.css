@@ -5,7 +5,6 @@ table {
 .cell-wrapper {
     display: flex;
     align-items: center;
-    justify-content: space-around;
     gap: 1rem;
 }
 
@@ -16,4 +15,106 @@ table {
     border-radius: 10px !important;
     height: 5vh;
     aspect-ratio: 1;
+}
+
+.content {
+    align-items: unset;
+    justify-content: unset;
+}
+
+.add-new-host {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 1px dashed gray;
+    color: gray;
+    background-color: var(--bg-color);
+    box-shadow: none;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.add-new-host:hover {
+    background-color: var(--bg-color-box);
+}
+
+.docker-host-info {
+    table-layout: auto;
+    font-weight: 300;
+}
+
+th {
+    white-space: nowrap;
+    width: 1%;
+    background-color: unset;
+}
+
+tr {
+    border-bottom: unset;
+}
+
+td {
+    white-space: normal;
+    word-break: break-word;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: start;
+    gap: 1rem;
+    margin: 1rem;
+}
+
+.section.bottom {
+    flex-direction: row;
+}
+
+.info-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: start;
+    flex-direction: column;
+    width: -webkit-fill-available;
+    font-weight: 300;
+}
+
+.value {
+    margin-left: 0.5rem;
+}
+
+.url {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 400;
+    color: var(--accent-color);
+    background-color: var(--bg-color);
+    padding: 1rem;
+    border-radius: 10px;
+    width: -webkit-fill-available;
+}
+
+/* New styles for Add Docker Host form */
+
+.form-group {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-help-text {
+    font-size: 0.85rem;
+    color: #8b9bb4;
+    margin-top: 0.5rem;
+}
+
+.form-help-text .code {
+    background-color: #2b303b;
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+    font-family: monospace;
+    color: #e2e8f0;
 }

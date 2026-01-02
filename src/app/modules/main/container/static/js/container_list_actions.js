@@ -1,23 +1,6 @@
 if (typeof SlimSelect !== 'undefined') {
-    const slim = new SlimSelect({
-        select: '#compose',
-        settings: {
-            showSearch: true,
-            placeholderText: 'Filter by compose',
-        },
-        events: {
-            afterChange: (newVal) => {
-                const values = newVal.map(v => v.value).join(',') || '';
-                const url = new URL(window.location);
-                if (values) {
-                    url.searchParams.set('compose', values);
-                } else {
-                    url.searchParams.delete('compose');
-                }
-                window.location = url.toString();
-            }
-        }
-    });
+    attachFilter('#compose', 'compose', 'Filter by compose');
+    attachFilter('#docker_host', 'docker_host', 'Filter by docker host');
 }
 
 document.querySelectorAll('.prune-btn').forEach(button => {

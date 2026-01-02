@@ -1,4 +1,53 @@
-from app.core.extensions import db
+from app.core.db import db
+from urllib.parse import urlparse
+
+class DockerHost(db.Model):
+    __tablename__ = 'stg_docker_hosts'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(150), unique=True, nullable=False)
+    url = db.Column(db.String(255), nullable=False)
+    enabled = db.Column(db.Boolean, default=True)
+
+    @property
+    def scheme(self):
+        if self.url.startswith('unix://'):
+            return 'unix'
+        return urlparse(self.url).scheme
+
+    @property
+    def address(self):
+        if self.scheme == 'unix':
+            return self.url.replace('unix://', '')
+        parsed = urlparse(self.url)
+        return (parsed.hostname, parsed.port or 80)
+
+    def as_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'url': self.url,
+            'enabled': self.enabled,
+        }
+    
+    @classmethod
+    def add(cls, name, url, enabled=True):
+        host = cls(name=name, url=url, enabled=enabled)
+        db.session.add(host)
+        db.session.commit()
+        return host
+    
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    def edit(self, name=None, url=None, enabled=None):
+        if name is not None:
+            self.name = name
+        if url is not None:
+            self.url = url
+        if enabled is not None:
+            self.enabled = enabled
+        db.session.commit()
 
 class GlobalSettings(db.Model):
     __tablename__ = 'stg_global_settings'
