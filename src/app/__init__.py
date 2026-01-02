@@ -16,6 +16,7 @@ import app.core.error_handlers as error_handlers
 
 from app.modules.user.models import Permissions, User, PersonalSettings
 from app.modules.settings.models import GlobalSettings
+from app.art import display_art
 
 class ApplicationFactory:
     def __init__(self):
@@ -178,6 +179,7 @@ class ApplicationFactory:
         entry = argv[0].lower()
         cli_commands = ['flask', 'cli']
         if not any(x in entry for x in cli_commands):
+            display_art()
             self.migrations(app)
             self.configure_base_assets(app)
             self.configure_context_processors(app)
