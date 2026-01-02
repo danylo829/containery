@@ -25,14 +25,12 @@ class ApplicationFactory:
         self.socketio = extensions.socketio
         self.migrate = extensions.migrate
         self.assets = extensions.assets
-        self.docker = extensions.docker
 
     def configure_extensions(self, app):
         """Configure Flask extensions."""
         self.db.init_app(app)
-        self.migrate.init_app(app, self.db)
+        self.migrate.init_app(app, self.db, render_as_batch=True)
         self.socketio.init_app(app)
-        self.docker.init_app(app)
         self.csrf.init_app(app)
 
         self.assets.init_app(app)
@@ -189,6 +187,6 @@ class ApplicationFactory:
             self.register_blueprints(app)
 
         if app.debug:
-            app.wsgi_app = DebuggedApplication(app.wsgi_app, evalex=True, pin_security=False)
+            app.wsgi_app = DebuggedApplication(app.wsgi_app, evalex=True)
         
         return app
