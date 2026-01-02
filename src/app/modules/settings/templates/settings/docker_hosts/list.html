@@ -23,12 +23,15 @@
 
     <div class="section">
         <div class="info-row">
-            <label class="label-header" for="url-input">URL</label>
-            <input type="text" class="url-input" id="url-input" value="{{ h.url }}" data-id="{{ h.id }}" readonly>
+            <label class="label-header" for="url-input-{{ h.id }}">URL</label>
+            <input type="text" class="url-input" id="url-input-{{ h.id }}" value="{{ h.url }}" data-id="{{ h.id }}" readonly>
         </div>
         <div class="info-row">
-            <label class="label-header" for="status-{{ h.id }}">Status</label>
-            <span id="status-{{ h.id }}" class="status value unknown">Unknown</span>
+            <span class="label-header">Status</span>
+            <div>
+                <span id="status-{{ h.id }}" data-id="{{ h.id }}" class="status value unknown">Unknown</span>
+                <span id="version-{{ h.id }}" data-id="{{ h.id }}" class="badge">Version</span>
+            </div>
         </div>
     </div>
     <hr>

@@ -339,16 +339,14 @@ span.delete:hover {
     font-size: 0.9rem;
 }
 
-.status.running {
+.status.running,
+.status.online {
     background-color: var(--success-bg);
     color: var(--success-text);
 }
 
-.status.stopped {
-    background-color: var(--error-bg);
-    color: var(--error-text)
-}
-
+.status.stopped,
+.status.offline,
 .status.exited {
     background-color: var(--error-bg);
     color: var(--error-text)
@@ -398,4 +396,13 @@ span.delete:hover {
     margin-bottom: 0;
     font-weight: 600;
     letter-spacing: 0.05em;
+}
+
+.badge {
+    display: inline-block;
+    background-color: var(--accent-color);
+    color: var(--bg-color);
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 0.8em;
 }

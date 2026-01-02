@@ -4,6 +4,7 @@ from flask_login import current_user
 from app.modules.settings.models import DockerHost
 from app.modules.settings.forms import DockerHostForm
 from app.core.db import db
+from app.core.extensions import docker
 
 from app.modules.user.models import Permissions
 from app.core.decorators import permission
@@ -92,3 +93,17 @@ def edit_docker_host(host_id):
         return jsonify({'message': 'Docker host updated successfully.'}), 200
     except Exception as e:
         return jsonify({'message': 'Failed to update docker host.'}), 500
+    
+@settings.route('/docker-hosts/check/<int:host_id>', methods=['GET'])
+@permission(Permissions.GLOBAL_SETTINGS_VIEW)
+def check_docker_host(host_id):
+    host = DockerHost.query.get_or_404(host_id)
+    try:
+        response, status = docker.info(host)
+
+        if status == 200:
+            return jsonify({'message': 'Docker host is reachable.', 'version': response.json().get('ServerVersion')}), 200
+        else:
+            return jsonify({'message': 'Docker host is not reachable.'}), 500
+    except Exception as e:
+        return jsonify({'message': f'Error checking docker host connection.'}), 500

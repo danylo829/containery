@@ -27,7 +27,7 @@
     <div class="role-list" data-user-id="{{ user.id }}">
         {% for role in user.get_roles() %}
             <div class="role-item" id="role-item-{{ role.id }}">
-                <span class="role-badge">{{ role.name }}</span>
+                <span class="badge">{{ role.name }}</span>
                 <div class="actions disable-on-load">
                     <div>
                         <a class="delete-role" data-role-id="{{ role.id }}" title="Remove Role">

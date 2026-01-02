@@ -54,15 +54,6 @@
     gap: 0.5rem;
 }
 
-.role-badge {
-    display: inline-block;
-    background-color: var(--accent-color);
-    color: var(--bg-color);
-    padding: 5px 10px;
-    border-radius: 10px;
-    font-size: 0.8em;
-}
-
 .toggle-header {
     display: flex;
     justify-content: space-between;

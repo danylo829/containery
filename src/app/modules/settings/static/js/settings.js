@@ -1,3 +1,30 @@
+// Docker Hosts Management
+document.querySelectorAll('.status').forEach(statusElem => {
+    const id = statusElem.getAttribute('data-id');
+
+    fetch(`/settings/docker-hosts/check/${id}`)
+    .then(response => {
+        statusElem.classList.remove('unknown');
+        if (response.status === 200) {
+            statusElem.textContent = 'Online';
+            statusElem.classList.add('online');
+
+            const versionSpan = document.getElementById(`version-${id}`);
+            response.json().then(data => {
+                versionSpan.textContent = `v${data.version}`;
+            });
+        } else {
+            statusElem.textContent = 'Offline';
+            statusElem.classList.add('offline');
+        }
+    })
+    .catch(() => {
+        statusElem.textContent = 'Unknown';
+        statusElem.classList.remove('unknown', 'online', 'offline');
+        statusElem.classList.add('unknown');
+    });
+});
+
 document.querySelectorAll('.delete-btn').forEach(button => {
     button.addEventListener('click', function() {
         const id = this.getAttribute('data-id');
@@ -31,6 +58,7 @@ document.querySelectorAll('.enable-checkbox').forEach(checkbox => {
     });
 });
 
+// Settings
 function resetSetting(fieldName) {
     spinner.classList.remove('hidden');
     disableAllActions();

@@ -18,7 +18,7 @@
             <h2>{{ current_user.username }}</h2>
             <div class="role-badge-container">
                 {% for role in current_user.get_roles() %}
-                    <span class="role-badge">{{ role.name }}</span>
+                    <span class="badge">{{ role.name }}</span>
                 {% endfor %}
             </div>
         </div>
