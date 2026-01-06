@@ -14,6 +14,7 @@
 
 {% block content %}
 <div class="content-box">
+    {% if rows | length > 0 %}
     {% set extra_buttons %}
         <a class="settings-btn" title="Open list settings">
             {% include 'icons/settings_sliders.svg' %}
@@ -131,7 +132,12 @@
                 {% endfor %}
             </tbody>
         </table>
-
     </div>
+    {% else %}
+    <div class="empty-state">
+        <h2>No containers found</h2>
+        <p>Check <a href="{{ url_for('settings.list_docker_hosts') }}">docker hosts settings</a> and container filters.</p>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
