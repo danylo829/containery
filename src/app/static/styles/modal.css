@@ -1,4 +1,7 @@
 .modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: fixed;
     z-index: 1000;
     left: 0;
@@ -10,18 +13,15 @@
     animation: fade-in 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-.modal.show {
-    display: block;
-}
-
 .modal-content {
     background-color: var(--bg-color-box);
-    margin: 15% auto;
     padding: 1rem;
     width: 25vw;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     animation: slide-down 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 @keyframes slide-down {
@@ -29,9 +29,27 @@
     100% { transform: translateY(0); opacity: 1; }
 }
 
+@keyframes slide-up {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-50px); opacity: 0; }
+}
+
 @keyframes fade-in {
     0% { opacity: 0; }
     100% { opacity: 1; }
+}
+
+@keyframes fade-out {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.modal.closing {
+    animation: fade-out 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+.modal.closing .modal-content {
+    animation: slide-up 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
 }
 
 #modalQuestion {
@@ -74,7 +92,6 @@
 
 @media all and (max-width: 650px) {
     .modal-content {
-        margin: 40% auto;
         width: 80%;
         padding: 1.5rem;
     }

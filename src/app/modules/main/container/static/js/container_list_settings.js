@@ -90,7 +90,12 @@ async function openDraggableListModal() {
 
 function closeDraggableListModal() {
     const modal = document.getElementById('containerListSettingsModal');
-    if (modal) modal.remove();
+    if (modal) {
+        modal.classList.add('closing');
+        modal.addEventListener('animationend', () => {
+            modal.remove();
+        }, { once: true });
+    }
     modalOpened = false;
 }
 

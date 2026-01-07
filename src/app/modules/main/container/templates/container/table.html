@@ -16,7 +16,7 @@
 <div class="content-box">
     {% if rows | length > 0 %}
     {% set extra_buttons %}
-        <a class="settings-btn" title="Open list settings">
+        <a class="settings-btn" title="Open list settings (M)">
             {% include 'icons/settings_sliders.svg' %}
         </a>
         {% if current_user.has_permission(Permissions.CONTAINER_DELETE) %}

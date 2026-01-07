@@ -43,7 +43,10 @@ function createModal() {
 function closeModal() {
     const modal = document.getElementById('confirmationModal');
     if (modal) {
-        modal.remove();
+        modal.classList.add('closing');
+        modal.addEventListener('animationend', () => {
+            modal.remove();
+        }, { once: true });
     }
 }
 
