@@ -87,14 +87,13 @@ def container_name (id):
 @permission(Permissions.CONTAINER_VIEW_LIST)
 def get_list():
     selected_composes = [c.strip() for c in request.args.get('compose', '').split(',')] if request.args.get('compose') else []
-    selected_docker_hosts_ids = [d.strip() for d in request.args.get('docker_host', '').split(',')] if request.args.get('docker_host') else []
-    print(selected_docker_hosts_ids)
+    selected_docker_hosts_ids = [int(d.strip()) for d in request.args.get('docker_host', '').split(',')] if request.args.get('docker_host') else []
 
     docker_hosts = DockerHost.query.filter_by(enabled=True).all()
     containers = []
     
     for host in docker_hosts:
-        if selected_docker_hosts_ids and str(host.id) not in selected_docker_hosts_ids:
+        if selected_docker_hosts_ids and host.id not in selected_docker_hosts_ids:
             continue
         response, status_code = docker.get_containers(host=host)
         if status_code in range(200, 300):
@@ -133,6 +132,7 @@ def get_list():
                     matches = True
                 
                 if not matches:
+                    docker_hosts = [h for h in docker_hosts if h.id != container.get('Host')]
                     continue
             
             row = {
