@@ -24,7 +24,7 @@
     <div class="section">
         <div class="info-row">
             <label class="label-header" for="url-input-{{ h.id }}">URL</label>
-            <input type="text" class="url-input" id="url-input-{{ h.id }}" value="{{ h.url }}" data-id="{{ h.id }}" readonly>
+            <input type="text" class="url-input disable-on-load" id="url-input-{{ h.id }}" value="{{ h.url }}" data-id="{{ h.id }}" disabled>
         </div>
         <div class="info-row">
             <span class="label-header">Status</span>
@@ -37,7 +37,7 @@
     <hr>
     <div class="section bottom">
         <span>Enabled</span>
-        <input type="checkbox" class="enable-checkbox" name="enabled_{{ h.id }}" id="enabled_{{ h.id }}" data-id="{{ h.id }}" {% if h.enabled %}checked{% endif %}>
+        <input type="checkbox" class="enable-checkbox disable-on-load" name="enabled_{{ h.id }}" id="enabled_{{ h.id }}" data-id="{{ h.id }}" {% if h.enabled %}checked{% endif %}>
         <label for="enabled_{{ h.id }}"></label>
     </div>
 </div>

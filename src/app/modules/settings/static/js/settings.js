@@ -1,19 +1,25 @@
 // Docker Hosts Management
 document.querySelectorAll('.status').forEach(statusElem => {
     const id = statusElem.getAttribute('data-id');
+    const versionSpan = document.getElementById(`version-${id}`);
+
+    spinner.classList.remove('hidden');
+    disableAllActions();
 
     fetch(`/settings/docker-hosts/check/${id}`)
-    .then(response => {
-        statusElem.classList.remove('unknown');
+    .then(async response => {
         if (response.status === 200) {
+            const data = await response.json();
+            
+            statusElem.classList.remove('unknown', 'offline');
             statusElem.textContent = 'Online';
             statusElem.classList.add('online');
-
-            const versionSpan = document.getElementById(`version-${id}`);
-            response.json().then(data => {
+            
+            if (versionSpan) {
                 versionSpan.textContent = `v${data.version}`;
-            });
+            }
         } else {
+            statusElem.classList.remove('unknown', 'online');
             statusElem.textContent = 'Offline';
             statusElem.classList.add('offline');
         }
@@ -22,6 +28,34 @@ document.querySelectorAll('.status').forEach(statusElem => {
         statusElem.textContent = 'Unknown';
         statusElem.classList.remove('unknown', 'online', 'offline');
         statusElem.classList.add('unknown');
+    }).finally(() => {
+        spinner.classList.add('hidden');
+        enableAllActions();
+    });
+});
+
+document.querySelectorAll('.url-input').forEach(input => {
+    input.addEventListener('change', function() {
+        const id = this.getAttribute('data-id');
+        const url = this.value;
+
+        if (!url) return;
+
+        spinner.classList.remove('hidden');
+        disableAllActions();
+
+        fetch(`/settings/docker-hosts/edit/${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({
+                url: url
+            })
+        })
+        .then(response => handleResponse(response))
+        .catch(error => handleError(error))
     });
 });
 

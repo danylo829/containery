@@ -49,6 +49,14 @@ th {
     background-color: unset;
 }
 
+/* Animations */
+.status {
+    width: 4rem;
+    display: inline-block;
+    text-align: center;
+    transition: color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
 tr {
     border-bottom: unset;
 }

@@ -43,8 +43,7 @@ input[type="text"][disabled],
 input[type="submit"][disabled],
 input[type="submit"][disabled]:hover,
 button[disabled] {
-    border: 1px solid grey;
-    background-color: grey;
+    opacity: 0.6;
     cursor: not-allowed;
 }
 
@@ -101,21 +100,11 @@ input[type="checkbox"]:checked + label:before {
 }
 
 input[type="checkbox"][disabled] + label {
-    background-color: #ccc;
-    border: none;
+    opacity: 0.6;
     cursor: not-allowed;
 }
 
-input[type="checkbox"][disabled] + label:before {
-    background-color: #ddd;
-}
-
-input[type="checkbox"][disabled]:checked + label {
-    background-color: #bbb;
-}
-
 input[type="checkbox"][disabled]:checked + label:before {
-    background-color: #999;
     transform: translateX(20px);
 }
 
