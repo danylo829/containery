@@ -49,12 +49,19 @@ th {
     background-color: unset;
 }
 
-/* Animations */
 .status {
     width: 4rem;
     display: inline-block;
     text-align: center;
     transition: color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.version {
+    transition: opacity 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.version.hide {
+    opacity: 0;
 }
 
 tr {
@@ -103,8 +110,6 @@ td {
     border-radius: 10px;
     width: -webkit-fill-available;
 }
-
-/* New styles for Add Docker Host form */
 
 .form-group {
     margin-bottom: 1.5rem;

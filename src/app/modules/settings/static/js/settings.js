@@ -22,6 +22,9 @@ document.querySelectorAll('.status').forEach(statusElem => {
             statusElem.classList.remove('unknown', 'online');
             statusElem.textContent = 'Offline';
             statusElem.classList.add('offline');
+            if (versionSpan) {
+                versionSpan.classList.add('hide');
+            }
         }
     })
     .catch(() => {
