@@ -10,79 +10,68 @@
 {% endblock %}
 
 {% block content %}
-<div class="content-box">
-    <h1>Global Settings</h1>
-<form method="POST" action="{{ url_for('settings.get_list') }}">
-    {{ form.hidden_tag() }}
+    <form method="POST" action="{{ url_for('settings.get_list') }}" style="display: contents;">
+        {{ form.hidden_tag() }}
 
-    <div class="settings-category">
-        <h2>General</h2>
-        <table>
-            <tr>
-                <td class="setting-label">{{ form.dashboard_refresh_interval.label }}</td>
-                <td>
-                    <div class="cell-wrapper">
+        <div class="content-box">
+            <div class="settings-section">
+                <h2>General</h2>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label class="setting-label">Docker Hosts</label>
+                        <p class="setting-description">Manage external Docker environments connected to this application.</p>
+                    </div>
+                    <div class="setting-control">
+                        <a href="{{ url_for('settings.list_docker_hosts') }}" class="manage-link">Manage Hosts</a>
+                    </div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label class="setting-label">{{ form.dashboard_refresh_interval.label.text }}</label>
+                        <p class="setting-description">How often the dashboard metrics should automatically refresh (in seconds).</p>
+                    </div>
+                    <div class="setting-control">
                         {{ form.dashboard_refresh_interval(class="setting-input") }}
-                        <div class="actions disable-on-load">
-                            <div>
-                                <a class="settings-revert-icon" onclick="resetSetting('dashboard_refresh_interval')" title="Revert Changes">
-                                    {% include 'icons/revert.svg' %}
-                                </a>
-                            </div>
-                        </div>
+                        <a class="settings-revert-icon disable-on-load" onclick="resetSetting('dashboard_refresh_interval')" title="Revert to default">
+                            {% include 'icons/revert.svg' %}
+                        </a>
                     </div>
-                </td>
-            </tr>
-            <tr>
-                <td class="setting-label">Docker Hosts</td>
-                <td>
-                    <div class="cell-wrapper">
-                        <a href="{{ url_for('settings.list_docker_hosts') }}">Manage</a>
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </div>
+                </div>
+            </div>
+        </div>
 
-    <div class="settings-category">
-        <h2>Session and Security</h2>
-        <table>
-            <tr>
-                <td class="setting-label">{{ form.session_timeout.label }}</td>
-                <td>
-                    <div class="cell-wrapper">
+        <div class="content-box">
+            <div class="settings-section">
+                <h2>Session and Security</h2>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label class="setting-label">{{ form.session_timeout.label.text }}</label>
+                        <p class="setting-description">Duration of inactivity before a user session expires (in minutes).</p>
+                    </div>
+                    <div class="setting-control">
                         {{ form.session_timeout(class="setting-input") }}
-                        <div class="actions disable-on-load">
-                            <div>
-                                <a class="settings-revert-icon" onclick="resetSetting('session_timeout')" title="Revert Changes">
-                                    {% include 'icons/revert.svg' %}
-                                </a>
-                            </div>
-                        </div>
+                        <a class="settings-revert-icon disable-on-load" onclick="resetSetting('session_timeout')" title="Revert to default">
+                            {% include 'icons/revert.svg' %}
+                        </a>
                     </div>
-                </td>
-            </tr>
-            <tr>
-                <td class="setting-label">{{ form.password_min_length.label }}</td>
-                <td>
-                    <div class="cell-wrapper">
-                        {{ form.password_min_length(class="setting-input") }}
-                        <div class="actions disable-on-load">
-                            <div>
-                                <a class="settings-revert-icon" onclick="resetSetting('password_min_length')" title="Revert Changes">
-                                    {% include 'icons/revert.svg' %}
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </div>
+                </div>
 
-    <div>
-        {{ form.submit(class="save-button") }}
-    </div>
-</form>
-</div>
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label class="setting-label">{{ form.password_min_length.label.text }}</label>
+                        <p class="setting-description">Minimum required character count for new user passwords.</p>
+                    </div>
+                    <div class="setting-control">
+                        {{ form.password_min_length(class="setting-input") }}
+                        <a class="settings-revert-icon disable-on-load" onclick="resetSetting('password_min_length')" title="Revert to default">
+                            {% include 'icons/revert.svg' %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 {% endblock %}

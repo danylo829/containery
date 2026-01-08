@@ -126,3 +126,83 @@ td {
     font-family: monospace;
     color: #e2e8f0;
 }
+
+.settings-section h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 0;
+    gap: 2rem;
+}
+
+.setting-item:last-child {
+    border-bottom: none;
+}
+
+.setting-info {
+    flex: 1;
+}
+
+.setting-label {
+    font-weight: 500;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+    display: block;
+}
+
+.setting-description {
+    font-size: 0.85rem;
+    opacity: 0.7;
+    margin: 0;
+}
+
+.setting-control {
+    flex: 0 0 300px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.manage-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1.5rem;
+    width: 100%;
+    background-color: transparent;
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.manage-link:hover {
+    background-color: var(--accent-color);
+    color: var(--bg-color-box);
+    text-decoration: none;
+}
+.settings-actions {
+    flex-basis: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 0.5rem;
+    padding-bottom: 2rem;
+}
+
+.setting-input.success {
+    border-color: var(--success);
+}
+
+.setting-input.error {
+    border-color: var(--error);
+}

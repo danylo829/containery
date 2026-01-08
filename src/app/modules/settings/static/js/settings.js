@@ -161,3 +161,49 @@ if (testConnectionBtn) {
         });
     });
 }
+
+document.querySelectorAll('.setting-input').forEach(input => {
+    input.addEventListener('change', function() {
+        const fieldName = this.name;
+        let value = this.value;
+
+        if (value === undefined || value === null || value === '') {
+            showFlashMessage('Invalid input value', 'error');
+            return;
+        }
+        
+        if (this.type === 'checkbox') {
+            value = this.checked;
+        }
+
+        this.classList.remove('error');
+        this.classList.remove('success');
+
+        fetch('/settings/update', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({
+                [fieldName]: value
+            })
+        })
+        .then(async response => {
+            const data = await response.json();
+            if (response.ok) {
+                this.classList.add('success');
+                setTimeout(() => {
+                    this.classList.remove('success');
+                }, 2000);
+            } else {
+                showFlashMessage(data.error || 'Failed to save', 'error');
+                this.classList.add('error');
+            }
+        })
+        .catch(error => {
+            handleError(error);
+            this.classList.add('error');
+        });
+    });
+});
