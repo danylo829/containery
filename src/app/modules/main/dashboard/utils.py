@@ -10,6 +10,13 @@ import time
 GITHUB_API_URL = "https://api.github.com/repos/danylo829/containery/releases/latest"
 CHECK_INTERVAL_MINUTES = 1
 
+def validate_version(ver: str) -> bool:
+    try:
+        version.parse(ver)
+        return True
+    except Exception:
+        return False
+
 def fetch_latest_version() -> str:
     try:
         response = requests.get(GITHUB_API_URL, timeout=5)
@@ -22,6 +29,9 @@ def fetch_latest_version() -> str:
     return ""
 
 def check_for_update() -> tuple[str, bool]:
+    if not validate_version(Config.VERSION):
+        return "unknown", False
+
     latest_version = GlobalSettings.get_setting('latest_version')
     last_checked_ts = GlobalSettings.get_setting('latest_version_checked_at')
     last_checked = None
@@ -48,4 +58,4 @@ def check_for_update() -> tuple[str, bool]:
         and not session.get('dismiss_update_notification', False)
     )
 
-    return str(latest_version or ""), bool(show_update_notification)
+    return str(latest_version or "unknown"), bool(show_update_notification)
