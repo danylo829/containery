@@ -156,7 +156,7 @@ class PersonalSettings(db.Model):
         db.session.commit()
 
     @classmethod
-    def migrate_all(cls):
+    def migrate(cls):
         """Normalize list-type settings for all users against current defaults.
 
         Generic merge: preserves user 'enabled' flags, removes

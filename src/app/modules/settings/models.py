@@ -1,5 +1,6 @@
 from app.core.db import db
 from urllib.parse import urlparse
+from flask import current_app
 
 class DockerHost(db.Model):
     __tablename__ = 'stg_docker_hosts'
@@ -20,14 +21,6 @@ class DockerHost(db.Model):
             return self.url.replace('unix://', '')
         parsed = urlparse(self.url)
         return (parsed.hostname, parsed.port or 80)
-
-    def as_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'url': self.url,
-            'enabled': self.enabled,
-        }
     
     @classmethod
     def add(cls, name, url, enabled=True):
@@ -48,6 +41,13 @@ class DockerHost(db.Model):
         if enabled is not None:
             self.enabled = enabled
         db.session.commit()
+
+    @classmethod
+    def migrate(cls, url):
+        if cls.query.first() is None:
+            if url.startswith('/'):
+                url = f'unix://{url}'
+            cls.add(name='Default', url=url)
 
 class GlobalSettings(db.Model):
     __tablename__ = 'stg_global_settings'

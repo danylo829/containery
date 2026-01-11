@@ -1,4 +1,3 @@
-from ast import arg
 from flask import Flask
 
 from sys import argv
@@ -15,7 +14,7 @@ import app.core.extensions as extensions
 import app.core.error_handlers as error_handlers
 
 from app.modules.user.models import Permissions, User, PersonalSettings
-from app.modules.settings.models import GlobalSettings
+from app.modules.settings.models import GlobalSettings, DockerHost
 
 class ApplicationFactory:
     def __init__(self):
@@ -159,7 +158,9 @@ class ApplicationFactory:
         with app.app_context():
             try:
                 print("Migrating personal settings...")
-                PersonalSettings.migrate_all()
+                PersonalSettings.migrate()
+                print("Migrating docker hosts...")
+                DockerHost.migrate(app.config['DOCKER_SOCKET_PATH'])
             except Exception as e:
                 print(f"Migration failed: {e}")
 
