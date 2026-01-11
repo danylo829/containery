@@ -26,6 +26,7 @@ class ApplicationFactory:
         self.socketio = extensions.socketio
         self.migrate = extensions.migrate
         self.assets = extensions.assets
+        self.docker = extensions.docker
 
     def configure_extensions(self, app):
         """Configure Flask extensions."""
@@ -33,8 +34,8 @@ class ApplicationFactory:
         self.migrate.init_app(app, self.db, render_as_batch=True)
         self.socketio.init_app(app)
         self.csrf.init_app(app)
-
         self.assets.init_app(app)
+        self.docker.init_app(app)
 
         self.login_manager.init_app(app)
         self.login_manager.login_view = 'auth.login'
