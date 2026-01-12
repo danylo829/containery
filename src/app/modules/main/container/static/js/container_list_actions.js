@@ -6,10 +6,22 @@ if (typeof SlimSelect !== 'undefined') {
 document.querySelectorAll('.prune-btn').forEach(button => {
     button.addEventListener('click', function() {
         const url = new URL(window.location);
-        const hasFilter = url.searchParams.has('compose');
-        const message = hasFilter
-            ? 'Delete all stopped containers across all composes (filters not applied)?'
-            : 'Delete all stopped containers?';
-        openModal('/container/api/prune', 'POST', message, '/container/list');
+        const hasComposeFilter = url.searchParams.has('compose');
+        const hasDockerHostFilter = url.searchParams.has('docker_host');
+        
+        let message = 'Delete all stopped containers?';
+        
+        if (hasDockerHostFilter) {
+            message = 'Delete all stopped containers on selected hosts?';
+        }
+        
+        let secondaryText = null;
+        if (hasComposeFilter) {
+            secondaryText = 'Note: Compose filter is not applied.';
+        }
+        
+        // Pass current query parameters to the API
+        const api_url = '/container/api/prune' + url.search;
+        openModal(api_url, 'POST', message, '/container/list', secondaryText);
     });
 });

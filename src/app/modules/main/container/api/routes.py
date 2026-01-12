@@ -1,7 +1,8 @@
-from flask import jsonify
+from flask import jsonify, request
 
 from app.core.extensions import docker
 from app.modules.user.models import Permissions
+from app.modules.settings.models import DockerHost
 from app.core.decorators import permission
 from app.lib.common import bytes_to_human_readable
 
@@ -34,16 +35,31 @@ def delete(id):
 @api.route('/prune', methods=['POST'])
 @permission(Permissions.CONTAINER_DELETE)
 def prune():
-    response, status_code = docker.prune_containers()
+    selected_docker_hosts_ids = [int(d.strip()) for d in request.args.get('docker_host', '').split(',')] if request.args.get('docker_host') else []
 
-    containers_deleted_list = response.json().get('ContainersDeleted')
-    containers_deleted = len(containers_deleted_list) if containers_deleted_list is not None else 0
+    docker_hosts = DockerHost.query.filter_by(enabled=True).all()
+    filtered_hosts = []
+    if selected_docker_hosts_ids:
+        filtered_hosts = [h for h in docker_hosts if h.id in selected_docker_hosts_ids]
+    else:
+        filtered_hosts = docker_hosts
 
-    if containers_deleted == 0:
-        return jsonify({"message": "Nothing to prune"}), status_code
+    total_deleted_count = 0
+    total_space_reclaimed = 0
 
-    space_reclaimed = bytes_to_human_readable(response.json().get('SpaceReclaimed', 0))
+    for host in filtered_hosts:
+        response, status_code = docker.prune_containers(host=host)
+        if status_code in range(200, 300):
+            result = response.json()
+            containers_deleted = result.get('ContainersDeleted')
+            if containers_deleted:
+                total_deleted_count += len(containers_deleted)
+            
+            total_space_reclaimed += result.get('SpaceReclaimed', 0)
+
+    if total_deleted_count == 0:
+        return jsonify({"message": "Nothing to prune"}), 200
+
+    message = f"Deleted {total_deleted_count} containers, reclaimed {bytes_to_human_readable(total_space_reclaimed)}"
     
-    message = f"Deleted {containers_deleted} containers, reclaimed {space_reclaimed}"
-    
-    return jsonify({"message": message}), status_code
+    return jsonify({"message": message}), 200

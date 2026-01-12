@@ -14,6 +14,10 @@ function createModal() {
     question.id = 'modalQuestion';
     question.textContent = 'Are you sure you want to perform this action?';
 
+    const secondaryText = document.createElement('p');
+    secondaryText.id = 'modalSecondaryText';
+    secondaryText.className = 'modal-secondary-text';
+
     const buttonGroup = document.createElement('div');
     buttonGroup.className = 'button-group';
 
@@ -30,6 +34,7 @@ function createModal() {
     // Build hierarchy
     modalContent.appendChild(header);
     modalContent.appendChild(question);
+    modalContent.appendChild(secondaryText);
     
     buttonGroup.appendChild(cancelBtn);
     buttonGroup.appendChild(confirmBtn);
@@ -50,13 +55,21 @@ function closeModal() {
     }
 }
 
-function openModal(url, method, question, returnUrl) {
+function openModal(url, method, question, returnUrl, secondaryText = null) {
     const confirmationModal = createModal();
     const confirmBtn = confirmationModal.querySelector('#confirmBtn');
     const cancelBtn = confirmationModal.querySelector('#cancelBtn');
     const modalQuestion = confirmationModal.querySelector('#modalQuestion');
+    const modalSecondaryText = confirmationModal.querySelector('#modalSecondaryText');
 
     modalQuestion.textContent = question;
+    
+    if (secondaryText) {
+        modalSecondaryText.textContent = secondaryText;
+        modalSecondaryText.style.display = 'block';
+    } else {
+        modalSecondaryText.style.display = 'none';
+    }
 
     confirmBtn.addEventListener('click', function () {
         const spinner = document.querySelector('.loading-spinner');

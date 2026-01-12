@@ -211,8 +211,11 @@ class Docker:
     def delete_container(self, container_id, host=None):
         return self.perform_request(f'/containers/{container_id}', method='DELETE', host=host)
 
-    def prune_containers(self, host=None):
-        return self.perform_request('/containers/prune', method='POST', host=host)
+    def prune_containers(self, filters=None, host=None):
+        params = None
+        if filters:
+            params = {'filters': json.dumps(filters)}
+        return self.perform_request('/containers/prune', method='POST', params=params, host=host)
 
     # IMAGE
 

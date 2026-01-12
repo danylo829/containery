@@ -15,27 +15,28 @@
 
 .modal-content {
     background-color: var(--bg-color-box);
-    padding: 1rem;
+    padding: 2rem;
     width: 25vw;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
     animation: slide-down 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     max-height: 90vh;
     overflow-y: auto;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 @keyframes slide-down {
-    0% { transform: translateY(-50px); opacity: 0; }
-    100% { transform: translateY(0); opacity: 1; }
+    0% { transform: translateY(-20px) scale(0.95); opacity: 0; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
 }
 
 @keyframes slide-up {
-    0% { transform: translateY(0); opacity: 1; }
-    100% { transform: translateY(-50px); opacity: 0; }
+    0% { transform: translateY(0) scale(1); opacity: 1; }
+    100% { transform: translateY(-20px) scale(0.95); opacity: 0; }
 }
 
 @keyframes fade-in {
-    0% { opacity: 0; }
+    0% { opacity: 0;}
     100% { opacity: 1; }
 }
 
@@ -53,14 +54,27 @@
 }
 
 #modalQuestion {
-    font-size: large;
+    font-size: 1.1rem;
     text-align: center;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.modal-secondary-text {
+    font-size: 0.9rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--text-muted);
+    opacity: 0.8;
 }
 
 .button-group {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
+    gap: 1rem;
     align-items: center;
+    margin-top: 1.5rem;
 }
 
 .btn {
