@@ -70,16 +70,22 @@ class Docker:
             if console_size:
                 start_payload["ConsoleSize"] = console_size
 
+            body = json.dumps(start_payload).encode('utf-8')
             http_request = (
                 f"POST /exec/{exec_id}/start HTTP/1.1\r\n"
                 f"Host: localhost\r\n"
                 f"Content-Type: application/json\r\n"
-                f"Content-Length: {len(json.dumps(start_payload))}\r\n"
+                f"Content-Length: {len(body)}\r\n"
                 f"\r\n"
-                f"{json.dumps(start_payload)}"
-            )
+            ).encode('utf-8') + body
+            sock.send(http_request)
 
-            sock.send(http_request.encode('utf-8'))
+            response_data = b""
+            while b"\r\n\r\n" not in response_data:
+                chunk = sock.recv(4096)
+                if not chunk:
+                    break
+                response_data += chunk
 
             self.exec_sessions[sid] = {
                 'socket': sock,
@@ -87,28 +93,7 @@ class Docker:
             }
 
             try:
-                # Read the HTTP response headers
-                response_data = b""
-                while b"\r\n\r\n" not in response_data:
-                    chunk = sock.recv(4096)
-                    if not chunk:
-                        break
-                    response_data += chunk
-
-                # Split headers and start of body
-                headers, body = response_data.split(b"\r\n\r\n", 1)
-
-                # Use an incremental decoder to correctly handle multi-byte sequences
-                # that may be split across recv() chunks
                 decoder = codecs.getincrementaldecoder('utf-8')(errors='replace')
-
-                # If we have any body data from the split, send it
-                if body:
-                    data = decoder.decode(body)
-                    if data:
-                        socketio.emit('output', {'data': data}, to=sid)
-
-                # Continue reading the stream
                 sock.settimeout(30)
                 while True:
                     if sid not in self.exec_sessions:
@@ -122,7 +107,6 @@ class Docker:
                     if data:
                         socketio.emit('output', {'data': data}, to=sid)
 
-                # Flush any remaining bytes in the decoder
                 data = decoder.decode(b'', final=True)
                 if data:
                     socketio.emit('output', {'data': data}, to=sid)

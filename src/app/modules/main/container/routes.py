@@ -83,6 +83,14 @@ def container_name (id):
     else:
         return "Unknown Container"
 
+def get_container_host(container_id):
+    """Return the first enabled DockerHost that has the given container."""
+    for host in DockerHost.query.filter_by(enabled=True).all():
+        _, code = docker.inspect_container(container_id, host=host)
+        if code == 200:
+            return host
+    return None
+
 @container.route('/list', methods=['GET'])
 @permission(Permissions.CONTAINER_VIEW_LIST)
 def get_list():
@@ -318,10 +326,15 @@ def handle_start_session(data):
     console_size = data['consoleSize']
     sid = request.sid
 
+    host = get_container_host(container_id)
+    if host is None:
+        emit('output', {'data': 'Could not find a host for this container.\r\n'})
+        return
+
     exec_create_endpoint = f"/containers/{container_id}/exec"
     payload = {"AttachStdin": True, "AttachStdout": True, "AttachStderr": True, "Tty": True, "Cmd": cmd, "User": user}
 
-    exec_id = docker.create_exec(exec_create_endpoint, payload=payload)
+    exec_id = docker.create_exec(exec_create_endpoint, payload=payload, host=host)
 
     if exec_id is None:
         emit('output', {'data': 'Could not create exec session. Check if container is running.\r\n'})
@@ -329,12 +342,12 @@ def handle_start_session(data):
 
     emit('exec_id', {'execId': exec_id}, to=sid)
 
-    socketio.start_background_task(target=docker.start_exec_session, 
+    socketio.start_background_task(target=docker.start_exec_session,
                                     exec_id=exec_id,
                                     sid=sid,
                                     socketio=socketio,
                                     console_size=console_size,
-                                    host=None)  # You might want to specify the host if needed
+                                    host=host)
 @socketio.on('input')
 def handle_command(data):
     command = data['command']
