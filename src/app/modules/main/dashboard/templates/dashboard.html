@@ -14,70 +14,123 @@
 
 {% block content %}
 <div class="content-card dashboard">
-    <h2>Docker Hosts</h2>
+    <h3>Docker Hosts</h3>
     <div class="hosts-list-container">
-        <table class="hosts-table light-table">
-            <thead>
-                <tr>
-                    <th class="col-status"></th>
-                    <th>Name</th>
-                    <th>OS</th>
-                    <th class="col-number">Containers</th>
-                    <th class="col-number">Images</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for host in hosts_data %}
-                <tr>
-                    <td class="col-status">
-                        <span class="host-status-dot {% if host.status == 'online' %}online{% else %}offline{% endif %}" title="{{ 'Online' if host.status == 'online' else host.error }}"></span>
-                    </td>
-                    <td>
-                        <a href="{{ url_for('main.dashboard.info', host_id=host.id) }}" class="host-name-link">
-                            {{ host.name }}
-                        </a>
-                    </td>
-                    <td>
-                        {% if host.status == 'online' and host.info.get('OperatingSystem') %}
-                            {{ host.info['OperatingSystem'] }}
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    <td class="col-number">
-                        {% if host.status == 'online' and host.info.get('Containers') is not none %}
-                            {{ host.info['Containers'] }}
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    <td class="col-number">
-                         {% if host.status == 'online' and host.info.get('Images') is not none %}
-                            {{ host.info['Images'] }}
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        {% if hosts_data|length == 1 %}
+            {% set host = hosts_data[0] %}
+            <table class="hosts-table hosts-table-single light-table">
+                <tbody>
+                    <tr>
+                        <th>Name</th>
+                        <td>
+                            <a href="{{ url_for('main.dashboard.info', host_id=host.id) }}" class="host-name-link">
+                                {{ host.name }}
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>
+                            <span class="host-status-dot {% if host.status == 'online' %}online{% else %}offline{% endif %}" title="{{ 'Online' if host.status == 'online' else host.error }}"></span>
+                            <span>{{ 'Online' if host.status == 'online' else 'Offline' }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>OS</th>
+                        <td>
+                            {% if host.status == 'online' and host.info.get('OperatingSystem') %}
+                                {{ host.info['OperatingSystem'] }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Containers</th>
+                        <td>
+                            {% if host.status == 'online' and host.info.get('Containers') is not none %}
+                                {{ host.info['Containers'] }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Images</th>
+                        <td>
+                            {% if host.status == 'online' and host.info.get('Images') is not none %}
+                                {{ host.info['Images'] }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        {% else %}
+            <table class="hosts-table light-table">
+                <thead>
+                    <tr>
+                        <th class="col-status"></th>
+                        <th>Name</th>
+                        <th>OS</th>
+                        <th class="col-number">Containers</th>
+                        <th class="col-number">Images</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for host in hosts_data %}
+                    <tr>
+                        <td class="col-status">
+                            <span class="host-status-dot {% if host.status == 'online' %}online{% else %}offline{% endif %}" title="{{ 'Online' if host.status == 'online' else host.error }}"></span>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('main.dashboard.info', host_id=host.id) }}" class="host-name-link">
+                                {{ host.name }}
+                            </a>
+                        </td>
+                        <td>
+                            {% if host.status == 'online' and host.info.get('OperatingSystem') %}
+                                {{ host.info['OperatingSystem'] }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="col-number">
+                            {% if host.status == 'online' and host.info.get('Containers') is not none %}
+                                {{ host.info['Containers'] }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="col-number">
+                            {% if host.status == 'online' and host.info.get('Images') is not none %}
+                                {{ host.info['Images'] }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
     </div>
 </div>
 
 <div class="content-card dashboard">
-    <h2>System Load</h2>
+    <h3>System Load</h3>
     <div class="usage-stats">
         <div class="usage-row">
             <div class="cpu-usage">
-                <h3>CPU</h3>
+                <h4>CPU</h4>
                 <div class="progress-bar">
                     <div class="progress" style="width: 0%;"></div>
                 </div>
                 <div class="usage-text">0%</div>
             </div>
             <div class="ram-usage">
-                <h3>RAM</h3>
+                <h4>RAM</h4>
                 <div class="progress-bar">
                     <div class="progress" style="width: 0%;"></div>
                 </div>
@@ -86,7 +139,7 @@
         </div>
         <div class="usage-row">
             <div class="load-average">
-                <h3>Load Average</h3>
+                <h4>Load Average</h4>
                 <table class="stat-table">
                     <tbody>
                         <tr>
@@ -125,7 +178,7 @@
 {% if show_update_notification %}
 <div class="content-card update-notification">
     <button class="close-btn" aria-label="Close notification">&times;</button>
-    <h2>New Version Available!</h2>
+    <h3>New Version Available!</h3>
     <p>
         A new version of Containery is available: <strong>{{ latest_version }}</strong><br>
         You are running: <strong>{{ installed_version }}</strong>

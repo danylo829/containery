@@ -68,7 +68,8 @@ body {
     flex: 1 1 calc(100% - 2rem);
 }
 
-.content-card h2 {
+.content-card h2,
+.content-card h3 {
     margin-top: 0;
     margin-bottom: 0;
 }
