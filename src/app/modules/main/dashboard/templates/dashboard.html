@@ -14,14 +14,55 @@
 
 {% block content %}
 <div class="content-card dashboard">
-    <h2>System Info on {{ docker_host_name }}</h2>
-    <p><strong>OSType: </strong>{{ info['OSType'] }}</p>
-    <p><strong>Operating System: </strong>{{ info['OperatingSystem'] }}</p>
-    <p><strong>Hostname: </strong>{{ info['Name'] }}</p>
-    <p><strong>Containers: </strong>{{ info['Containers'] }}</p>
-    <p><strong>Images: </strong>{{ info['Images'] }}</p>
-    <p><strong>Docker root dir: </strong>{{ info['DockerRootDir'] }}</p>
-    <a href="{{ url_for('main.dashboard.info') }}">More</a>
+    <h2>Docker Hosts</h2>
+    <div class="hosts-list-container">
+        <table class="hosts-table light-table">
+            <thead>
+                <tr>
+                    <th class="col-status"></th>
+                    <th>Name</th>
+                    <th>OS</th>
+                    <th class="col-number">Containers</th>
+                    <th class="col-number">Images</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for host in hosts_data %}
+                <tr>
+                    <td class="col-status">
+                        <span class="host-status-dot {% if host.status == 'online' %}online{% else %}offline{% endif %}" title="{{ 'Online' if host.status == 'online' else host.error }}"></span>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('main.dashboard.info', host_id=host.id) }}" class="host-name-link">
+                            {{ host.name }}
+                        </a>
+                    </td>
+                    <td>
+                        {% if host.status == 'online' and host.info.get('OperatingSystem') %}
+                            {{ host.info['OperatingSystem'] }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td class="col-number">
+                        {% if host.status == 'online' and host.info.get('Containers') is not none %}
+                            {{ host.info['Containers'] }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td class="col-number">
+                         {% if host.status == 'online' and host.info.get('Images') is not none %}
+                            {{ host.info['Images'] }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <div class="content-card dashboard">
