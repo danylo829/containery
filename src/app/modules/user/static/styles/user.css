@@ -30,3 +30,19 @@
 input[type="submit"] {
     margin-top: 0;
 }
+
+.personal-settings-table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.personal-settings-table td:first-child {
+    width: 10rem;
+    white-space: nowrap;
+    padding-right: 1rem;
+    vertical-align: middle;
+}
+
+.personal-settings-table td:last-child {
+    width: auto;
+}

@@ -129,6 +129,15 @@ class PersonalSettings(db.Model):
                 {'name': 'Terminal',  'enabled': True},
             ]
         },
+        'glassmorphism': {
+            'default': 'false',
+        },
+        'glass_background': {
+            'default': 'image:mountains',
+        },
+        'glass_background_url': {
+            'default': '',
+        },
     }
 
     @classmethod

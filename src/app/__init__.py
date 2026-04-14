@@ -91,6 +91,7 @@ class ApplicationFactory:
             "styles/icons.css",
             "styles/animations.css",
             "styles/mobile.css",
+            "styles/glassmorphism.css",
             filters="rcssmin",
             output="dist/css/app.%(version)s.css"
         )
@@ -128,7 +129,8 @@ class ApplicationFactory:
                 PersonalSettings=PersonalSettings, 
                 GlobalSettings=GlobalSettings, 
                 Permissions=Permissions, 
-                common=common
+                common=common,
+                glass_background_css=common.glass_background_css,
             )
         
     def configure_error_pages(self, app):

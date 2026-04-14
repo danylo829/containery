@@ -30,7 +30,7 @@
 
 <div class="content-card">
     <h3>Security</h3>
-    <h3>Change password</h3>
+    <h4>Change password</h4>
     <form method="POST" action="{{ url_for('user.profile') }}">
         {{ password_form.csrf_token(id = 'password_csrf') }}
 
@@ -73,12 +73,27 @@
         {{ settings_form.csrf_token(id = 'settings_csrf') }}
         
         <div class="table-box">
-            <table>
+            <table class="personal-settings-table">
                 <tr>
                     <td><strong>Theme</strong></td>
                     <td>
                         {{ settings_form.theme(id="theme-select") }}
                     </td>
+                </tr>
+                <tr>
+                    <td><strong>Glassmorphism</strong></td>
+                    <td>
+                        {{ settings_form.glassmorphism(id="glassmorphism-toggle") }}
+                        <label for="glassmorphism-toggle"></label>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Background</strong></td>
+                    <td>{{ settings_form.glass_background(id="glass-bg-select") }}</td>
+                </tr>
+                <tr id="glass-custom-url-row">
+                    <td><strong>Custom URL</strong></td>
+                    <td>{{ settings_form.glass_background_url(id="glass-bg-url", placeholder="https://example.com/image.jpg") }}</td>
                 </tr>
             </table>
         </div>
