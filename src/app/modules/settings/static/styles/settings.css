@@ -132,14 +132,6 @@ td {
     color: #e2e8f0;
 }
 
-.settings-section h2 {
-    font-size: 1.25rem;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.5rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
 .setting-item {
     display: flex;
     justify-content: space-between;
