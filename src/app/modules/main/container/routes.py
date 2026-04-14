@@ -320,11 +320,15 @@ def terminal(id):
 
 @socketio.on('start_session')
 def handle_start_session(data):
-    container_id = data['container_id']
-    cmd = data['command'].split()
-    user = data['user']
-    console_size = data['consoleSize']
+    container_id = data.get('container_id')
+    command = data.get('command')
+    user = data.get('user', '')
+    console_size = data.get('consoleSize')
     sid = request.sid
+
+    if not container_id or not command:
+        emit('output', {'data': 'Invalid session data.\r\n'})
+        return
 
     host = get_container_host(container_id)
     if host is None:
@@ -332,7 +336,7 @@ def handle_start_session(data):
         return
 
     exec_create_endpoint = f"/containers/{container_id}/exec"
-    payload = {"AttachStdin": True, "AttachStdout": True, "AttachStderr": True, "Tty": True, "Cmd": cmd, "User": user}
+    payload = {"AttachStdin": True, "AttachStdout": True, "AttachStderr": True, "Tty": True, "Cmd": command.split(), "User": user}
 
     exec_id = docker.create_exec(exec_create_endpoint, payload=payload, host=host)
 
@@ -350,22 +354,27 @@ def handle_start_session(data):
                                     host=host)
 @socketio.on('input')
 def handle_command(data):
-    command = data['command']
-    sid = request.sid  # Using flask.request for session ID
+    command = data.get('command')
+    if not command:
+        return
+    sid = request.sid
 
     response = docker.handle_command(command, sid)
     if response:
         emit('output', {'data': response})
 
+
 @socketio.on('resize_session')
 def handle_resize_session(data):
-    exec_id = data['exec_id']
-    cols = data['cols']
-    rows = data['rows']
+    exec_id = data.get('exec_id')
+    cols = data.get('cols')
+    rows = data.get('rows')
+    sid = request.sid
 
-    resize_exec_endpoint = f"/exec/{exec_id}/resize?h={rows}&w={cols}"
+    if not all([exec_id, cols, rows]):
+        return
 
-    response, status_code = docker.perform_request(path=resize_exec_endpoint, method='POST')
+    docker.resize_exec(sid, exec_id, cols, rows)
 
 @socketio.on('disconnect')
 def handle_disconnect():

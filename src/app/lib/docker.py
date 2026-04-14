@@ -89,7 +89,8 @@ class Docker:
 
             self.exec_sessions[sid] = {
                 'socket': sock,
-                'exec_id': exec_id
+                'exec_id': exec_id,
+                'host': host
             }
 
             try:
@@ -130,6 +131,14 @@ class Docker:
                 return "No active session\r\n"
         except Exception as e:
             return f"Error sending command: {str(e)}"
+
+    def resize_exec(self, sid, exec_id, cols, rows):
+        """Resize the TTY for an active exec session."""
+        session = self.exec_sessions.get(sid)
+        if not session:
+            return None, 404
+        host = session['host']
+        return self.perform_request(f'/exec/{exec_id}/resize?h={rows}&w={cols}', method='POST', host=host)
 
     def cleanup_session(self, sid):
         """Clean up session resources"""
