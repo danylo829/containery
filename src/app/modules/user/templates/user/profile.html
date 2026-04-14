@@ -15,7 +15,7 @@
 <div class="content-card">
     <div class="user-header">
         <div class="user-details">
-            <h2>{{ current_user.username }}</h2>
+            <h3>{{ current_user.username }}</h3>
             <div class="role-badge-container">
                 {% for role in current_user.get_roles() %}
                     <span class="badge">{{ role.name }}</span>
@@ -29,7 +29,7 @@
 </div>
 
 <div class="content-card">
-    <h2>Security</h2>
+    <h3>Security</h3>
     <h3>Change password</h3>
     <form method="POST" action="{{ url_for('user.profile') }}">
         {{ password_form.csrf_token(id = 'password_csrf') }}
@@ -68,7 +68,7 @@
 </div>
 
 <div class="content-card">
-    <h2>Personal settings</h2>
+    <h3>Personal settings</h3>
     <form method="POST" action="{{ url_for('user.profile') }}">
         {{ settings_form.csrf_token(id = 'settings_csrf') }}
         

@@ -11,7 +11,7 @@
         <!-- General Info Block -->
         <div class="content-card">
             <div class="title">
-                <h2>{{ volume['Name'] }}</h2>
+                <h3>{{ volume['Name'] }}</h3>
                 <div class="actions disable-on-load">
                     <div>
                         <a class="delete-btn" data-id="{{ volume['Name'] }}">
@@ -28,7 +28,7 @@
 
         <!-- Labels Block -->
         <div class="content-card">
-            <h2>Labels</h2>
+            <h3>Labels</h3>
             {% if volume['Labels'] and volume['Labels']|length > 0 %}
                 <div class="table-box">
                     <table>

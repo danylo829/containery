@@ -11,7 +11,7 @@
         <!-- General Info Block -->
         <div class="content-card">
             <div class="title">
-                <h2>{{ container.general_info.name }}</h2>
+                <h3>{{ container.general_info.name }}</h3>
                 <div class="actions disable-on-load">
                     <div>
                         <!-- Start Container -->
@@ -61,7 +61,7 @@
 
         <!-- ENV & Labels Block -->
         <div class="content-card">
-            <h2>Environment Variables</h2>
+            <h3>Environment Variables</h3>
             {% if container.env_vars %}
                 <div class="table-box">
                     <table>
@@ -81,7 +81,7 @@
         </div>
 
         <div class="content-card">
-            <h2>Labels</h2>
+            <h3>Labels</h3>
             {% if container.labels %}
                 <div class="table-box">
                     <table>
@@ -102,7 +102,7 @@
 
         <!-- Volumes Block -->
         <div class="content-card">
-            <h2>Volumes</h2>
+            <h3>Volumes</h3>
             {% if container.volumes %}
                 <div class="table-box">
                     <table>
@@ -129,7 +129,7 @@
 
         <!-- Network Info Block -->
         <div class="content-card">
-            <h2>Network Info</h2>
+            <h3>Network Info</h3>
             {% if container.network_info %}
                 <div class="table-box">
                     <table id="container-table">

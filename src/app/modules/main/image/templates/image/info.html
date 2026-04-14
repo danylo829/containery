@@ -11,7 +11,7 @@
         <!-- General Info Block -->
         <div class="content-card">
             <div class="title">
-                <h2>{{ image.repo_tags[0] }}</h2>
+                <h3>{{ image.repo_tags[0] }}</h3>
                 <div class="actions disable-on-load">
                     <div>
                         <a class="delete-btn" data-id="{{ image.general_info.id }}" title="Delete Image">
@@ -43,7 +43,7 @@
 
         <!-- ENV & Labels Block -->
         <div class="content-card">
-            <h2>Environment Variables</h2>
+            <h3>Environment Variables</h3>
             {% if image.env_vars %}
                 <div class="table-box">
                     <table>
@@ -64,7 +64,7 @@
 
         <!-- Labels Block -->
         <div class="content-card">
-            <h2>Labels</h2>
+            <h3>Labels</h3>
             {% if image.labels %}
                 <div class="table-box">
                     <table>
