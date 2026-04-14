@@ -22,6 +22,7 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 EXPOSE 5000
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    CONTAINERY_VERSION=0.1.0-dev
 
 ENTRYPOINT ["./entrypoint.sh"]
