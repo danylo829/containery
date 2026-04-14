@@ -1,3 +1,4 @@
+import codecs
 import json
 import socket
 import requests_unixsocket
@@ -56,8 +57,12 @@ class Docker:
                 return
 
             sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-            sock.connect(host.address)
-            
+            try:
+                sock.connect(host.address)
+            except Exception:
+                sock.close()
+                raise
+
             start_payload = {
                 "Detach": False,
                 "Tty": True
@@ -85,44 +90,42 @@ class Docker:
                 # Read the HTTP response headers
                 response_data = b""
                 while b"\r\n\r\n" not in response_data:
-                    chunk = sock.recv(1024)
+                    chunk = sock.recv(4096)
                     if not chunk:
                         break
                     response_data += chunk
 
                 # Split headers and start of body
                 headers, body = response_data.split(b"\r\n\r\n", 1)
-                
+
+                # Use an incremental decoder to correctly handle multi-byte sequences
+                # that may be split across recv() chunks
+                decoder = codecs.getincrementaldecoder('utf-8')(errors='replace')
+
                 # If we have any body data from the split, send it
                 if body:
-                    socketio.emit('output', {'data': body.decode('utf-8', errors='replace')}, to=sid)
+                    data = decoder.decode(body)
+                    if data:
+                        socketio.emit('output', {'data': data}, to=sid)
 
                 # Continue reading the stream
-                buffer = b""
+                sock.settimeout(30)
                 while True:
                     if sid not in self.exec_sessions:
                         break
 
-                    chunk = sock.recv(1024)
+                    chunk = sock.recv(4096)
                     if not chunk:
                         break
 
-                    buffer += chunk
-                    
-                    # Try to process as much of the buffer as possible
-                    while buffer:
-                        try:
-                            # Try to decode the buffer
-                            data = buffer.decode('utf-8', errors='replace')
-                            socketio.emit('output', {'data': data}, to=sid)
-                            buffer = b""
-                        except UnicodeDecodeError:
-                            # If we can't decode, we might have a partial character
-                            # Keep the last byte in the buffer and try again
-                            buffer = buffer[-1:]
-                            data = buffer[:-1].decode('utf-8', errors='replace')
-                            if data:
-                                socketio.emit('output', {'data': data}, to=sid)
+                    data = decoder.decode(chunk)
+                    if data:
+                        socketio.emit('output', {'data': data}, to=sid)
+
+                # Flush any remaining bytes in the decoder
+                data = decoder.decode(b'', final=True)
+                if data:
+                    socketio.emit('output', {'data': data}, to=sid)
 
             except Exception as e:
                 socketio.emit('output', {'data': f"Error: {str(e)}"}, to=sid)
