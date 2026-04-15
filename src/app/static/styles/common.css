@@ -47,6 +47,7 @@ hr {
 .align-center {
     align-items: center;
 }
+
 .empty-state {
     display: flex;
     flex-direction: column;
@@ -65,4 +66,16 @@ hr {
 
 .empty-state p {
     margin: 0;
+}
+
+.hosts-list-container .empty-state {
+    height: auto;
+    min-height: 0;
+    padding: 0;
+}
+
+.hosts-list-container:has(.empty-state) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

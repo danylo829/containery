@@ -45,6 +45,8 @@
 
 /* Hosts List Styles */
 .hosts-list-container {
+    flex: 1;
+    min-height: 0;
     overflow-y: auto;
     margin-top: 1rem;
     padding-right: 0.5rem;

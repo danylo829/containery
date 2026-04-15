@@ -16,7 +16,12 @@
 <div class="content-card dashboard">
     <h3>Docker Hosts</h3>
     <div class="hosts-list-container">
-        {% if hosts_data|length == 1 %}
+        {% if hosts_data|length == 0 %}
+        <div class="empty-state">
+            <p>No Docker hosts configured.</p>
+            <p>Check <a href="{{ url_for('settings.list_docker_hosts') }}">Docker hosts settings</a>.</p>
+        </div>
+        {% elif hosts_data|length == 1 %}
             {% set host = hosts_data[0] %}
             <table class="hosts-table hosts-table-single light-table">
                 <tbody>
