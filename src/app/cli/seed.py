@@ -7,7 +7,7 @@ from app.core.db import db
 from app.modules.user.models.user import User, PersonalSettings
 from app.modules.user.models.role import Role, RolePermission, UserRole
 from app.modules.user.models.permissions import Permissions, permission_names
-from app.modules.settings.models import GlobalSettings
+from app.modules.settings.models import GlobalSettings, DockerHost
 
 # Helper to escape single quotes for raw SQL generation
 _def_escape = lambda s: s.replace("'", "''") if isinstance(s, str) else s
@@ -18,7 +18,8 @@ _def_escape = lambda s: s.replace("'", "''") if isinstance(s, str) else s
 @click.option('--permissions-per-role', default=8, show_default=True, help='Approx permissions per role (sampled)')
 @click.option('--personal-settings/--no-personal-settings', default=True, show_default=True, help='Populate PersonalSettings for each user')
 @click.option('--sql-file', type=click.Path(dir_okay=False), default=None, help='If provided, also emit a raw SQL file with INSERT statements')
-def seed_command(users, roles, permissions_per_role, personal_settings, sql_file):
+@click.option('--docker-hosts/--no-docker-hosts', default=False, show_default=True, help='Seed default DockerHost entries')
+def seed_command(users, roles, permissions_per_role, personal_settings, sql_file, docker_hosts):
     """Populate the database with synthetic test data.
 
     Creates:
@@ -39,9 +40,29 @@ def seed_command(users, roles, permissions_per_role, personal_settings, sql_file
         ) from exc
     fake = Faker()
 
+    # Hardcoded docker hosts matching docker-compose.yml
+    default_hosts = [
+        {'name': 'socket-proxy-1', 'url': 'http://socket-proxy-1:2375'},
+        {'name': 'socket-proxy-2', 'url': 'http://socket-proxy-2:2375'},
+        {'name': 'dind-local',     'url': 'unix:///var/run/dind/docker.sock'},
+    ]
+
     sql_statements = []
 
     with app.app_context():
+        # Seed DockerHost entries
+        hosts_created = 0
+        if docker_hosts:
+            for host_data in default_hosts:
+                if not DockerHost.query.filter_by(name=host_data['name']).first():
+                    host = DockerHost(name=host_data['name'], url=host_data['url'], enabled=True)
+                    db.session.add(host)
+                    db.session.flush()
+                    hosts_created += 1
+                    sql_statements.append(
+                        f"INSERT INTO stg_docker_hosts (name, url, enabled) VALUES ("
+                        f"'{_def_escape(host_data['name'])}', '{_def_escape(host_data['url'])}', 1);"
+                    )
         # Ensure GlobalSettings defaults exist
         for k, v in GlobalSettings.defaults.items():
             existing = GlobalSettings.query.filter_by(key=k).first()
@@ -159,6 +180,8 @@ def seed_command(users, roles, permissions_per_role, personal_settings, sql_file
     click.echo(f"  Roles created: {len(generated_roles)} (+ admin)")
     click.echo(f"  Users created: {users} (+ admin if created)")
     click.echo("  Personal settings: " + ("yes" if personal_settings else "no"))
+    if docker_hosts:
+        click.echo(f"  Docker hosts seeded: {hosts_created}")
 
 # Compatibility helper for dumps without importing json globally in command context
 import json as _json

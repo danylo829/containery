@@ -1,6 +1,7 @@
 from flask import render_template, url_for, request, jsonify
 from flask_login import current_user
 from flask_socketio import emit
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import json
 
@@ -15,30 +16,30 @@ from app.core.extensions import socketio
 
 from . import container
 
-def container_info (id):
+def _find_container(container_id):
+    """Return (host, response) from the first host that has the given container."""
     docker_hosts = DockerHost.query.filter_by(enabled=True).all()
-    response = None
-    status_code = 404
-    
-    for host in docker_hosts:
-        resp, code = docker.inspect_container(id, host=host)
-        if code == 200:
-            response = resp
-            status_code = code
-            break
-        if code != 404:
-            # Keep the last error if not found
-            response = resp
-            status_code = code
+    found_host = None
+    found_response = None
 
-    if status_code == 404 and not response:
+    with ThreadPoolExecutor() as executor:
+        futures = {executor.submit(docker.inspect_container, container_id, host=host): host for host in docker_hosts}
+        for future in as_completed(futures):
+            resp, code = future.result()
+            if code == 200 and found_host is None:
+                found_host = futures[future]
+                found_response = resp
+
+    return found_host, found_response
+
+
+def container_info(id):
+    host, response = _find_container(id)
+
+    if host is None:
         return "Container not found", 404
 
-    container_details = []
-    if status_code not in range(200, 300):
-        return response, status_code
-    else:
-        container_details = response.json()
+    container_details = response.json()
 
     general_info = {
         "id": container_details["Id"],
@@ -54,10 +55,9 @@ def container_info (id):
     }
 
     env_vars = container_details["Config"].get("Env", [])
-
     labels = container_details["Config"].get("Labels", {})
 
-    container_info = {
+    return {
         'general_info': general_info,
         'image': image,
         'env_vars': env_vars,
@@ -72,24 +72,19 @@ def container_info (id):
             'self_ip': network['IPAddress'],
             'exposed_ports': container_details['NetworkSettings']['Ports']
         } for net, network in container_details['NetworkSettings']['Networks'].items()]
-    }
+    }, 200
 
-    return container_info, 200
 
-def container_name (id):
+def container_name(id):
     response, status_code = container_info(id)
     if status_code in range(200, 300) and isinstance(response, dict):
         return response.get('general_info', {}).get('name', "Unknown Container")
-    else:
-        return "Unknown Container"
+    return "Unknown Container"
+
 
 def get_container_host(container_id):
-    """Return the first enabled DockerHost that has the given container."""
-    for host in DockerHost.query.filter_by(enabled=True).all():
-        _, code = docker.inspect_container(container_id, host=host)
-        if code == 200:
-            return host
-    return None
+    host, _ = _find_container(container_id)
+    return host
 
 @container.route('/list', methods=['GET'])
 @permission(Permissions.CONTAINER_VIEW_LIST)
@@ -98,19 +93,23 @@ def get_list():
     selected_docker_hosts_ids = [int(d.strip()) for d in request.args.get('docker_host', '').split(',')] if request.args.get('docker_host') else []
 
     docker_hosts = DockerHost.query.filter_by(enabled=True).all()
+    hosts_to_query = [h for h in docker_hosts if not selected_docker_hosts_ids or h.id in selected_docker_hosts_ids]
     containers = []
-    
-    for host in docker_hosts:
-        if selected_docker_hosts_ids and host.id not in selected_docker_hosts_ids:
-            continue
-        response, status_code = docker.get_containers(host=host)
-        if status_code in range(200, 300):
-            response = response.json()
-            for container in response:
-                container['Host'] = host.id
-            containers.extend(response)
-        else:
-            docker_hosts.remove(host)
+    successful_hosts = []
+
+    with ThreadPoolExecutor() as executor:
+        futures = {executor.submit(docker.get_containers, host=host): host for host in hosts_to_query}
+        for future in as_completed(futures):
+            host = futures[future]
+            response, status_code = future.result()
+            if status_code in range(200, 300):
+                data = response.json()
+                for c in data:
+                    c['Host'] = host.id
+                containers.extend(data)
+                successful_hosts.append(host)
+
+    docker_hosts = successful_hosts
 
     container_columns_setting = PersonalSettings.get_setting(current_user.id, 'container_list_columns', json_format=True)
     container_quick_actions_setting = PersonalSettings.get_setting(current_user.id, 'container_list_quick_actions', json_format=True)
@@ -249,8 +248,12 @@ def logs(id):
     tail = request.args.get('tail', '100')
     if int(tail) < 0:
         tail = '100'
-    response, status_code = docker.get_logs(id, tail=tail)
-    logs = []
+
+    host = get_container_host(id)
+    if host is None:
+        return render_template('error.html', message='Container not found', code=404), 404
+
+    response, status_code = docker.get_logs(id, tail=tail, host=host)
     if status_code not in range(200, 300):
         message = response.text if hasattr(response, 'text') else str(response)
         try:
@@ -258,10 +261,8 @@ def logs(id):
         except json.JSONDecodeError:
             pass
         return render_template('error.html', message=message, code=status_code), status_code
-    else:
-        logs = response
 
-    log_text = ''.join(log['message'] for log in logs)
+    log_text = ''.join(log['message'] for log in response)
     
     breadcrumbs = [
         {"name": "Dashboard", "url": url_for('main.dashboard.index')},
@@ -276,8 +277,11 @@ def logs(id):
 @container.route('/<id>/processes', methods=['GET'])
 @permission(Permissions.CONTAINER_INFO)
 def processes(id):
-    response, status_code = docker.get_processes(id)
-    processes = []
+    host = get_container_host(id)
+    if host is None:
+        return render_template('error.html', message='Container not found', code=404), 404
+
+    response, status_code = docker.get_processes(id, host=host)
     if status_code not in range(200, 300):
         # Custom error messages
         if status_code == 409:
@@ -292,8 +296,8 @@ def processes(id):
         except json.JSONDecodeError:
             pass
         return render_template('error.html', message=message, code=status_code), status_code
-    else:
-        processes = response.json()
+
+    processes = response.json()
 
     breadcrumbs = [
         {"name": "Dashboard", "url": url_for('main.dashboard.index')},
