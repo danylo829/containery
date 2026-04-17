@@ -359,7 +359,8 @@ span.delete:hover {
     color: var(--info-text)
 }
 
-.status.unknown {
+.status.unknown,
+.status.loading {
     background-color: gray;
     color: var(--info-text)
 }

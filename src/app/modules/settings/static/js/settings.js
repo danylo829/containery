@@ -2,24 +2,35 @@
 document.querySelectorAll('.status').forEach(statusElem => {
     const id = statusElem.getAttribute('data-id');
     const versionSpan = document.getElementById(`version-${id}`);
+    const checkStartedAt = Date.now();
+
+    statusElem.textContent = 'Loading';
+    statusElem.classList.remove('unknown', 'online', 'offline');
+    statusElem.classList.add('loading');
 
     spinner.classList.remove('hidden');
     disableAllActions();
 
     fetch(`/settings/docker-hosts/check/${id}`)
     .then(async response => {
+        const elapsed = Date.now() - checkStartedAt;
+        if (elapsed < 500) {
+            await sleep(500 - elapsed);
+        }
+
         if (response.status === 200) {
             const data = await response.json();
             
-            statusElem.classList.remove('unknown', 'offline');
+            statusElem.classList.remove('loading', 'unknown', 'offline');
             statusElem.textContent = 'Online';
             statusElem.classList.add('online');
             
             if (versionSpan) {
                 versionSpan.textContent = `v${data.version}`;
+                versionSpan.classList.remove('hide');
             }
         } else {
-            statusElem.classList.remove('unknown', 'online');
+            statusElem.classList.remove('loading', 'unknown', 'online');
             statusElem.textContent = 'Offline';
             statusElem.classList.add('offline');
             if (versionSpan) {
@@ -27,9 +38,14 @@ document.querySelectorAll('.status').forEach(statusElem => {
             }
         }
     })
-    .catch(() => {
+    .catch(async () => {
+        const elapsed = Date.now() - checkStartedAt;
+        if (elapsed < 500) {
+            await sleep(500 - elapsed);
+        }
+
         statusElem.textContent = 'Unknown';
-        statusElem.classList.remove('unknown', 'online', 'offline');
+        statusElem.classList.remove('loading', 'online', 'offline');
         statusElem.classList.add('unknown');
     }).finally(() => {
         spinner.classList.add('hidden');
