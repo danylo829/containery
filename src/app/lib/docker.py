@@ -9,6 +9,52 @@ class Docker:
     def __init__(self):
         self.exec_sessions = {}
 
+    def _decode_chunked_data(self, state, data: bytes) -> bytes:
+        """Decode HTTP chunked payload bytes from a streaming connection."""
+        if not data:
+            return b""
+
+        state['buffer'] += data
+        out = bytearray()
+
+        while True:
+            if state['chunk_size'] is None:
+                line_end = state['buffer'].find(b"\r\n")
+                if line_end == -1:
+                    break
+
+                size_line = state['buffer'][:line_end].split(b";", 1)[0].strip()
+                state['buffer'] = state['buffer'][line_end + 2:]
+
+                try:
+                    state['chunk_size'] = int(size_line, 16)
+                except ValueError:
+                    # Fallback: return buffered bytes unmodified if framing is malformed.
+                    out.extend(state['buffer'])
+                    state['buffer'] = b""
+                    state['chunk_size'] = None
+                    break
+
+                if state['chunk_size'] == 0:
+                    state['chunk_size'] = None
+                    if state['buffer'].startswith(b"\r\n"):
+                        state['buffer'] = state['buffer'][2:]
+                    continue
+
+            chunk_size = state['chunk_size']
+            if len(state['buffer']) < chunk_size + 2:
+                break
+
+            out.extend(state['buffer'][:chunk_size])
+            state['buffer'] = state['buffer'][chunk_size:]
+
+            if state['buffer'].startswith(b"\r\n"):
+                state['buffer'] = state['buffer'][2:]
+
+            state['chunk_size'] = None
+
+        return bytes(out)
+
     # GENERAL
 
     def perform_request(self, path: str, method='GET', payload=None, params=None, host=None, timeout=10) -> tuple:
@@ -75,10 +121,12 @@ class Docker:
                 f"POST /exec/{exec_id}/start HTTP/1.1\r\n"
                 f"Host: localhost\r\n"
                 f"Content-Type: application/json\r\n"
+                f"Connection: Upgrade\r\n"
+                f"Upgrade: tcp\r\n"
                 f"Content-Length: {len(body)}\r\n"
                 f"\r\n"
             ).encode('utf-8') + body
-            sock.send(http_request)
+            sock.sendall(http_request)
 
             response_data = b""
             while b"\r\n\r\n" not in response_data:
@@ -86,6 +134,29 @@ class Docker:
                 if not chunk:
                     break
                 response_data += chunk
+
+            if b"\r\n\r\n" not in response_data:
+                socketio.emit('output', {'data': "Error: invalid exec response from Docker daemon"}, to=sid)
+                sock.close()
+                return
+
+            header_bytes, initial_body = response_data.split(b"\r\n\r\n", 1)
+            header_text = header_bytes.decode('iso-8859-1', errors='replace')
+            header_lines = header_text.split("\r\n")
+
+            status_code = 500
+            if header_lines:
+                status_parts = header_lines[0].split(" ", 2)
+                if len(status_parts) > 1 and status_parts[1].isdigit():
+                    status_code = int(status_parts[1])
+
+            if status_code not in (101, 200):
+                socketio.emit('output', {'data': f"Error: Docker exec start failed ({status_code})"}, to=sid)
+                sock.close()
+                return
+
+            is_chunked = 'transfer-encoding: chunked' in header_text.lower()
+            chunked_state = {'buffer': b'', 'chunk_size': None}
 
             self.exec_sessions[sid] = {
                 'socket': sock,
@@ -96,6 +167,14 @@ class Docker:
             try:
                 decoder = codecs.getincrementaldecoder('utf-8')(errors='replace')
                 sock.settimeout(30)
+
+                # Some Docker variants send initial payload bytes with headers.
+                pending = self._decode_chunked_data(chunked_state, initial_body) if is_chunked else initial_body
+                if pending:
+                    initial_data = decoder.decode(pending)
+                    if initial_data:
+                        socketio.emit('output', {'data': initial_data}, to=sid)
+
                 while True:
                     if sid not in self.exec_sessions:
                         break
@@ -103,6 +182,11 @@ class Docker:
                     chunk = sock.recv(4096)
                     if not chunk:
                         break
+
+                    if is_chunked:
+                        chunk = self._decode_chunked_data(chunked_state, chunk)
+                        if not chunk:
+                            continue
 
                     data = decoder.decode(chunk)
                     if data:
@@ -126,7 +210,7 @@ class Docker:
         try:
             if sid in self.exec_sessions:
                 sock = self.exec_sessions[sid]['socket']
-                sock.send(command.encode())
+                sock.sendall(command.encode())
             else:
                 return "No active session\r\n"
         except Exception as e:
