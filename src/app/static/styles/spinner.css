@@ -4,9 +4,10 @@
     justify-content: center;
     font-size: 1.5rem;
     color: var(--accent-color);
+    opacity: 1;
+    transition: opacity 0.3s ease;
 }
 
-.loading-spinner.hidden *{
+.loading-spinner.hidden {
     opacity: 0;
-    transition: all 0.3s ease;
 }

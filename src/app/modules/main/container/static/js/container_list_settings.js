@@ -10,10 +10,9 @@ async function openDraggableListModal() {
     const url = '/container/list/settings';
     const method = 'GET';
 
-    const spinner = document.querySelector('.loading-spinner');
     const disable_on_load = document.querySelector('.disable-on-load');
 
-    spinner.classList.remove('hidden');
+    showSpinner();
 
     if (disable_on_load) {
         disable_on_load.classList.add('disabled');
@@ -76,7 +75,7 @@ async function openDraggableListModal() {
             if (event.target === modalContent) closeDraggableListModal();
         });
 
-        spinner.classList.add('hidden');
+        hideSpinner();
 
         if (disable_on_load) {
             disable_on_load.classList.remove('disabled');

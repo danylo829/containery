@@ -72,8 +72,7 @@ function openModal(url, method, question, returnUrl, secondaryText = null) {
     }
 
     confirmBtn.addEventListener('click', function () {
-        const spinner = document.querySelector('.loading-spinner');
-        spinner.classList.remove('hidden');
+        showSpinner();
 
         disableAllActions();
 

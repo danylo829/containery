@@ -8,7 +8,7 @@ document.querySelectorAll('.status').forEach(statusElem => {
     statusElem.classList.remove('unknown', 'online', 'offline');
     statusElem.classList.add('loading');
 
-    spinner.classList.remove('hidden');
+    showSpinner();
     disableAllActions();
 
     fetch(`/settings/docker-hosts/check/${id}`)
@@ -48,7 +48,7 @@ document.querySelectorAll('.status').forEach(statusElem => {
         statusElem.classList.remove('loading', 'online', 'offline');
         statusElem.classList.add('unknown');
     }).finally(() => {
-        spinner.classList.add('hidden');
+        hideSpinner();
         enableAllActions();
     });
 });
@@ -60,7 +60,7 @@ document.querySelectorAll('.url-input').forEach(input => {
 
         if (!url) return;
 
-        spinner.classList.remove('hidden');
+        showSpinner();
         disableAllActions();
 
         fetch(`/settings/docker-hosts/edit/${id}`, {
@@ -90,7 +90,7 @@ document.querySelectorAll('.enable-checkbox').forEach(checkbox => {
         const id = this.getAttribute('data-id');
         const isEnabled = this.checked;
 
-        spinner.classList.remove('hidden');
+        showSpinner();
         disableAllActions();
 
         // Wait to finish checkbox animation
@@ -113,7 +113,7 @@ document.querySelectorAll('.enable-checkbox').forEach(checkbox => {
 
 // Settings
 function resetSetting(fieldName) {
-    spinner.classList.remove('hidden');
+    showSpinner();
     disableAllActions();
 
     fetch('/settings/reset', {
@@ -143,7 +143,7 @@ if (testConnectionBtn) {
             return;
         }
 
-        spinner.classList.remove('hidden');
+        showSpinner();
         disableAllActions();
 
         // Wait a bit for UI update
@@ -175,7 +175,7 @@ if (testConnectionBtn) {
             console.error(error);
         })
         .finally(() => {
-            spinner.classList.add('hidden');
+            hideSpinner();
             enableAllActions();
         });
     });

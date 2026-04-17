@@ -1,5 +1,4 @@
 const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-const spinner = document.querySelector('.loading-spinner');
 
 function handleResponse(response, returnUrl) {
     if (response.ok) {

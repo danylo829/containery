@@ -9,7 +9,7 @@ document.querySelectorAll('.start-btn').forEach(button => {
     button.addEventListener('click', function() {
         const containerId = this.getAttribute('data-id');
 
-        spinner.classList.remove('hidden');
+        showSpinner();
 
         disableAllActions();
 
@@ -29,7 +29,7 @@ document.querySelectorAll('.restart-btn').forEach(button => {
     button.addEventListener('click', function() {
         const containerId = this.getAttribute('data-id');
 
-        spinner.classList.remove('hidden');
+        showSpinner();
 
         disableAllActions();
 
@@ -49,7 +49,7 @@ document.querySelectorAll('.stop-btn').forEach(button => {
     button.addEventListener('click', function() {
         const containerId = this.getAttribute('data-id');
 
-        spinner.classList.remove('hidden');
+        showSpinner();
 
         disableAllActions();
 
