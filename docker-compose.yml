@@ -1,7 +1,10 @@
 services:
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: containery
+    hostname: containery
     restart: "unless-stopped"
     ports:
       - "${PORT:-5000}:${PORT:-5000}"

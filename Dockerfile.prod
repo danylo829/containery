@@ -10,6 +10,17 @@ COPY requirements.txt ./
 
 RUN pip install --no-cache-dir -r requirements.txt
 
+RUN rm -rf \
+    /usr/local/lib/python3.12/site-packages/faker \
+    /usr/local/lib/python3.12/site-packages/Faker-*.dist-info \
+    /usr/local/lib/python3.12/site-packages/pip \
+    /usr/local/lib/python3.12/site-packages/pip-*.dist-info \
+    /usr/local/lib/python3.12/site-packages/setuptools \
+    /usr/local/lib/python3.12/site-packages/setuptools-*.dist-info \
+    /usr/local/lib/python3.12/site-packages/pkg_resources \
+    /usr/local/lib/python3.12/site-packages/_distutils_hack \
+    && rm -f /usr/local/bin/pip /usr/local/bin/pip3 /usr/local/bin/pip3.12
+
 FROM python:3.12-alpine
 
 ARG VERSION
@@ -27,6 +38,11 @@ WORKDIR /containery
 
 COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
+
+RUN rm -rf \
+    /usr/local/lib/python3.12/site-packages/pip \
+    /usr/local/lib/python3.12/site-packages/pip-*.dist-info \
+    && rm -f /usr/local/bin/pip /usr/local/bin/pip3 /usr/local/bin/pip3.12
 
 COPY ./src ./
 

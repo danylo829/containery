@@ -1,5 +1,4 @@
 import click
-from faker import Faker
 import random
 from werkzeug.security import generate_password_hash
 
@@ -32,6 +31,12 @@ def seed_command(users, roles, permissions_per_role, personal_settings, sql_file
     """
     app_factory = ApplicationFactory()
     app = app_factory.create_app()
+    try:
+        from faker import Faker
+    except ImportError as exc:
+        raise click.ClickException(
+            "Faker is not installed in this runtime image. Use a dev image or install Faker to run seed."
+        ) from exc
     fake = Faker()
 
     sql_statements = []
