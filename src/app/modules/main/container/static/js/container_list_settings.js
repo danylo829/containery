@@ -7,6 +7,9 @@ document.querySelectorAll('.settings-btn').forEach(button => {
 });
 
 async function openDraggableListModal() {
+    if (modalOpened) return;
+    modalOpened = true;
+    
     const url = '/container/list/settings';
     const method = 'GET';
 
@@ -83,8 +86,6 @@ async function openDraggableListModal() {
     } else {
         handleError(new Error('Failed to fetch modal content'));
     }
-
-    modalOpened = true;
 }
 
 function closeDraggableListModal() {
@@ -93,9 +94,9 @@ function closeDraggableListModal() {
         modal.classList.add('closing');
         modal.addEventListener('animationend', () => {
             modal.remove();
+            modalOpened = false;
         }, { once: true });
     }
-    modalOpened = false;
 }
 
 // === drag logic ===
