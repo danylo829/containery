@@ -25,7 +25,7 @@
         <option value="stderr" {% if stream == 'stderr' %}selected{% endif %}>stderr</option>
     </select>
     {% endset %}
-    {{ box_top_panel(extra_buttons, extra_inputs) }}
+    {{ box_top_panel(extra_buttons, extra_inputs, enable_search=False) }}
     <textarea id="log-textarea" readonly>{{ log_text }}</textarea>
 </div>
 {% endblock %}
