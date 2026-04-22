@@ -1,6 +1,8 @@
 const textarea = document.getElementById('log-textarea');
 const logInput = document.getElementById('log-lines');
 
+attachFilter('#stream', 'stream', 'Filter by docker host');
+
 if (textarea) {
 	textarea.scrollTop = textarea.scrollHeight;
 }

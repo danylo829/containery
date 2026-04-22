@@ -40,11 +40,18 @@ def logs(id):
     if int(tail) < 0:
         tail = '100'
 
+    stream = request.args.get('stream', 'all')
+    if stream not in ['all', 'stdout', 'stderr']:
+        stream = 'all'
+    
+    stdout = stream in ['all', 'stdout']
+    stderr = stream in ['all', 'stderr']
+
     host = get_container_host(id)
     if host is None:
         return render_template('error.html', message='Container not found', code=404), 404
 
-    response, status_code = docker.get_logs(id, tail=tail, host=host)
+    response, status_code = docker.get_logs(id, stdout=stdout, stderr=stderr, tail=tail, host=host)
     if status_code not in range(200, 300):
         message = response.text if hasattr(response, 'text') else str(response)
         try:
@@ -52,7 +59,7 @@ def logs(id):
         except json.JSONDecodeError:
             pass
         return render_template('error.html', message=message, code=status_code), status_code
-
+    
     log_text = ''.join(log['message'] for log in response)
 
     breadcrumbs = [
@@ -63,7 +70,7 @@ def logs(id):
     ]
     page_title = 'Container Logs'
 
-    return render_template('container/logs.html', tail=tail, log_text=log_text, breadcrumbs=breadcrumbs, page_title=page_title)
+    return render_template('container/logs.html', tail=tail, stream=stream, log_text=log_text, breadcrumbs=breadcrumbs, page_title=page_title)
 
 
 @container.route('/<id>/processes', methods=['GET'])

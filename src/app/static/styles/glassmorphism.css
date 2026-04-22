@@ -196,7 +196,7 @@ body.glass .flash-message.info {
 
 body.glass input:not([type="submit"]):not([type="checkbox"]):not([type="radio"]):not([type="range"]) {
     background: var(--glass-bg) !important;
-    border: 1px solid var(--glass-border) !important;
+    border: 1px solid var(--glass-border);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
 }
@@ -239,6 +239,10 @@ body.glass .user-panel.open {
     -webkit-backdrop-filter: var(--glass-blur);
     border: 1px solid var(--glass-border-hi) !important;
     box-shadow: var(--glass-shadow) !important;
+}
+
+body.glass .lines-input input {
+  border: none !important;
 }
 
 body.glass *::-webkit-scrollbar-track {
