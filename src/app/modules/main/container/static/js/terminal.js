@@ -1,10 +1,12 @@
 const form = document.getElementById('start-form');
 const terminalWrapper = document.getElementById('terminal-wrapper');
 const container = document.getElementById('terminal-container');
-const xterm = new Terminal();
 const commandSelect = document.getElementById('command-select');
 const commandInput = document.getElementById('command-input');
 const submitBtn = document.getElementById('submit-btn');
+
+const xterm = new Terminal();
+const fitAddon = new FitAddon.FitAddon();
 
 const slim = new SlimSelect({
     select: '#command-select',
@@ -41,8 +43,6 @@ const resizeTerminalObserver = new ResizeObserver(entries => {
             cols: cols,
             rows: rows
         });
-
-        xterm.resize(cols, rows);
     }
 });
 
@@ -68,6 +68,9 @@ form.addEventListener('submit', (event) => {
     form.style.display = 'none';
     terminalWrapper.style.display = 'block';
 
+    xterm.loadAddon(fitAddon);
+    fitAddon.fit();
+    
     xterm.open(container);
 
     socket = io();
