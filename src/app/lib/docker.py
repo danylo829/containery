@@ -57,7 +57,7 @@ class Docker:
 
     # GENERAL
 
-    def perform_request(self, path: str, method='GET', payload=None, params=None, host=None, timeout=10) -> tuple:
+    def perform_request(self, path: str, method='GET', payload=None, params=None, host=None, timeout=30) -> tuple:
         if not host:
             return "Host not provided", 500
 

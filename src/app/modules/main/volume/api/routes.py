@@ -1,31 +1,45 @@
 from flask import jsonify
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from app.core.extensions import docker
 from app.modules.user.models import Permissions
+from app.modules.settings.models import DockerHost
 from app.core.decorators import permission
 from app.lib.common import bytes_to_human_readable
+from app.lib.hosts import find_on_host
 
 from . import api
+
 
 @api.route('/<id>/delete', methods=['DELETE'])
 @permission(Permissions.VOLUME_INFO)
 def delete(id):
-    response, status_code = docker.delete_volume(id)
+    host, _ = find_on_host(docker.inspect_volume, id)
+    if host is None:
+        return 'Volume not found', 404
+    response, status_code = docker.delete_volume(id, host=host)
     return str(response), status_code
+
 
 @api.route('/prune', methods=['POST'])
 @permission(Permissions.VOLUME_DELETE)
 def prune():
-    response, status_code = docker.prune_volumes()
+    docker_hosts = DockerHost.query.filter_by(enabled=True).all()
 
-    volumes_deleted_list = response.json().get('VolumesDeleted')
-    volumes_deleted = len(volumes_deleted_list) if volumes_deleted_list is not None else 0
+    total_deleted = 0
+    total_space_reclaimed = 0
 
-    if volumes_deleted == 0:
-        return jsonify({"message": "Nothing to prune"}), status_code
+    with ThreadPoolExecutor() as executor:
+        futures = {executor.submit(docker.prune_volumes, host=host): host for host in docker_hosts}
+        for future in as_completed(futures):
+            response, status_code = future.result()
+            if status_code in range(200, 300):
+                volumes_deleted_list = response.json().get('VolumesDeleted')
+                total_deleted += len(volumes_deleted_list) if volumes_deleted_list else 0
+                total_space_reclaimed += response.json().get('SpaceReclaimed', 0)
 
-    space_reclaimed = bytes_to_human_readable(response.json().get('SpaceReclaimed', 0))
-    
-    message = f"Deleted {volumes_deleted} volumes, reclaimed {space_reclaimed}"
-    
-    return jsonify({"message": message}), status_code
+    if total_deleted == 0:
+        return jsonify({"message": "Nothing to prune"}), 200
+
+    message = f"Deleted {total_deleted} volumes, reclaimed {bytes_to_human_readable(total_space_reclaimed)}"
+    return jsonify({"message": message}), 200

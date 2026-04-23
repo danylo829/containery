@@ -5,6 +5,7 @@ import json
 
 from app.core.extensions import docker
 from app.lib.common import format_docker_timestamp
+from app.lib.hosts import find_on_host
 from app.modules.settings.models import DockerHost
 
 from app.core.decorators import permission
@@ -13,25 +14,8 @@ from app.modules.user.models import Permissions
 from . import network
 
 
-def _find_network(network_id):
-    """Return (host, response) from the first host that has the given network."""
-    docker_hosts = DockerHost.query.filter_by(enabled=True).all()
-    found_host = None
-    found_response = None
-
-    with ThreadPoolExecutor() as executor:
-        futures = {executor.submit(docker.inspect_network, network_id, host=host): host for host in docker_hosts}
-        for future in as_completed(futures):
-            resp, code = future.result()
-            if code == 200 and found_host is None:
-                found_host = futures[future]
-                found_response = resp
-
-    return found_host, found_response
-
-
 def network_info(id):
-    host, response = _find_network(id)
+    host, response = find_on_host(docker.inspect_network, id)
 
     if host is None:
         return "Network not found", 404
@@ -124,7 +108,7 @@ def info(id):
 @network.route('/<id>/delete', methods=['DELETE'])
 @permission(Permissions.NETWORK_DELETE)
 def delete(id):
-    host, _ = _find_network(id)
+    host, _ = find_on_host(docker.inspect_network, id)
     if host is None:
         return 'Network not found', 404
     response, status_code = docker.delete_network(id, host=host)

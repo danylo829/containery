@@ -5,29 +5,13 @@ import json
 
 from app.core.extensions import docker
 from app.lib.common import format_docker_timestamp
+from app.lib.hosts import find_on_host
 from app.modules.settings.models import DockerHost
 
 from app.core.decorators import permission
 from app.modules.user.models import Permissions
 
 from . import volume
-
-
-def _find_volume(name):
-    """Return (host, response) from the first host that has the given volume."""
-    docker_hosts = DockerHost.query.filter_by(enabled=True).all()
-    found_host = None
-    found_response = None
-
-    with ThreadPoolExecutor() as executor:
-        futures = {executor.submit(docker.inspect_volume, name, host=host): host for host in docker_hosts}
-        for future in as_completed(futures):
-            resp, code = future.result()
-            if code == 200 and found_host is None:
-                found_host = futures[future]
-                found_response = resp
-
-    return found_host, found_response
 
 
 @volume.route('/list', methods=['GET'])
@@ -67,7 +51,7 @@ def get_list():
 @volume.route('/<name>', methods=['GET'])
 @permission(Permissions.VOLUME_INFO)
 def info(name):
-    host, response = _find_volume(name)
+    host, response = find_on_host(docker.inspect_volume, name)
 
     if host is None:
         return render_template('error.html', message='Volume not found', code=404), 404

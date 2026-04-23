@@ -7,31 +7,15 @@ from app.modules.user.models import Permissions
 from app.modules.settings.models import DockerHost
 from app.core.decorators import permission
 from app.lib.common import format_docker_timestamp, format_unix_timestamp
+from app.lib.hosts import find_on_host
 
 from app.core.extensions import docker
 
 from . import image
 
 
-def _find_image(image_id):
-    """Return (host, response) from the first host that has the given image."""
-    docker_hosts = DockerHost.query.filter_by(enabled=True).all()
-    found_host = None
-    found_response = None
-
-    with ThreadPoolExecutor() as executor:
-        futures = {executor.submit(docker.inspect_image, image_id, host=host): host for host in docker_hosts}
-        for future in as_completed(futures):
-            resp, code = future.result()
-            if code == 200 and found_host is None:
-                found_host = futures[future]
-                found_response = resp
-
-    return found_host, found_response
-
-
 def image_info(id):
-    host, response = _find_image(id)
+    host, response = find_on_host(docker.inspect_image, id)
 
     if host is None:
         return "Image not found", 404
