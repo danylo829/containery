@@ -24,20 +24,20 @@ def image_info(id):
 
     general_info = {
         "id": id,
-        "architecture": image_details["Architecture"],
-        "docker_version": image_details["DockerVersion"],
-        "os": image_details["Os"],
-        "created_at": format_docker_timestamp(image_details["Created"]),
-        "size": round(image_details["Size"] / 1024 / 1024, 2),
+        "architecture": image_details.get("Architecture", "unknown"),
+        "docker_version": image_details.get("DockerVersion", "unknown"),
+        "os": image_details.get("Os", "unknown"),
+        "created_at": format_docker_timestamp(image_details.get("Created", "")),
+        "size": round(image_details.get("Size", 0) / 1024 / 1024, 2),
         "author": image_details.get("Author", ""),
         "comment": image_details.get("Comment", "")
     }
 
-    env_vars = image_details["Config"].get("Env", [])
-    labels = image_details["Config"].get("Labels", {})
+    env_vars = image_details.get("Config", {}).get("Env", [])
+    labels = image_details.get("Config", {}).get("Labels", {})
     repo_tags = image_details.get("RepoTags", [])
-    entrypoint = image_details["Config"].get("Entrypoint", [])
-    cmd = image_details["Config"].get("Cmd", [])
+    entrypoint = image_details.get("Config", {}).get("Entrypoint", [])
+    cmd = image_details.get("Config", {}).get("Cmd", [])
 
     return {
         'general_info': general_info,
@@ -76,10 +76,10 @@ def get_list():
     rows = []
     for img in images:
         row = {
-            'id': img['Id'],
-            'created': format_unix_timestamp(img['Created']),
-            'repo_tags': ', '.join(img['RepoTags']) if img.get('RepoTags') else 'N/A',
-            'size': round(img['Size'] / 1024 / 1024, 2)
+            'id': img.get('Id', 'unknown'),
+            'created': format_unix_timestamp(img.get('Created', 0)),
+            'repo_tags': ', '.join(img.get('RepoTags', [])) if img.get('RepoTags') else 'N/A',
+            'size': round(img.get('Size', 0) / 1024 / 1024, 2)
         }
         rows.append(row)
 

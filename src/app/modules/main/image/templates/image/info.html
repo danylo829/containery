@@ -22,7 +22,9 @@
             </div>
             
             <p><strong>Architecture:</strong> {{ image.general_info.architecture }}</p>
-            <p><strong>Docker Version:</strong> {{ image.general_info.docker_version }}</p>
+            {% if image.general_info.docker_version != "unknown" %}
+                <p><strong>Docker Version:</strong> {{ image.general_info.docker_version }}</p>
+            {% endif %}            
             <p><strong>OS:</strong> {{ image.general_info.os }}</p>
             <p><strong>Created At:</strong> {{ image.general_info.created_at }}</p>
             <p><strong>Size:</strong> {{ image.general_info.size }} MB</p>

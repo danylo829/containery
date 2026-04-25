@@ -3,6 +3,8 @@ from hashlib import sha256
 from urllib.parse import urlparse, urljoin
 
 def format_docker_timestamp(timestamp):
+    if not timestamp:
+        return "unknown"
     dt = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
     return dt.strftime("%H:%M %d-%m-%Y")
 
