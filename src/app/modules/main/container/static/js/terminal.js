@@ -31,22 +31,25 @@ function getContainerSize() {
     return { cols, rows };
 }
 
-const resizeTerminalObserver = new ResizeObserver(entries => {
-    for (let entry of entries) {
-        if (!execId) {
-            return;
-        }
-        const { cols, rows } = getContainerSize();
 
-        socket.emit('resize_session', {
-            exec_id: execId,
-            cols: cols,
-            rows: rows
-        });
-    }
+let resizeTimeout = null;
+function handleResize() {
+    if (!execId) return;
+    const { cols, rows } = getContainerSize();
+    socket.emit('resize_session', {
+        exec_id: execId,
+        cols: cols,
+        rows: rows
+    });
+
+    fitAddon.fit();
+}
+
+const resizeTerminalObserver = new ResizeObserver(() => {
+    if (resizeTimeout) clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(handleResize, 100);
 });
 
-// Disable select when there is any input in custom command
 commandInput.addEventListener('input', function () {
     if (commandInput.value.length > 0) {
         commandSelect.disabled = true;
@@ -58,8 +61,6 @@ commandInput.addEventListener('input', function () {
 form.addEventListener('submit', (event) => {
     event.preventDefault();
 
-    resizeTerminalObserver.observe(container);
-
     const user = document.getElementById('user-field').value;
     const containerId = submitBtn.getAttribute('data-container-id');
 
@@ -70,8 +71,9 @@ form.addEventListener('submit', (event) => {
 
     xterm.loadAddon(fitAddon);
     fitAddon.fit();
-    
     xterm.open(container);
+
+    resizeTerminalObserver.observe(container);
 
     socket = io();
 
