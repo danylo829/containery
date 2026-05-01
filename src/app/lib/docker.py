@@ -172,6 +172,7 @@ class Docker:
                 pending = self._decode_chunked_data(chunked_state, initial_body) if is_chunked else initial_body
                 if pending:
                     initial_data = decoder.decode(pending)
+                    session = self.exec_sessions.get(sid)
                     if initial_data:
                         socketio.emit('output', {'data': initial_data}, to=sid)
 

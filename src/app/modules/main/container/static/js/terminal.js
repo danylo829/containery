@@ -35,14 +35,14 @@ function getContainerSize() {
 let resizeTimeout = null;
 function handleResize() {
     if (!execId) return;
-    const { cols, rows } = getContainerSize();
-    socket.emit('resize_session', {
-        exec_id: execId,
-        cols: cols,
-        rows: rows
-    });
 
+    xterm.write('\x1b[2J\x1b[H');
     fitAddon.fit();
+
+    const cols = xterm.cols;
+    const rows = xterm.rows;
+
+    socket.emit('resize_session', { exec_id: execId, cols, rows });
 }
 
 const resizeTerminalObserver = new ResizeObserver(() => {
