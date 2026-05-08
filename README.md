@@ -99,6 +99,24 @@ server {
 2. To enable static content caching, ensure that the `containery_static` volume is mounted to `/var/www/containery/static/dist` in the NGINX configuration. 
 3. If you do not wish to enable static content caching, you can omit the `containery_static` volume mount and remove the `/static/dist/` location block from the NGINX configuration.
 
+### Adding a Docker Host
+
+Containery supports managing multiple Docker hosts. To register one, go to **Settings → Docker Hosts → Add** and provide a name and URL.
+
+#### Remote host via socket proxy (recommended)
+
+For remote machines, we recommend running [lscr.io/linuxserver/socket-proxy](https://github.com/linuxserver/docker-socket-proxy) on the remote host. It exposes the Docker socket over HTTP and lets you enable only the capabilities you actually need. For example, if you only want to browse images on a remote host, you can enable `IMAGES` and `INFO` alone and leave everything else off for security reasons.
+
+See the [socket proxy documentation](https://github.com/linuxserver/docker-socket-proxy) for setup instructions and the full list of available capabilities.
+
+Once the proxy is running on the remote machine, register it in Containery with:
+- **URL**: `http://<remote-host>:<proxy-port>`
+
+#### Local Unix socket
+
+If you need to connect to a Docker daemon accessible via a Unix socket (e.g. a socket shared through a volume), use:
+- **URL**: `unix:///path/to/docker.sock`
+
 ### Environment variables
 
 #### Docker Configuration

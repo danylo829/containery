@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from time import time
 import json
 
-from app.core.extensions import db
+from app.core.db import db
 from .role import Role, UserRole
 from .helpers import merge_named_list
 
@@ -129,6 +129,15 @@ class PersonalSettings(db.Model):
                 {'name': 'Terminal',  'enabled': True},
             ]
         },
+        'glassmorphism': {
+            'default': 'false',
+        },
+        'glass_background': {
+            'default': 'image:mountains',
+        },
+        'glass_background_url': {
+            'default': '',
+        },
     }
 
     @classmethod
@@ -156,7 +165,7 @@ class PersonalSettings(db.Model):
         db.session.commit()
 
     @classmethod
-    def migrate_all(cls):
+    def migrate(cls):
         """Normalize list-type settings for all users against current defaults.
 
         Generic merge: preserves user 'enabled' flags, removes

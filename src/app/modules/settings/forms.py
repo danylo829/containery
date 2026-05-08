@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, SubmitField
+from wtforms import IntegerField, StringField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, NumberRange
 
 class GlobalSettingsForm(FlaskForm):
@@ -14,3 +14,10 @@ class GlobalSettingsForm(FlaskForm):
                                        validators=[DataRequired(), NumberRange(min=6, max=50)], default=8)
 
     submit = SubmitField('Save')
+
+
+class DockerHostForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    url = StringField('URL', validators=[DataRequired()])
+    enabled = BooleanField('Enabled', default=True)
+    submit = SubmitField('Add Host')

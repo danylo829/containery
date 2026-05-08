@@ -11,7 +11,7 @@
         <!-- General Info Block -->
         <div class="content-card">
             <div class="title">
-                <h2>{{ image.repo_tags[0] }}</h2>
+                <h3>{{ image.repo_tags[0] }}</h3>
                 <div class="actions disable-on-load">
                     <div>
                         <a class="delete-btn" data-id="{{ image.general_info.id }}" title="Delete Image">
@@ -22,7 +22,9 @@
             </div>
             
             <p><strong>Architecture:</strong> {{ image.general_info.architecture }}</p>
-            <p><strong>Docker Version:</strong> {{ image.general_info.docker_version }}</p>
+            {% if image.general_info.docker_version != "unknown" %}
+                <p><strong>Docker Version:</strong> {{ image.general_info.docker_version }}</p>
+            {% endif %}            
             <p><strong>OS:</strong> {{ image.general_info.os }}</p>
             <p><strong>Created At:</strong> {{ image.general_info.created_at }}</p>
             <p><strong>Size:</strong> {{ image.general_info.size }} MB</p>
@@ -43,7 +45,7 @@
 
         <!-- ENV & Labels Block -->
         <div class="content-card">
-            <h2>Environment Variables</h2>
+            <h3>Environment Variables</h3>
             {% if image.env_vars %}
                 <div class="table-box">
                     <table>
@@ -64,7 +66,7 @@
 
         <!-- Labels Block -->
         <div class="content-card">
-            <h2>Labels</h2>
+            <h3>Labels</h3>
             {% if image.labels %}
                 <div class="table-box">
                     <table>

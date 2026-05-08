@@ -43,6 +43,99 @@
     width: 50%;
 }
 
+/* Hosts List Styles */
+.hosts-list-container {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    margin-top: 1rem;
+    padding-right: 0.5rem;
+}
+
+.hosts-table.light-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.hosts-table.light-table th {
+    font-weight: normal;
+    padding: 0.5rem;
+}
+
+.hosts-table.light-table td {
+    padding: 0.75rem 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.hosts-table.light-table tr:last-child td {
+    border-bottom: none;
+}
+
+.hosts-table.light-table .col-status {
+    width: 20px;
+    padding-right: 0;
+    text-align: center;
+}
+
+.hosts-table.light-table .col-number {
+    text-align: center;
+}
+
+.hosts-table-single.light-table th {
+    text-align: left;
+    width: 130px;
+    font-weight: normal;
+    color: var(--bg-color);
+    cursor: default;
+}
+
+.hosts-table-single.light-table tr:first-child th {
+    border-top-left-radius: 10px;
+}
+
+.hosts-table-single.light-table tr:last-child th {
+    border-bottom-left-radius: 10px;
+    border-bottom: none;
+}
+
+.hosts-table-single .host-status-dot {
+    margin-right: 0.4rem;
+    vertical-align: middle;
+}
+
+.hosts-table tr:last-child {
+    border-bottom: none;
+}
+
+.host-name-link {
+    font-weight: bold;
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.host-name-link:hover {
+    color: var(--accent-color);
+}
+
+.host-status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.host-status-dot.online {
+    background-color: var(--success);
+}
+
+.host-status-dot.offline {
+    background-color: var(--error);
+}
+
 .progress-bar {
     position: relative;
     height: 20px;

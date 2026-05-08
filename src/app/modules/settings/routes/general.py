@@ -1,13 +1,13 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import current_user
 
-from .models import GlobalSettings
-from .forms import GlobalSettingsForm
+from app.modules.settings.models import GlobalSettings
+from app.modules.settings.forms import GlobalSettingsForm
 
 from app.modules.user.models import Permissions
 from app.core.decorators import permission
 
-from . import settings
+from app.modules.settings import settings
 
 @settings.route('', methods=['GET', 'POST'])
 @permission(Permissions.GLOBAL_SETTINGS_VIEW)
@@ -48,6 +48,33 @@ def get_list():
                            breadcrumbs=breadcrumbs, 
                            page_title=page_title,
                            form=form)
+
+@settings.route('/update', methods=['POST'])
+@permission(Permissions.GLOBAL_SETTINGS_EDIT)
+def update_setting():
+    data = request.get_json()
+    if not data or len(data) != 1:
+        return jsonify({'error': "Invalid request data"}), 400
+
+    field_name = next(iter(data))
+    field_value = data[field_name]
+    
+    form = GlobalSettingsForm(csrf_enabled=False)
+    
+    if field_name not in form._fields:
+        return jsonify({'error': f"Field '{field_name}' not found"}), 400
+    
+    field = form[field_name]
+    field.process_data(field_value) # Process raw data (e.g. type conversion)
+    
+    if not field.validate(form):
+        return jsonify({'error': field.errors[0]}), 400
+        
+    try:
+        GlobalSettings.set_setting(field_name, field.data)
+        return jsonify({'message': f"{field.label.text} updated successfully"}), 200
+    except Exception as e:
+        return jsonify({'error': "An unexpected error occurred"}), 500
 
 @settings.route('/reset', methods=['POST'])
 @permission(Permissions.GLOBAL_SETTINGS_EDIT)

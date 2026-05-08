@@ -11,7 +11,7 @@
         <!-- General Info Block -->
         <div class="content-card">
             <div class="title">
-                <h2>{{ network.Name }}</h2>
+                <h3>{{ network.Name }}</h3>
                 <div class="actions disable-on-load">
                     <div>
                         <a class="delete-btn" data-id="{{ network.Id }}" title="Delete Network">
@@ -44,7 +44,7 @@
 
         <!-- Containers Block -->
         <div class="content-card">
-            <h2>Containers</h2>
+            <h3>Containers</h3>
             {% if network.Containers %}
                 <div class="table-box">
                     <table>
@@ -74,7 +74,7 @@
 
         <!-- Labels Block -->
         <div class="content-card">
-            <h2>Labels</h2>
+            <h3>Labels</h3>
             {% if network.Labels %}
                 <div class="table-box">
                     <table>

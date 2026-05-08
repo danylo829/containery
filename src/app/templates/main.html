@@ -15,8 +15,16 @@
     {% endassets %}
     {% block custom_header %}
     {% endblock %}
+    {% if PersonalSettings.get_setting(current_user.id, 'glassmorphism') == 'true' %}
+    {% set _css = glass_background_css(
+        PersonalSettings.get_setting(current_user.id, 'glass_background') or 'image:mountains',
+        PersonalSettings.get_setting(current_user.id, 'theme').lower(),
+        PersonalSettings.get_setting(current_user.id, 'glass_background_url') or ''
+    ) %}
+    {% if _css %}<style>{{ _css | safe }}</style>{% endif %}
+    {% endif %}
 </head>
-<body class="{{ PersonalSettings.get_setting(current_user.id, 'theme').lower() }}">
+<body class="{{ PersonalSettings.get_setting(current_user.id, 'theme').lower() }}{{ ' glass' if PersonalSettings.get_setting(current_user.id, 'glassmorphism') == 'true' else '' }}">
     <div class="container">
         <aside class="sidebar{{ ' closed' if session.get('sidebar_state', 'open') == 'closed' else '' }}">
             <div class="sidebar-header">

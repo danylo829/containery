@@ -62,13 +62,16 @@ body {
 
 .content-card.dashboard {
     flex: 1 1 calc(50% - 2rem);
+    display: flex;
+    flex-direction: column;
+    max-height: 360px;
 }
 
 .content-card.single {
     flex: 1 1 calc(100% - 2rem);
 }
 
-.content-card h2 {
+.content-card :is(h2, h3) {
     margin-top: 0;
 }
 
@@ -100,7 +103,7 @@ body {
     display: flex;
     gap: 1rem;
     align-items: center;
-    width: 20vw;
+    width: 40vw;
 }
 
 .search-box .inputs-box:has(#search:only-child) {
@@ -193,6 +196,7 @@ form table tr {
 }
 
 .content-card .table-box {
+    margin-bottom: 1rem;
     max-height: 40vh;
 }
 
@@ -337,16 +341,14 @@ span.delete:hover {
     font-size: 0.9rem;
 }
 
-.status.running {
+.status.running,
+.status.online {
     background-color: var(--success-bg);
     color: var(--success-text);
 }
 
-.status.stopped {
-    background-color: var(--error-bg);
-    color: var(--error-text)
-}
-
+.status.stopped,
+.status.offline,
 .status.exited {
     background-color: var(--error-bg);
     color: var(--error-text)
@@ -354,6 +356,12 @@ span.delete:hover {
 
 .status.paused {
     background-color: var(--info-bg);
+    color: var(--info-text)
+}
+
+.status.unknown,
+.status.loading {
+    background-color: gray;
     color: var(--info-text)
 }
 
@@ -383,4 +391,21 @@ span.delete:hover {
 
 .error-text {
     font-size: x-large;
+}
+
+.label-header {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    margin-bottom: 0;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+.badge {
+    display: inline-block;
+    background-color: var(--accent-color);
+    color: var(--bg-color);
+    padding: 5px 10px;
+    border-radius: 50em;
+    font-size: 0.8em;
 }

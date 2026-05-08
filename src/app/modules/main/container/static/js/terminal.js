@@ -1,10 +1,12 @@
 const form = document.getElementById('start-form');
 const terminalWrapper = document.getElementById('terminal-wrapper');
 const container = document.getElementById('terminal-container');
-const xterm = new Terminal();
 const commandSelect = document.getElementById('command-select');
 const commandInput = document.getElementById('command-input');
 const submitBtn = document.getElementById('submit-btn');
+
+const xterm = new Terminal();
+const fitAddon = new FitAddon.FitAddon();
 
 const slim = new SlimSelect({
     select: '#command-select',
@@ -29,24 +31,25 @@ function getContainerSize() {
     return { cols, rows };
 }
 
-const resizeTerminalObserver = new ResizeObserver(entries => {
-    for (let entry of entries) {
-        if (!execId) {
-            return;
-        }
-        const { cols, rows } = getContainerSize();
 
-        socket.emit('resize_session', {
-            exec_id: execId,
-            cols: cols,
-            rows: rows
-        });
+let resizeTimeout = null;
+function handleResize() {
+    if (!execId) return;
 
-        xterm.resize(cols, rows);
-    }
+    xterm.write('\x1b[2J\x1b[H');
+    fitAddon.fit();
+
+    const cols = xterm.cols;
+    const rows = xterm.rows;
+
+    socket.emit('resize_session', { exec_id: execId, cols, rows });
+}
+
+const resizeTerminalObserver = new ResizeObserver(() => {
+    if (resizeTimeout) clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(handleResize, 100);
 });
 
-// Disable select when there is any input in custom command
 commandInput.addEventListener('input', function () {
     if (commandInput.value.length > 0) {
         commandSelect.disabled = true;
@@ -58,8 +61,6 @@ commandInput.addEventListener('input', function () {
 form.addEventListener('submit', (event) => {
     event.preventDefault();
 
-    resizeTerminalObserver.observe(container);
-
     const user = document.getElementById('user-field').value;
     const containerId = submitBtn.getAttribute('data-container-id');
 
@@ -68,7 +69,11 @@ form.addEventListener('submit', (event) => {
     form.style.display = 'none';
     terminalWrapper.style.display = 'block';
 
+    xterm.loadAddon(fitAddon);
+    fitAddon.fit();
     xterm.open(container);
+
+    resizeTerminalObserver.observe(container);
 
     socket = io();
 

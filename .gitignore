@@ -2,3 +2,5 @@
 build
 dist
 .webassets-cache
+
+.vscode

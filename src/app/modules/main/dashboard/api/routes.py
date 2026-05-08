@@ -1,12 +1,15 @@
 from flask import jsonify, session
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from app.core.extensions import docker
+from app.modules.settings.models import DockerHost
 from app.lib.common import bytes_to_human_readable
 
 import psutil
 import json
 
 from . import api
+
 
 @api.route('/usage', methods=['GET'])
 def get_usage():
@@ -27,42 +30,38 @@ def get_usage():
         load_average=load_average
     )
 
+
 @api.route('/dismiss-update-notification', methods=['POST'])
 def dismiss_update_notification():
     session['dismiss_update_notification'] = True
     return jsonify({'success': True}), 200
 
+
 @api.route('/prune', methods=['POST'])
 def prune():
-    reclaimed_space = 0
-
-    response, status_code = docker.prune_containers()
-    if status_code not in range(200, 300):
-        return jsonify({'message': 'Failed to prune containers'}), status_code
-    reclaimed_space += response.json().get('SpaceReclaimed', 0)
-
+    docker_hosts = DockerHost.query.filter_by(enabled=True).all()
     filters = {"dangling": ["false"]}
     params = {"filters": json.dumps(filters)}
-    response, status_code = docker.prune_images(params=params)
-    if status_code not in range(200, 300):
-        return jsonify({'message': 'Failed to prune images'}), status_code
-    reclaimed_space += response.json().get('SpaceReclaimed', 0)
 
-    response, status_code = docker.prune_volumes()
-    if status_code not in range(200, 300):
-        return jsonify({'message': 'Failed to prune volumes'}), status_code
-    reclaimed_space += response.json().get('SpaceReclaimed', 0)
+    prune_ops = [
+        ('containers', lambda host: docker.prune_containers(host=host), 'SpaceReclaimed'),
+        ('images', lambda host: docker.prune_images(params=params, host=host), 'SpaceReclaimed'),
+        ('volumes', lambda host: docker.prune_volumes(host=host), 'SpaceReclaimed'),
+        ('networks', lambda host: docker.prune_networks(host=host), None),
+        ('build_cache', lambda host: docker.prune_build_cache(host=host), 'SpaceReclaimed'),
+    ]
 
-    response, status_code = docker.prune_networks()
-    if status_code not in range(200, 300):
-        return jsonify({'message': 'Failed to prune networks'}), status_code
-    reclaimed_space += response.json().get('SpaceReclaimed', 0)
+    reclaimed_space = 0
 
-    response, status_code = docker.prune_build_cache()
-    if status_code not in range(200, 300):
-        return jsonify({'message': 'Failed to prune build cache'}), status_code
-    reclaimed_space += response.json().get('SpaceReclaimed', 0)
+    for label, op, space_key in prune_ops:
+        with ThreadPoolExecutor() as executor:
+            futures = {executor.submit(op, host): host for host in docker_hosts}
+            for future in as_completed(futures):
+                response, status_code = future.result()
+                if status_code not in range(200, 300):
+                    return jsonify({'message': f'Failed to prune {label}'}), status_code
+                if space_key:
+                    reclaimed_space += response.json().get(space_key, 0)
 
     message = f"Reclaimed {bytes_to_human_readable(reclaimed_space)} of disk space."
-
     return jsonify({'message': message}), 200

@@ -7,13 +7,15 @@ document.querySelectorAll('.settings-btn').forEach(button => {
 });
 
 async function openDraggableListModal() {
+    if (modalOpened) return;
+    modalOpened = true;
+    
     const url = '/container/list/settings';
     const method = 'GET';
 
-    const spinner = document.querySelector('.loading-spinner');
     const disable_on_load = document.querySelector('.disable-on-load');
 
-    spinner.classList.remove('hidden');
+    showSpinner();
 
     if (disable_on_load) {
         disable_on_load.classList.add('disabled');
@@ -76,7 +78,7 @@ async function openDraggableListModal() {
             if (event.target === modalContent) closeDraggableListModal();
         });
 
-        spinner.classList.add('hidden');
+        hideSpinner();
 
         if (disable_on_load) {
             disable_on_load.classList.remove('disabled');
@@ -84,14 +86,17 @@ async function openDraggableListModal() {
     } else {
         handleError(new Error('Failed to fetch modal content'));
     }
-
-    modalOpened = true;
 }
 
 function closeDraggableListModal() {
     const modal = document.getElementById('containerListSettingsModal');
-    if (modal) modal.remove();
-    modalOpened = false;
+    if (modal) {
+        modal.classList.add('closing');
+        modal.addEventListener('animationend', () => {
+            modal.remove();
+            modalOpened = false;
+        }, { once: true });
+    }
 }
 
 // === drag logic ===

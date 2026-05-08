@@ -27,7 +27,7 @@
     <div class="role-list" data-user-id="{{ user.id }}">
         {% for role in user.get_roles() %}
             <div class="role-item" id="role-item-{{ role.id }}">
-                <span class="role-badge">{{ role.name }}</span>
+                <span class="badge">{{ role.name }}</span>
                 <div class="actions disable-on-load">
                     <div>
                         <a class="delete-role" data-role-id="{{ role.id }}" title="Remove Role">
@@ -52,7 +52,7 @@
 
 {% if current_user.id != user.id %}
     <div class="content-card">
-        <h2>Security</h2>
+        <h3>Security</h3>
         <h3>Change user's password</h3>
         <form method="POST" action="{{ url_for('user.view_profile', id=user.id) }}">
             {{ password_form.csrf_token(id = 'password_csrf') }}

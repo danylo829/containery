@@ -1,6 +1,9 @@
 {% extends "main.html" %}
+{% from 'box-top-panel-macros.html' import box_top_panel %}
 
 {% block custom_header %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/lib/slim-select/slimselect.css') }}"/>
+    <script src="{{ url_for('static', filename='dist/lib/slim-select/slimselect.js') }}" defer></script>
     {% assets "container_logs_js" %}
         <script src="{{ ASSET_URL }}" defer></script>
     {% endassets %}
@@ -11,17 +14,18 @@
 
 {% block content %}
 <div class="content-box">
-    <div class="search-box">
+    {% set extra_inputs %}
     <div class="lines-input">
         <span>Lines</span>
         <input type="number" id="log-lines" value="{{ tail }}" min="0" max="5000" step="10">
     </div>
-    <a id="refresh-page-btn" title="Refresh">
-        {% include 'icons/restart.svg' %}
-    </a>
-    </div>
-    <div class="log-box">
-        <textarea id="log-textarea" readonly>{{ log_text }}</textarea>
-    </div>
+    <select name="stream" id="stream">
+        <option value="all" {% if stream == 'all' %}selected{% endif %}>all</option>
+        <option value="stdout" {% if stream == 'stdout' %}selected{% endif %}>stdout</option>
+        <option value="stderr" {% if stream == 'stderr' %}selected{% endif %}>stderr</option>
+    </select>
+    {% endset %}
+    {{ box_top_panel(extra_buttons, extra_inputs, enable_search=False) }}
+    <textarea id="log-textarea" readonly>{{ log_text }}</textarea>
 </div>
 {% endblock %}

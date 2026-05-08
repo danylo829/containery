@@ -1,8 +1,10 @@
 {# templates/box-top-panel-macros.html #}
-{% macro box_top_panel(extra_actions='', extra_inputs='') %}
+{% macro box_top_panel(extra_actions='', extra_inputs='', enable_search=True) %}
 <div class="search-box">
     <div class="inputs-box">
+        {% if enable_search %}
         <input type="search" id="search" placeholder="Search">
+        {% endif %}
         {{ extra_inputs | safe }}
     </div>
     <div class="actions disable-on-load">

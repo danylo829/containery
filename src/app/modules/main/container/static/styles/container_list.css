@@ -4,8 +4,10 @@
 }
 
 .draggable-modal-header {
-  text-align: center;
+  text-align: left;
   margin-bottom: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
 .draggable-list {
@@ -42,6 +44,36 @@
   gap: 6px;
 }
 
+.container-list-settings-group {
+  margin-bottom: 3rem;
+}
+
+.header-with-hint {
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.drag-hint {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    font-weight: normal;
+}
+
+.drag-handle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.handle-part {
+    font-size: 1rem;
+    line-height: 0.4em;
+    user-select: none;
+}
+
 .container-list-settings-buttons {
   margin-top: 15px;
   display: flex;
@@ -51,7 +83,7 @@
 
 .quick-actions-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .quick-action-item {
@@ -59,6 +91,9 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem;
+  justify-content: space-between;
+  border-bottom: 1px solid gray;
+  margin: 1rem;
 }
 
 .quick-action-item span {

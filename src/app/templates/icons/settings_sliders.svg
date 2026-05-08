@@ -1,0 +1,7 @@
+<svg class="icons" id="settings-sliders-icon" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="2" y1="6" x2="22" y2="6" />
+    <circle id="slider-1" cx="8" cy="6" r="3" fill="currentColor" />
+    
+    <line x1="2" y1="18" x2="22" y2="18" />
+    <circle id="slider-2" cx="16" cy="18" r="3" fill="currentColor" />
+</svg>

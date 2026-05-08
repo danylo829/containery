@@ -8,6 +8,24 @@ class PersonalSettingsForm(FlaskForm):
         choices=[('light', 'Light'), ('dark', 'Dark'), ('dark_mixed', 'Dark Mixed'), ('system', 'System')],
         default='system'
     )
+    glassmorphism = BooleanField('Glassmorphism', default=True)
+    glass_background = SelectField(
+        'Background',
+        choices=[
+            ('image:mountains', 'Mountains'),
+            ('image:forest',    'Forest'),
+            ('image:space',     'Space'),
+            ('gradient:aurora',    'Gradient: Aurora'),
+            ('gradient:ocean',     'Gradient: Ocean'),
+            ('gradient:midnight',  'Gradient: Midnight'),
+            ('gradient:peach',     'Gradient: Peach Sky'),
+            ('gradient:mist',      'Gradient: Cool Mist'),
+            ('none',               'Plain (no background)'),
+            ('custom',             'Custom URL'),
+        ],
+        default='image:mountains'
+    )
+    glass_background_url = StringField('Custom Background URL')
     submit = SubmitField('Save Changes', name='submit_settings')
 
 class ChangeOwnPasswordForm(FlaskForm):

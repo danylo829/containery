@@ -21,6 +21,9 @@ def profile():
 
     if settings_form.submit.data and settings_form.validate_on_submit():
         PersonalSettings.set_setting(current_user.id, 'theme', settings_form.theme.data)
+        PersonalSettings.set_setting(current_user.id, 'glassmorphism', 'true' if settings_form.glassmorphism.data else 'false')
+        PersonalSettings.set_setting(current_user.id, 'glass_background', settings_form.glass_background.data)
+        PersonalSettings.set_setting(current_user.id, 'glass_background_url', settings_form.glass_background_url.data or '')
         
         flash('Settings updated successfully!', 'success')
         return redirect(url_for('user.profile'))
@@ -35,6 +38,9 @@ def profile():
     
     # Set form data based on current settings
     settings_form.theme.data = PersonalSettings.get_setting(current_user.id, 'theme')
+    settings_form.glassmorphism.data = PersonalSettings.get_setting(current_user.id, 'glassmorphism') == 'true'
+    settings_form.glass_background.data = PersonalSettings.get_setting(current_user.id, 'glass_background') or 'image:mountains'
+    settings_form.glass_background_url.data = PersonalSettings.get_setting(current_user.id, 'glass_background_url') or ''
 
     breadcrumbs = [
         {"name": "Dashboard", "url": url_for('main.dashboard.index')},

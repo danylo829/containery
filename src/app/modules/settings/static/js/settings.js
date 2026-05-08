@@ -1,8 +1,122 @@
-function resetSetting(fieldName) {
-    spinner.classList.remove('hidden');
-    actions.classList.add('disabled');
+// Docker Hosts Management
+document.querySelectorAll('.status').forEach(statusElem => {
+    const id = statusElem.getAttribute('data-id');
+    const versionSpan = document.getElementById(`version-${id}`);
+    const checkStartedAt = Date.now();
 
-    fetch(`/settings/reset`, {
+    statusElem.textContent = 'Loading';
+    statusElem.classList.remove('unknown', 'online', 'offline');
+    statusElem.classList.add('loading');
+
+    showSpinner();
+    disableAllActions();
+
+    fetch(`/settings/docker-hosts/check/${id}`)
+    .then(async response => {
+        const elapsed = Date.now() - checkStartedAt;
+        if (elapsed < 500) {
+            await sleep(500 - elapsed);
+        }
+
+        if (response.status === 200) {
+            const data = await response.json();
+            
+            statusElem.classList.remove('loading', 'unknown', 'offline');
+            statusElem.textContent = 'Online';
+            statusElem.classList.add('online');
+            
+            if (versionSpan) {
+                versionSpan.textContent = `v${data.version}`;
+                versionSpan.classList.remove('hide');
+            }
+        } else {
+            statusElem.classList.remove('loading', 'unknown', 'online');
+            statusElem.textContent = 'Offline';
+            statusElem.classList.add('offline');
+            if (versionSpan) {
+                versionSpan.classList.add('hide');
+            }
+        }
+    })
+    .catch(async () => {
+        const elapsed = Date.now() - checkStartedAt;
+        if (elapsed < 500) {
+            await sleep(500 - elapsed);
+        }
+
+        statusElem.textContent = 'Unknown';
+        statusElem.classList.remove('loading', 'online', 'offline');
+        statusElem.classList.add('unknown');
+    }).finally(() => {
+        hideSpinner();
+        enableAllActions();
+    });
+});
+
+document.querySelectorAll('.url-input').forEach(input => {
+    input.addEventListener('change', function() {
+        const id = this.getAttribute('data-id');
+        const url = this.value;
+
+        if (!url) return;
+
+        showSpinner();
+        disableAllActions();
+
+        fetch(`/settings/docker-hosts/edit/${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({
+                url: url
+            })
+        })
+        .then(response => handleResponse(response))
+        .catch(error => handleError(error))
+    });
+});
+
+document.querySelectorAll('.delete-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        const id = this.getAttribute('data-id');
+        openModal(`/settings/docker-hosts/delete/${id}`, 'POST', 'Are you sure you want to delete this docker host?', '/settings/docker-hosts');
+    });
+});
+
+document.querySelectorAll('.enable-checkbox').forEach(checkbox => {
+    checkbox.addEventListener('change', async function() {
+        const id = this.getAttribute('data-id');
+        const isEnabled = this.checked;
+
+        showSpinner();
+        disableAllActions();
+
+        // Wait to finish checkbox animation
+        await sleep(500); 
+
+        fetch(`/settings/docker-hosts/edit/${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({
+                enabled: isEnabled
+            })
+        })
+        .then(response => handleResponse(response))
+        .catch(error => handleError(error))
+    });
+});
+
+// Settings
+function resetSetting(fieldName) {
+    showSpinner();
+    disableAllActions();
+
+    fetch('/settings/reset', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -15,3 +129,100 @@ function resetSetting(fieldName) {
     .then(response => handleResponse(response))
     .catch(error => handleError(error))
 }
+
+// Test Connection
+const testConnectionBtn = document.getElementById('test-connection-btn');
+if (testConnectionBtn) {
+    testConnectionBtn.addEventListener('click', async function(e) {
+        e.preventDefault();
+        const urlInput = document.getElementById('docker-host-url');
+        const url = urlInput.value;
+
+        if (!url) {
+            showFlashMessage('Please enter a URL first.', 'error');
+            return;
+        }
+
+        showSpinner();
+        disableAllActions();
+
+        // Wait a bit for UI update
+        await sleep(500);
+
+        fetch('/settings/docker-hosts/test-connection', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({
+                url: url
+            })
+        })
+        .then(response => {
+             if (response.ok) {
+                return response.json().then(data => {
+                    showFlashMessage(`Success: ${data.message} (v${data.version})`, 'success');
+                });
+             } else {
+                 return response.json().then(data => {
+                     showFlashMessage(`Error: ${data.message}`, 'error');
+                 });
+             }
+        })
+        .catch(error => {
+            showFlashMessage('An error occurred.', 'error');
+            console.error(error);
+        })
+        .finally(() => {
+            hideSpinner();
+            enableAllActions();
+        });
+    });
+}
+
+document.querySelectorAll('.setting-input').forEach(input => {
+    input.addEventListener('change', function() {
+        const fieldName = this.name;
+        let value = this.value;
+
+        if (value === undefined || value === null || value === '') {
+            showFlashMessage('Invalid input value', 'error');
+            return;
+        }
+        
+        if (this.type === 'checkbox') {
+            value = this.checked;
+        }
+
+        this.classList.remove('error');
+        this.classList.remove('success');
+
+        fetch('/settings/update', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({
+                [fieldName]: value
+            })
+        })
+        .then(async response => {
+            const data = await response.json();
+            if (response.ok) {
+                this.classList.add('success');
+                setTimeout(() => {
+                    this.classList.remove('success');
+                }, 2000);
+            } else {
+                showFlashMessage(data.error || 'Failed to save', 'error');
+                this.classList.add('error');
+            }
+        })
+        .catch(error => {
+            handleError(error);
+            this.classList.add('error');
+        });
+    });
+});

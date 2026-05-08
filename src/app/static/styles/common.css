@@ -24,7 +24,7 @@
 body {
     /* Custom select global vars */
     --ss-border-radius: 10px !important;
-    --ss-main-height: 3rem !important;
+    --ss-main-height: 2.5rem !important;
 }
 
 ul {
@@ -46,4 +46,36 @@ hr {
 
 .align-center {
     align-items: center;
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 50vh;
+    text-align: center;
+    opacity: 0.7;
+}
+
+.empty-state h3 {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.empty-state p {
+    margin: 0;
+}
+
+.hosts-list-container .empty-state {
+    height: auto;
+    min-height: 0;
+    padding: 0;
+}
+
+.hosts-list-container:has(.empty-state) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
