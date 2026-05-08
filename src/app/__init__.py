@@ -34,7 +34,6 @@ class ApplicationFactory:
         self.socketio.init_app(app)
         self.csrf.init_app(app)
         self.assets.init_app(app)
-        self.docker.init_app(app)
 
         self.login_manager.init_app(app)
         self.login_manager.login_view = 'auth.login'
