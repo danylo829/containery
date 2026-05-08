@@ -4,6 +4,7 @@ info:
   title: CHANGELOG
   repository_url: https://github.com/danylo829/containery
 options:
+  tag_filter_pattern: '^v'
   commits:
     filters:
       Type:

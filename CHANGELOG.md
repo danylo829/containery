@@ -1,4 +1,48 @@
 
+<a name="v1.3"></a>
+## [v1.3](https://github.com/danylo829/containery/compare/v1.2...v1.3)
+
+### Bug Fixes
+
+- **core:** Fix init after migration
+- **core:** Fix Docker init
+- **core:** Improve version validation in update check
+- **core:** Update migration configuration
+- **core:** Fix image, volume and network deletion
+- **dashboard:** Disable "Clean All" button on load
+- **style:** Fix custom select display
+- **style:** Fix number input styles
+- **style:** Update select dropdown
+- **style:** Fix sidebar icons width in closed state
+- **style:** Ensure responsive layout for permissions grid on mobile
+- **style:** Update sidebar navigation styles for certain devices
+- **style:** Fix mobile sidebar, change to bottom layout
+- **style:** Fix inputs height for large screens
+- **user:** Preserve user defined order of container list settings
+
+### Code Refactoring
+
+- **style:** Reworked colors and theme logic
+- **style:** Rework and optimize styles
+- **user:** Increase stability and maintainability, improve some UI elements
+
+### Features
+
+- **container:** Add containers list customization
+- **container:** Add sorting by compose project in containers list
+- **core:** Add multiple Docker hosts support
+- **core:** Add startup ASCII art
+- **core:** Add seed script to populate database with synthetic test data
+- **core:** Implement personal settings migration, improve container list customization
+- **core:** Add last lines parameter to logs retrieval
+- **style:** Improve visual appearance of select inputs
+
+### Performance Improvements
+
+- **core:** Add auto reload page on CSRF errors
+- **core:** Switch to Alpine base image
+
+
 <a name="v1.2"></a>
 ## [v1.2](https://github.com/danylo829/containery/compare/v1.1...v1.2)
 
