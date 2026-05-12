@@ -49,7 +49,7 @@ def index():
         page_title=page_title,
         show_update_notification=show_update_notification,
         latest_version=latest_version,
-        installed_version=Config.VERSION
+        installed_version=Config.VERSION.lstrip('v')
     )
 
 @dashboard.route('/info', methods=['GET'])
