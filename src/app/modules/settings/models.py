@@ -6,7 +6,7 @@ class DockerHost(db.Model):
     __tablename__ = 'stg_docker_hosts'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), unique=True, nullable=False)
-    url = db.Column(db.String(255), nullable=False)
+    url = db.Column(db.String(255), unique=True, nullable=False)
     enabled = db.Column(db.Boolean, default=True)
 
     @property

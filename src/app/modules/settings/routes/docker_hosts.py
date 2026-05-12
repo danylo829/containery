@@ -39,10 +39,13 @@ def add_docker_host():
         return render_template('error.html', message=message, code=code), code
 
     if form.validate_on_submit():
-        # Simple uniqueness check for name before attempting to insert
-        existing = DockerHost.query.filter_by(name=form.name.data.strip()).first()
-        if existing:
+        name = form.name.data.strip()
+        url = form.url.data.strip()
+        
+        if DockerHost.query.filter_by(name=name).first():
             flash('A host with this name already exists.', 'error')
+        elif DockerHost.query.filter_by(url=url).first():
+            flash('A host with this URL already exists.', 'error')
         else:
             try:
                 DockerHost.add(
@@ -74,9 +77,9 @@ def delete_docker_host(host_id):
     host = DockerHost.query.get_or_404(host_id)
     try:
         host.delete()
-        return jsonify({'message': 'User deleted successfully.'}), 200
+        return jsonify({'message': 'Docker host deleted successfully.'}), 200
     except Exception as e:
-        return jsonify({'message': 'Failed to delete user.'}), 500
+        return jsonify({'message': 'Failed to delete docker host.'}), 500
     
 @settings.route('/docker-hosts/edit/<int:host_id>', methods=['POST'])
 @permission(Permissions.GLOBAL_SETTINGS_EDIT)
@@ -117,7 +120,6 @@ def test_docker_host_connection():
     if not url:
         return jsonify({'message': 'URL is required.'}), 400
     
-    # Create a temporary host object (not saved to DB)
     host = DockerHost(url=url)
     
     try:
