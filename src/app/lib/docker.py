@@ -166,7 +166,7 @@ class Docker:
 
             try:
                 decoder = codecs.getincrementaldecoder('utf-8')(errors='replace')
-                sock.settimeout(30)
+                sock.settimeout(3600)
 
                 # Some Docker variants send initial payload bytes with headers.
                 pending = self._decode_chunked_data(chunked_state, initial_body) if is_chunked else initial_body
