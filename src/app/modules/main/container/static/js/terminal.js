@@ -33,6 +33,7 @@ function getContainerSize() {
 
 
 let resizeTimeout = null;
+let observerInitialized = false;
 function handleResize() {
     if (!execId) return;
 
@@ -46,6 +47,10 @@ function handleResize() {
 }
 
 const resizeTerminalObserver = new ResizeObserver(() => {
+    if (!observerInitialized) {
+        observerInitialized = true;
+        return; // skip initial fire on .observe()
+    }
     if (resizeTimeout) clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(handleResize, 100);
 });
@@ -72,7 +77,6 @@ form.addEventListener('submit', (event) => {
     xterm.loadAddon(fitAddon);
     fitAddon.fit();
     xterm.open(container);
-
     resizeTerminalObserver.observe(container);
 
     socket = io();
