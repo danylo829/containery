@@ -101,7 +101,9 @@
                     </div>
                 </div>
                 <div class="user-section">
-                    {% include 'icons/user.svg' %}  
+                    <button class="user-icon-btn">
+                        {% include 'icons/user.svg' %}  
+                    </button>
                     <div class="user-panel" id="userPanel">
                         <a href="{{ url_for('user.profile') }}">{{ current_user.username }}</a>
                         <a id="logout" href="{{ url_for('auth.logout') }}">

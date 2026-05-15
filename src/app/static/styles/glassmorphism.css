@@ -241,6 +241,14 @@ body.glass .user-panel.open {
     box-shadow: var(--glass-shadow) !important;
 }
 
+body.glass .user-icon-btn {
+    background: var(--glass-bg) !important;
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border) !important;
+    box-shadow: var(--glass-shadow) !important;
+}
+
 body.glass .lines-input input {
   border: none !important;
 }

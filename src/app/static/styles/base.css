@@ -243,13 +243,25 @@ a:hover {
 .user-section {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 1rem;
+}
+
+.user-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-color-box);
+    border: none;
+    border-radius: 10px;
+    padding: 0.5rem;
+    box-shadow: 0 0 10px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    color: var(--text-color);
 }
 
 .user-panel {
     width: 0;
-    height: 100%;
+    align-self: stretch;
     border-radius: 10px;
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     overflow: hidden;
@@ -271,7 +283,7 @@ a:hover {
 
 .user-panel.open {
     width: 125px;
-    padding: 0.5rem;
+    padding: 0 0.5rem;
     box-shadow: 0 0 10px 6px rgba(0, 0, 0, 0.1);
 }
 
