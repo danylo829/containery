@@ -40,6 +40,12 @@ body {
     align-items: unset;
 }
 
+.content-card.ghost {
+    background: none;
+    box-shadow: none;
+    padding: 0;
+}
+
 .content-box {
     background-color: var(--bg-color-box);
     border-radius: 10px;

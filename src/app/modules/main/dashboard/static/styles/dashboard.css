@@ -5,9 +5,9 @@
 }
 
 .dashboard-button {
-    background-color: var(--bg-color);
+    background-color: var(--bg-color-box);
     color: var(--text-color);
-    border: 1px solid grey;
+    border: none;
     border-radius: 10px;
     padding: 2rem;
     font-size: 1.2rem;
@@ -16,11 +16,12 @@
     align-items: center;
     gap: 1rem;
     flex: 1 1;
-    transition: border 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 0 10px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .dashboard-button:hover {
-    border: 1px solid var(--accent-color);
+    box-shadow: 0 0 14px 8px rgba(0, 0, 0, 0.15);
     color: var(--text-color);
     text-decoration: none;
 }
