@@ -1,4 +1,20 @@
 
+<a name="v1.3.1"></a>
+## [v1.3.1](https://github.com/danylo829/containery/compare/v1.3...v1.3.1)
+
+### Bug Fixes
+
+- **container:** Fix exec error display
+- **core:** Ensure unique URL for Docker hosts
+- **dashboard:** Correct version format in notification
+- **style:** Increase user button visibility on light themes
+
+### Performance Improvements
+
+- **docker:** Increase container exec timeout
+- **style:** Enchance styles of dashboard buttons
+
+
 <a name="v1.3"></a>
 ## [v1.3](https://github.com/danylo829/containery/compare/v1.2...v1.3)
 
