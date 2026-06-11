@@ -16,36 +16,50 @@
 {% endblock %}
 
 {% block content %}
-<div class="content-box">
-    <form id="start-form">
-        <div class="table-box">
-            <table>
-                <tr>
-                    <td><strong>Command</strong></td>
-                    <td>
-                        <select name="command" id="command-select">
-                            <option value="/bin/bash">/bin/bash</option>
-                            <option value="/bin/sh">/bin/sh</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr></tr>
-                    <td><strong>Custom command</strong></td>
-                    <td>
-                        <input type="text" id="command-input" name="command" placeholder="Custom command">
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>User</strong></td>
-                    <td>
-                        <input type="text" id="user-field" name="user" value="root" required>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <input id="submit-btn" type="submit" data-container-id="{{ container_id }}" value="Exec">
-    </form>
+<div id="terminal-settings-modal" class="modal" style="display: none;">
+    <div class="modal-content terminal-modal-content">
+        <h2 id="modalQuestion">Terminal Settings</h2>
+        <form id="start-form" class="terminal-settings-form">
+            <div class="form-group">
+                <label>Command</label>
+                <select name="command" id="command-select">
+                    <option value="/bin/bash">/bin/bash</option>
+                    <option value="/bin/sh">/bin/sh</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Custom command</label>
+                <input type="text" id="command-input" name="command" placeholder="e.g. /bin/zsh">
+            </div>
+            <div class="form-group">
+                <label>User</label>
+                <input type="text" id="user-field" name="user" placeholder="Default">
+            </div>
+            <div class="form-group">
+                <label>Flags</label>
+                <div class="flags-container">
+                    <div class="flag-item">
+                        <span>Interactive</span>
+                        <input type="checkbox" id="interactive-flag" name="interactive" checked>
+                        <label for="interactive-flag"></label>
+                    </div>
+                    <div class="flag-item">
+                        <span>TTY</span>
+                        <input type="checkbox" id="tty-flag" name="tty" checked>
+                        <label for="tty-flag"></label>
+                    </div>
+                </div>
+            </div>
 
+            <div class="button-group">
+                <a href="{{ url_for('main.container.info', id=container_id) }}" class="btn cancel cancel-btn">Cancel</a>
+                <input class="btn confirm" id="submit-btn" type="submit" data-container-id="{{ container_id }}" value="Exec">
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="content-box terminal-main-box">
     <div class="terminal-wrapper" id="terminal-wrapper" style="display: none;">
         <div id="terminal-container"></div>
     </div>

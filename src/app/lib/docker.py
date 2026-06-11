@@ -91,7 +91,7 @@ class Docker:
             return exec_instance_json.get("Id")
         return None
 
-    def start_exec_session(self, exec_id, sid, socketio, host, console_size=None):
+    def start_exec_session(self, exec_id, sid, socketio, host, console_size=None, tty=True):
         """Start an exec session and handle IO"""
         try:
             if not host or not host.enabled:
@@ -111,7 +111,7 @@ class Docker:
 
             start_payload = {
                 "Detach": False,
-                "Tty": True
+                "Tty": tty
             }
             if console_size:
                 start_payload["ConsoleSize"] = console_size
@@ -168,13 +168,31 @@ class Docker:
                 decoder = codecs.getincrementaldecoder('utf-8')(errors='replace')
                 sock.settimeout(3600)
 
-                # Some Docker variants send initial payload bytes with headers.
                 pending = self._decode_chunked_data(chunked_state, initial_body) if is_chunked else initial_body
-                if pending:
-                    initial_data = decoder.decode(pending)
-                    session = self.exec_sessions.get(sid)
-                    if initial_data:
-                        socketio.emit('output', {'data': initial_data}, to=sid)
+                demux_buffer = b""
+
+                def process_chunk(raw_chunk):
+                    nonlocal demux_buffer
+                    if not raw_chunk:
+                        return
+                    if tty:
+                        decoded = decoder.decode(raw_chunk)
+                        if decoded:
+                            socketio.emit('output', {'data': decoded}, to=sid)
+                    else:
+                        demux_buffer += raw_chunk
+                        while len(demux_buffer) >= 8:
+                            size_bytes = demux_buffer[4:8]
+                            size = (size_bytes[0] << 24) + (size_bytes[1] << 16) + (size_bytes[2] << 8) + size_bytes[3]
+                            if len(demux_buffer) < 8 + size:
+                                break
+                            payload = demux_buffer[8:8+size]
+                            demux_buffer = demux_buffer[8+size:]
+                            decoded = decoder.decode(payload)
+                            if decoded:
+                                socketio.emit('output', {'data': decoded}, to=sid)
+
+                process_chunk(pending)
 
                 while True:
                     if sid not in self.exec_sessions:
@@ -186,16 +204,12 @@ class Docker:
 
                     if is_chunked:
                         chunk = self._decode_chunked_data(chunked_state, chunk)
-                        if not chunk:
-                            continue
 
-                    data = decoder.decode(chunk)
-                    if data:
-                        socketio.emit('output', {'data': data}, to=sid)
+                    process_chunk(chunk)
 
-                data = decoder.decode(b'', final=True)
-                if data:
-                    socketio.emit('output', {'data': data}, to=sid)
+                final_data = decoder.decode(b'', final=True)
+                if final_data:
+                    socketio.emit('output', {'data': final_data}, to=sid)
 
             except Exception as e:
                 socketio.emit('output', {'data': f"Error: {str(e)}"}, to=sid)

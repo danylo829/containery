@@ -1,3 +1,4 @@
+const modal = document.getElementById('terminal-settings-modal');
 const form = document.getElementById('start-form');
 const terminalWrapper = document.getElementById('terminal-wrapper');
 const container = document.getElementById('terminal-container');
@@ -21,6 +22,10 @@ const charHeight = 17;
 let socket;
 let execId;
 
+if (modal) {
+    modal.style.display = 'flex';
+}
+
 function getContainerSize() {
     const { width, height } = container.getBoundingClientRect();
 
@@ -30,7 +35,6 @@ function getContainerSize() {
 
     return { cols, rows };
 }
-
 
 let resizeTimeout = null;
 let observerInitialized = false;
@@ -70,6 +74,12 @@ form.addEventListener('submit', (event) => {
     const containerId = submitBtn.getAttribute('data-container-id');
 
     const command = commandInput.value.length > 0 ? commandInput.value : commandSelect.value;
+    const interactive = document.getElementById('interactive-flag').checked;
+    const tty = document.getElementById('tty-flag').checked;
+
+    if (modal) {
+        modal.style.display = 'none';
+    }
 
     form.style.display = 'none';
     terminalWrapper.style.display = 'block';
@@ -87,6 +97,8 @@ form.addEventListener('submit', (event) => {
         container_id: containerId,
         user: user,
         command: command,
+        interactive: interactive,
+        tty: tty,
         consoleSize: [rows, cols]
     });
 

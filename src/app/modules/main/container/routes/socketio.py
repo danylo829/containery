@@ -20,8 +20,20 @@ def handle_start_session(data):
         emit('output', {'data': 'Could not find a host for this container.\r\n'})
         return
 
+    interactive = data.get('interactive', True)
+    tty = data.get('tty', True)
+
     exec_create_endpoint = f"/containers/{container_id}/exec"
-    payload = {"AttachStdin": True, "AttachStdout": True, "AttachStderr": True, "Tty": True, "Cmd": command.split(), "User": user}
+    payload = {
+        "AttachStdin": interactive,
+        "AttachStdout": True,
+        "AttachStderr": True,
+        "Tty": tty,
+        "Cmd": command.split(),
+    }
+    
+    if user:
+        payload["User"] = user
 
     exec_id = docker.create_exec(exec_create_endpoint, payload=payload, host=host)
 
@@ -36,7 +48,8 @@ def handle_start_session(data):
                                    sid=sid,
                                    socketio=socketio,
                                    host=host,
-                                   console_size=console_size)
+                                   console_size=console_size,
+                                   tty=tty)
 
 @socketio.on('input')
 def handle_command(data):

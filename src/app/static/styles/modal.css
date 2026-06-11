@@ -19,7 +19,7 @@
     width: 25vw;
     border-radius: 16px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-    animation: slide-down 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    animation: slide-down 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
     max-height: 90vh;
     overflow-y: auto;
     border: 1px solid rgba(255, 255, 255, 0.1);

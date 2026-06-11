@@ -70,12 +70,14 @@ input[type="checkbox"] + label {
     display: inline-block;
     width: 40px;
     height: 20px;
+    box-sizing: content-box;
     background-color: var(--bg-color);
     border: 1px solid var(--accent-color);
     border-radius: 20px;
     vertical-align: middle;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transform: translateZ(0);
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 input[type="checkbox"] + label:before {
@@ -84,10 +86,12 @@ input[type="checkbox"] + label:before {
     width: 16px;
     height: 16px;
     left: 2px;
-    bottom: 2px;
+    top: 50%;
+    margin-top: -8px;
+    transform: translateX(0);
     background-color: var(--text-color);
     border-radius: 50%;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 input[type="checkbox"]:checked + label {
