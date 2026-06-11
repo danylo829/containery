@@ -2,6 +2,8 @@
 {% from 'box-top-panel-macros.html' import box_top_panel %}
 
 {% block custom_header %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/lib/slim-select/slimselect.css') }}"/>
+    <script src="{{ url_for('static', filename='dist/lib/slim-select/slimselect.js') }}" defer></script>
     {% assets "volume_js" %}
         <script src="{{ ASSET_URL }}" defer></script>
     {% endassets %}
@@ -10,13 +12,30 @@
 {% block content %}
 <div class="content-box">
     {% set extra_buttons %}
+        {% if selected_docker_hosts_ids %}
+            <a class="clear-filters-btn" title="Clear filters" style="cursor: pointer;">
+                {% include 'icons/filter_clear.svg' %}
+            </a>
+        {% endif %}
         {% if current_user.has_permission(Permissions.VOLUME_DELETE) %}
             <a class="prune-btn" title="Prune unused volumes">
                 {% include 'icons/prune.svg' %}
             </a>
         {% endif %}
     {% endset %}
-    {{ box_top_panel(extra_buttons) }}
+    {% set extra_inputs %}
+        {% if docker_hosts | length > 1 %}
+        <select name="docker_host" id="docker_host" multiple>
+            {% for item in docker_hosts %}
+                <option value="{{ item.id }}"
+                    {% if item.id in selected_docker_hosts_ids %}selected{% endif %}>
+                    {{ item.name }}
+                </option>
+            {% endfor %}
+        </select>
+        {% endif %}
+    {% endset %}
+    {{ box_top_panel(extra_buttons, extra_inputs) }}
     <div class="table-box">
         <table id="volume-table">
             <thead>

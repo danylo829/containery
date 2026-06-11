@@ -94,3 +94,40 @@ const attachFilter = (selector, paramName, placeholder, search) => {
         }
     });
 };
+
+function initFilters(filtersConfig) {
+    if (typeof SlimSelect === 'undefined') return;
+
+    const url = new URL(window.location);
+    let redirect = false;
+
+    filtersConfig.forEach(filter => {
+        const urlVal = url.searchParams.get(filter.paramName);
+        const lsVal = localStorage.getItem(filter.paramName + '_filter');
+
+        if (urlVal !== null) {
+            localStorage.setItem(filter.paramName + '_filter', urlVal);
+        } else if (lsVal) {
+            url.searchParams.set(filter.paramName, lsVal);
+            redirect = true;
+        }
+    });
+
+    if (redirect) {
+        window.location.replace(url.toString());
+        return;
+    }
+
+    filtersConfig.forEach(filter => {
+        attachFilter(filter.selector, filter.paramName, filter.placeholder, filter.search);
+    });
+
+    document.querySelectorAll('.clear-filters-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            filtersConfig.forEach(filter => {
+                localStorage.removeItem(filter.paramName + '_filter');
+            });
+            window.location.href = window.location.pathname;
+        });
+    });
+}

@@ -1,4 +1,4 @@
-from flask import render_template, url_for
+from flask import render_template, url_for, request
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import json
@@ -49,11 +49,15 @@ def network_info(id):
 @network.route('/list', methods=['GET'])
 @permission(Permissions.NETWORK_VIEW_LIST)
 def get_list():
+    selected_docker_hosts_ids = [int(d.strip()) for d in request.args.get('docker_host', '').split(',')] if request.args.get('docker_host') else []
+
     docker_hosts = DockerHost.query.filter_by(enabled=True).all()
+    hosts_to_query = [h for h in docker_hosts if not selected_docker_hosts_ids or h.id in selected_docker_hosts_ids]
     networks = []
+    successful_hosts = []
 
     with ThreadPoolExecutor() as executor:
-        futures = {executor.submit(docker.get_networks, host=host): host for host in docker_hosts}
+        futures = {executor.submit(docker.get_networks, host=host): host for host in hosts_to_query}
         for future in as_completed(futures):
             host = futures[future]
             response, status_code = future.result()
@@ -62,6 +66,9 @@ def get_list():
                 for n in data:
                     n['Host'] = host.id
                 networks.extend(data)
+                successful_hosts.append(host)
+
+    docker_hosts = successful_hosts
 
     rows = []
     for net in networks:
@@ -80,7 +87,7 @@ def get_list():
         {"name": "Networks", "url": None},
     ]
     page_title = "Networks List"
-    return render_template('network/table.html', rows=rows, breadcrumbs=breadcrumbs, page_title=page_title)
+    return render_template('network/table.html', rows=rows, breadcrumbs=breadcrumbs, page_title=page_title, docker_hosts=docker_hosts, selected_docker_hosts_ids=selected_docker_hosts_ids)
 
 
 @network.route('/<id>', methods=['GET'])
