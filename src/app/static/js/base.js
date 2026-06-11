@@ -79,6 +79,8 @@ const attachFilter = (selector, paramName, placeholder, search) => {
                 const values = newVal.map(v => v.value).join(',');
                 const url = new URL(window.location);
                 
+                localStorage.setItem(paramName + '_filter', values);
+                
                 if (values) {
                     url.searchParams.set(paramName, values);
                 } else {

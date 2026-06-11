@@ -16,6 +16,11 @@
 <div class="content-box">
     {% if rows | length > 0 %}
     {% set extra_buttons %}
+        {% if selected_composes or selected_docker_hosts_ids %}
+            <a class="clear-filters-btn" title="Clear filters" style="cursor: pointer;">
+                {% include 'icons/filter_clear.svg' %}
+            </a>
+        {% endif %}
         <a class="settings-btn" title="Open list settings (M)">
             {% include 'icons/settings_sliders.svg' %}
         </a>

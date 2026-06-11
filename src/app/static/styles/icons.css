@@ -113,6 +113,7 @@
 .actions a:hover svg *,
 #logout-icon:hover #arrow,
 #clear-icon:hover *,
+#filter-clear-icon:hover *,
 #prune-icon:hover *,
 #settings-sliders-icon:hover *,
 :is(.nav-menu li a:hover, .nav-menu li.active a, .buttons a:hover) #settings-icon *,
@@ -229,6 +230,23 @@ a.action:hover {
 }
 
 #clear-icon:hover *:last-child {
+    transform: rotate(-90deg);
+}
+
+/* Filter Clear */
+#filter-clear-icon * {
+    color: gray;
+}
+
+#filter-clear-icon:hover * {
+    stroke: var(--error-bg);
+}
+
+#filter-clear-icon:hover line:first-child {
+    transform: rotate(90deg);
+}
+
+#filter-clear-icon:hover line:last-child {
     transform: rotate(-90deg);
 }
 
