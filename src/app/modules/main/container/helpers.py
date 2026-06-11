@@ -25,7 +25,7 @@ def _find_container(container_id):
 def container_info(id):
     host, response = _find_container(id)
 
-    if host is None:
+    if host is None or response is None:
         return "Container not found", 404
 
     container_details = response.json()
@@ -67,7 +67,9 @@ def container_info(id):
 def container_name(id):
     response, status_code = container_info(id)
     if status_code in range(200, 300) and isinstance(response, dict):
-        return response.get('general_info', {}).get('name', "Unknown Container")
+        info = response.get('general_info')
+        if isinstance(info, dict):
+            return info.get('name', "Unknown Container")
     return "Unknown Container"
 
 

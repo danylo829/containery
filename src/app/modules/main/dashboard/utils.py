@@ -53,7 +53,7 @@ def check_for_update() -> tuple[str, bool]:
 
     show_update_notification = (
         latest_version
-        and version.parse(Config.VERSION) < version.parse(latest_version)
+        and version.parse(Config.VERSION) < version.parse(str(latest_version))
         and latest_version != ''
         and not session.get('dismiss_update_notification', False)
     )

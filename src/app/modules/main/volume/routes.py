@@ -53,7 +53,7 @@ def get_list():
 def info(name):
     host, response = find_on_host(docker.inspect_volume, name)
 
-    if host is None:
+    if host is None or response is None:
         return render_template('error.html', message='Volume not found', code=404), 404
 
     vol = response.json()

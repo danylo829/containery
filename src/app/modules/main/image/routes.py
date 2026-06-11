@@ -17,7 +17,7 @@ from . import image
 def image_info(id):
     host, response = find_on_host(docker.inspect_image, id)
 
-    if host is None:
+    if host is None or response is None:
         return "Image not found", 404
 
     image_details = response.json()
@@ -51,8 +51,10 @@ def image_info(id):
 
 def image_name(id):
     response, status_code = image_info(id)
-    if status_code in range(200, 300) and isinstance(response, dict) and response.get('repo_tags'):
-        return response['repo_tags'][0]
+    if status_code in range(200, 300) and isinstance(response, dict):
+        tags = response.get('repo_tags')
+        if isinstance(tags, list) and tags:
+            return tags[0]
     return "Unnamed Image"
 
 

@@ -17,7 +17,7 @@ from . import network
 def network_info(id):
     host, response = find_on_host(docker.inspect_network, id)
 
-    if host is None:
+    if host is None or response is None:
         return "Network not found", 404
 
     network_details = response.json()
@@ -87,7 +87,7 @@ def get_list():
 @permission(Permissions.NETWORK_INFO)
 def info(id):
     response, status_code = network_info(id)
-    if status_code not in range(200, 300):
+    if status_code not in range(200, 300) or not isinstance(response, dict):
         message = response.text if hasattr(response, 'text') else str(response)
         try:
             message = json.loads(message).get('message', message)
