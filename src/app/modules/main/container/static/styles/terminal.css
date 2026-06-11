@@ -7,7 +7,7 @@
 }
 
 .terminal-wrapper {
-    background-color: black;
+    background-color: var(--terminal-bg);
     padding: 10px;
     border-radius: 10px;
 }

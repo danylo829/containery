@@ -6,7 +6,17 @@ const commandSelect = document.getElementById('command-select');
 const commandInput = document.getElementById('command-input');
 const submitBtn = document.getElementById('submit-btn');
 
-const xterm = new Terminal();
+const computedStyle = getComputedStyle(document.body);
+const terminalBg = computedStyle.getPropertyValue('--terminal-bg').trim() || '#000000';
+const terminalFg = computedStyle.getPropertyValue('--terminal-fg').trim() || '#ffffff';
+
+const xterm = new Terminal({
+    theme: {
+        background: terminalBg,
+        foreground: terminalFg,
+        cursor: terminalFg
+    }
+});
 const fitAddon = new FitAddon.FitAddon();
 
 const slim = new SlimSelect({

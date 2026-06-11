@@ -39,6 +39,8 @@
         --accent-color: var(--accent-dark);
         --accent-color-darken: var(--accent-dark-darken);
         --info-bg: var(--accent-dark);
+        --terminal-bg: #000000;
+        --terminal-fg: #ffffff;
 
         /* Custom select colors */
         --ss-primary-color: var(--accent-color) !important;
@@ -58,6 +60,8 @@
         --accent-color: var(--accent-light);
         --accent-color-darken: var(--accent-light-darken);
         --info-bg: var(--accent-light);
+        --terminal-bg: var(--bg-light);
+        --terminal-fg: var(--text-light);
 
         /* Custom select colors */
         --ss-primary-color: var(--accent-color) !important;
@@ -77,6 +81,8 @@ body.light {
     --accent-color: var(--accent-light);
     --accent-color-darken: var(--accent-light-darken);
     --info-bg: var(--accent-light);
+    --terminal-bg: var(--bg-light);
+    --terminal-fg: var(--text-light);
 
     /* Custom select colors */
     --ss-primary-color: var(--accent-color) !important;
@@ -94,6 +100,8 @@ body.dark {
     --accent-color: var(--accent-dark);
     --accent-color-darken: var(--accent-dark-darken);
     --info-bg: var(--accent-dark);
+    --terminal-bg: #000000;
+    --terminal-fg: #ffffff;
 
     /* Custom select colors */
     --ss-primary-color: var(--accent-color) !important;
@@ -111,6 +119,8 @@ body.dark_mixed {
     --accent-color: var(--accent-dark);
     --accent-color-darken: var(--accent-dark-darken);
     --info-bg: var(--accent-dark);
+    --terminal-bg: #000000;
+    --terminal-fg: #ffffff;
 
     /* Custom select colors */
     --ss-primary-color: var(--accent-color) !important;

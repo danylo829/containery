@@ -3,8 +3,8 @@
     height: 100%;
     min-height: 75vh;
     line-height: 2;
-    background-color: black;
-    color: white;
+    background-color: var(--terminal-bg);
+    color: var(--terminal-fg);
     border-radius: 10px;
     border: none;
     padding: 1rem;
@@ -17,7 +17,7 @@
 }
 
 textarea::-webkit-scrollbar-track {
-    background-color: black;
+    background-color: var(--terminal-bg);
 }
 
 #log-textarea:focus {
