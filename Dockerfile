@@ -19,10 +19,15 @@ RUN apk add --no-cache sqlite
 COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 
-EXPOSE 5000
+EXPOSE $PORT
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
+    HOST=0.0.0.0 \
+    PORT=5000 \
     CONTAINERY_VERSION=v0.1.0-dev
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://${HOST}:${PORT}/ping || exit 1
 
 ENTRYPOINT ["./entrypoint.sh"]

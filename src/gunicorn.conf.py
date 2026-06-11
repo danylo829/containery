@@ -1,10 +1,11 @@
 from os import getenv
 
 DEBUG = getenv('DEBUG', 'False') == 'True'
+HOST = getenv('HOST', '0.0.0.0')
 PORT = int(getenv('PORT', 5000))
 
 wsgi_app = 'wsgi:app'
-bind = f'0.0.0.0:{PORT}'
+bind = f'{HOST}:{PORT}'
 workers = 1  # Only one worker is used to ensure WebSocket support with Gevent
 worker_class = 'gevent'
 reload = DEBUG

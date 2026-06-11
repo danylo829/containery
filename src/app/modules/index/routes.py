@@ -12,6 +12,10 @@ def root():
         return redirect(url_for('auth.login'))
     return redirect(url_for('auth.install'))
 
+@index.route('/ping', methods=['GET'])
+def ping():
+    return "pong", 200
+
 @index.route('/toggle-sidebar', methods=['POST'])
 @login_required
 def toggle_sidebar():
