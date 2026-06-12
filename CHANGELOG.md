@@ -1,4 +1,23 @@
 
+<a name="v1.3.2"></a>
+## [v1.3.2](https://github.com/danylo829/containery/compare/v1.3.1...v1.3.2)
+
+### Bug Fixes
+
+- **dashboard:** Add hover effect to dashboard buttons in dark theme
+- **user:** Correctly process and validate user permissions
+
+### Code Refactoring
+
+- **container:** Redesign terminal execution interface into a modal and support dynamic exec flags
+
+### Features
+
+- **container:** Persist list filters and add animated clear filters button
+- **core:** Add ping route and dynamic healthcheck for Docker containers
+- **core:** Add docker host filter to all lists and refactor filter logic
+
+
 <a name="v1.3.1"></a>
 ## [v1.3.1](https://github.com/danylo829/containery/compare/v1.3...v1.3.1)
 

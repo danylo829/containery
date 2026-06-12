@@ -1,17 +1,21 @@
-# Containery 1.3.1 is out!
+# Containery 1.3.2 is out!
 
-This patch release focuses on reliability and UI polish, with fixes for container exec feedback, Docker host handling, and dashboard presentation.
+This release introduces new features like dynamic healthchecks, persistent list filters, and a redesigned terminal execution interface, along with several UI improvements and bug fixes.
+
+### Features
+
+- **core:** Add ping route and dynamic healthcheck for Docker containers
+- **core:** Add docker host filter to all lists and refactor filter logic
+- **container:** Persist list filters and add animated clear filters button
 
 ### Bug Fixes
 
-- **container:** Fix exec error display
-- **core:** Ensure unique URL for Docker hosts
-- **dashboard:** Correct version format in notification
-- **style:** Increase user button visibility on light themes
+- **dashboard:** Add hover effect to dashboard buttons in dark theme
+- **user:** Correctly process and validate user permissions
 
 ### Improvements
 
-- **docker:** Increase container exec timeout
-- **style:** Enhance dashboard button styles
+- **container:** Redesign terminal execution interface into a modal and support dynamic exec flags
+- **container:** Add light theme support for terminal and logs interfaces
 
 Feedback, issues, and contributions are welcome.
