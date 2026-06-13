@@ -92,7 +92,9 @@
                                     <div class="port-list">
                                         {% for port in row.get(col_property) %}
                                             <div>
-                                                <span>{{ port }}</span>
+                                                <a href="{{ port.url }}" target="_blank" rel="noopener noreferrer">
+                                                    {{ port.text }}
+                                                </a>
                                             </div>
                                             {% if not loop.last %}
                                                 <hr />

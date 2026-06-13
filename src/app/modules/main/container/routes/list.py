@@ -66,6 +66,8 @@ def get_list():
                     docker_hosts = [h for h in docker_hosts if h.id != container.get('Host')]
                     continue
             
+            c_host = next((h for h in docker_hosts if h.id == container.get('Host')), None)
+            host_ip = request.host.split(':')[0] if c_host and c_host.scheme == 'unix' else (c_host.address[0] if c_host else 'localhost')
             row = {
                 'id': container.get('Id', 'Unknown'),
                 'name': container.get('Names', ['Unknown'])[0].strip('/') if container.get('Names') else 'Unknown',
@@ -75,7 +77,10 @@ def get_list():
                 'image': container.get('Image', 'Unknown'),
                 'imageID': container.get('ImageID', 'Unknown'),
                 'ports': [
-                    f"{port.get('PrivatePort', 'Unknown')} -> {port.get('PublicPort', 'Unknown')}" 
+                    {
+                        'text': f"{port.get('PrivatePort', 'Unknown')} -> {port.get('PublicPort', 'Unknown')}",
+                        'url': f"http://{host_ip}:{port.get('PublicPort')}"
+                    }
                     for port in container.get('Ports', []) 
                     if all(key in port for key in ['PrivatePort', 'PublicPort', 'IP']) and port.get('IP') != '::'
                 ] if container.get('Ports') else [],
