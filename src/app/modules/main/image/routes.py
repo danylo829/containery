@@ -6,7 +6,7 @@ import json
 from app.modules.user.models import Permissions
 from app.modules.settings.models import DockerHost
 from app.core.decorators import permission
-from app.lib.common import format_docker_timestamp, format_unix_timestamp
+from app.lib.common import format_docker_timestamp, format_unix_timestamp, paginate_and_sort_list
 from app.lib.hosts import find_on_host
 
 from app.core.extensions import docker
@@ -92,14 +92,20 @@ def get_list():
         }
         rows.append(row)
 
-    rows = sorted(rows, key=lambda x: x['repo_tags'], reverse=True)
+    # Pagination, Sort, Search
+    rows, pagination = paginate_and_sort_list(
+        rows, request,
+        search_fields=['repo_tags', 'id'],
+        default_sort='repo_tags',
+        reverse=True
+    )
 
     breadcrumbs = [
         {"name": "Dashboard", "url": url_for('main.dashboard.index')},
         {"name": "Images", "url": None},
     ]
     page_title = "Images List"
-    return render_template('image/table.html', rows=rows, breadcrumbs=breadcrumbs, page_title=page_title, docker_hosts=docker_hosts, selected_docker_hosts_ids=selected_docker_hosts_ids)
+    return render_template('image/table.html', rows=rows, breadcrumbs=breadcrumbs, page_title=page_title, docker_hosts=docker_hosts, selected_docker_hosts_ids=selected_docker_hosts_ids, pagination=pagination)
 
 
 @image.route('/<id>', methods=['GET'])

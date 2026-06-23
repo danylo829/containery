@@ -1,0 +1,16 @@
+{# templates/pagination-macros.html #}
+{% macro render_pagination(pagination) %}
+{% if pagination and pagination.total_pages > 0 %}
+<div class="pagination-controls">
+    <div class="pagination">
+        <a class="pagination-btn pagination-prev {% if pagination.page <= 1 %}disabled{% endif %}" {% if pagination.page > 1 %}onclick="updateUrlParams({page: {{ pagination.page - 1 }}})"{% endif %}>
+            {% include 'icons/chevron_left.svg' %}
+        </a>
+        <span class="page-info">Page {{ pagination.page }} of {{ pagination.total_pages }}</span>
+        <a class="pagination-btn pagination-next {% if pagination.page >= pagination.total_pages %}disabled{% endif %}" {% if pagination.page < pagination.total_pages %}onclick="updateUrlParams({page: {{ pagination.page + 1 }}})"{% endif %}>
+            {% include 'icons/chevron_right.svg' %}
+        </a>
+    </div>
+</div>
+{% endif %}
+{% endmacro %}

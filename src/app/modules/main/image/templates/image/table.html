@@ -1,5 +1,6 @@
 {% extends "main.html" %}
 {% from 'box-top-panel-macros.html' import box_top_panel %}
+{% from 'pagination-macros.html' import render_pagination %}
 
 {% block custom_header %}
     <link rel="stylesheet" href="{{ url_for('static', filename='dist/lib/slim-select/slimselect.css') }}"/>
@@ -37,7 +38,7 @@
     {% endset %}
     {{ box_top_panel(extra_buttons, extra_inputs) }}
     <div class="table-box">
-        <table id="image-table">
+        <table id="image-table" data-total-pages="{{ pagination.total_pages }}" data-current-page="{{ pagination.page }}">
             <thead>
                 <tr>
                     <th data-sort="repo_tags">Repo</th>
@@ -56,5 +57,6 @@
             </tbody>
         </table>
     </div>
+    {{ render_pagination(pagination) }}
 </div>
 {% endblock %}

@@ -278,3 +278,17 @@ a.action:hover {
 #settings-icon:hover #wrench {
     animation: brush-wiggle 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
+
+/* Pagination Chevrons */
+#chevron-left-icon #arrow,
+#chevron-right-icon #arrow {
+    transition: transform 0.3s ease;
+}
+
+#chevron-left-icon:hover #arrow {
+    transform: translateX(-3px);
+}
+
+#chevron-right-icon:hover #arrow {
+    transform: translateX(3px);
+}

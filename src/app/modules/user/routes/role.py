@@ -5,6 +5,7 @@ from app.modules.user.forms import *
 from app.modules.user.models import User, Role, Permissions
 
 from app.core.decorators import permission
+from app.lib.common import paginate_and_sort_list
 
 from app.modules.user import user
 
@@ -15,6 +16,12 @@ def get_role_list():
     Render the role list page.
     """
     roles = Role.get_roles()
+    roles, pagination = paginate_and_sort_list(
+        roles, request,
+        search_fields=['name'],
+        default_sort='name',
+        reverse=False
+    )
     breadcrumbs = [
         {"name": "Dashboard", "url": url_for('main.dashboard.index')},
         {"name": "Users", "url": url_for('user.get_list')},
@@ -25,7 +32,8 @@ def get_role_list():
     return render_template('user/table_role.html', 
                            breadcrumbs=breadcrumbs, 
                            page_title=page_title, 
-                           roles=roles)
+                           roles=roles,
+                           pagination=pagination)
 
 @user.route('/role', methods=['GET', 'POST'])
 @permission(Permissions.ROLE_VIEW)

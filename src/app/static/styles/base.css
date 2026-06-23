@@ -207,8 +207,8 @@ form table tr {
 }
 
 .table-box {
-    max-height: calc(100vh - 200px);
-    overflow-y: auto;
+    max-height: calc(100vh - 250px);
+    overflow: auto;
 }
 
 .table-box td {
@@ -426,4 +426,34 @@ span.delete:hover {
     padding: 5px 10px;
     border-radius: 50em;
     font-size: 0.8em;
+}
+
+/* Pagination */
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.pagination a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.pagination a.disabled {
+    pointer-events: none;
+    opacity: 0.4;
+}
+
+.pagination .page-info {
+    font-size: 0.9rem;
+    font-weight: 500;
 }

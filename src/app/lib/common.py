@@ -1,6 +1,8 @@
 from datetime import datetime
 from hashlib import sha256
 from urllib.parse import urlparse, urljoin
+from markupsafe import escape
+import math
 
 def format_docker_timestamp(timestamp):
     if not timestamp:
@@ -67,8 +69,72 @@ def glass_background_css(bg: str, theme: str, custom_url: str = '') -> str:
             )
 
     if bg == 'custom' and custom_url:
-        from markupsafe import escape
         safe = escape(custom_url)
         return f"body.glass{{background-image:url('{safe}')}}"
 
     return ''
+
+def paginate_and_sort_list(items, request, search_fields=None, default_sort=None, reverse=False):
+    """
+    Sorts, searches, and paginates a list of dictionaries based on request args.
+    - search_fields: list of keys in the dict to search against
+    - default_sort: default key to sort by if 'sort_col' is not provided
+    - reverse: default sort direction
+    """
+    search_val = request.args.get('search', '').lower()
+    sort_col = request.args.get('sort_col', default_sort)
+    sort_dir = request.args.get('sort_dir', 'desc' if reverse else 'asc')
+    
+    try:
+        page = int(request.args.get('page', 1))
+        if page < 1: page = 1
+    except ValueError:
+        page = 1
+        
+    try:
+        per_page = int(request.args.get('per_page', 15))
+        if per_page < 1: per_page = 15
+    except ValueError:
+        per_page = 15
+
+    # Filter
+    if search_val and search_fields:
+        filtered = []
+        for item in items:
+            for field in search_fields:
+                val = item.get(field) if isinstance(item, dict) else getattr(item, field, None)
+                if val and search_val in str(val).lower():
+                    filtered.append(item)
+                    break
+        items = filtered
+
+    # Sort
+    if sort_col:
+        is_reverse = sort_dir == 'desc'
+        def sort_key(x):
+            val = x.get(sort_col) if isinstance(x, dict) else getattr(x, sort_col, None)
+            return str(val).lower() if val is not None else ''
+        items = sorted(items, key=sort_key, reverse=is_reverse)
+        
+    # Paginate
+    total_items = len(items)
+    total_pages = max(1, math.ceil(total_items / per_page))
+    if page > total_pages:
+        page = total_pages
+        
+    start = (page - 1) * per_page
+    end = start + per_page
+    paginated_items = items[start:end]
+    
+    pagination_info = {
+        'page': page,
+        'per_page': per_page,
+        'total_pages': total_pages,
+        'total_items': total_items,
+        'search': search_val,
+        'sort_col': sort_col,
+        'sort_dir': sort_dir
+    }
+    
+    return paginated_items, pagination_info
+

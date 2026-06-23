@@ -1,11 +1,12 @@
 from flask import render_template, url_for, request, jsonify
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from flask_login import current_user
 
 from app.modules.user.models import Permissions, PersonalSettings
 from app.core.decorators import permission
 from app.modules.settings.models import DockerHost
 from app.core.extensions import docker
-from app.lib.common import format_unix_timestamp
+from app.lib.common import format_unix_timestamp, paginate_and_sort_list
 from app.modules.main.container import container
 from app.modules.main.container.helpers import container_info, container_name, get_container_host
 
@@ -20,7 +21,6 @@ def get_list():
     containers = []
     successful_hosts = []
 
-    from concurrent.futures import ThreadPoolExecutor, as_completed
     with ThreadPoolExecutor() as executor:
         futures = {executor.submit(docker.get_containers, host=host): host for host in hosts_to_query}
         for future in as_completed(futures):
@@ -87,7 +87,13 @@ def get_list():
             }
             rows.append(row)
 
-    rows = sorted(rows, key=lambda x: x['name'], reverse=True)
+    # Pagination, Sort, Search
+    rows, pagination = paginate_and_sort_list(
+        rows, request,
+        search_fields=['name', 'id', 'image', 'state', 'status'],
+        default_sort='name',
+        reverse=True
+    )
 
     breadcrumbs = [
         {"name": "Dashboard", "url": url_for('main.dashboard.index')},
@@ -104,8 +110,8 @@ def get_list():
                         container_columns_setting=container_columns_setting,
                         container_quick_actions_setting=container_quick_actions_setting,
                         breadcrumbs=breadcrumbs, 
-                        page_title=page_title)
-
+                        page_title=page_title,
+                        pagination=pagination)
 
 @container.route('/list/settings', methods=['GET', 'POST'])
 def column_settings():

@@ -1,5 +1,6 @@
 {% extends "main.html" %}
 {% from 'box-top-panel-macros.html' import box_top_panel %}
+{% from 'pagination-macros.html' import render_pagination %}
 
 {% block custom_header %}
 <link rel="stylesheet" href="{{ url_for('static', filename='dist/lib/slim-select/slimselect.css') }}"/>
@@ -56,7 +57,7 @@
     {{ box_top_panel(extra_buttons, extra_inputs) }}
     <div class="table-box">
         {% set columns = container_columns_setting %}
-        <table id="container-table">
+        <table id="container-table" data-total-pages="{{ pagination.total_pages }}" data-current-page="{{ pagination.page }}">
             <thead>
                 <tr>
                     {% for col in columns if col.enabled %}
@@ -140,6 +141,7 @@
             </tbody>
         </table>
     </div>
+    {{ render_pagination(pagination) }}
     {% else %}
     <div class="empty-state">
         <h2>No containers found</h2>

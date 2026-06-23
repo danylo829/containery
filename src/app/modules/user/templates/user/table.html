@@ -1,5 +1,6 @@
 {% extends "main.html" %}
 {% from 'box-top-panel-macros.html' import box_top_panel %}
+{% from 'pagination-macros.html' import render_pagination %}
 
 {% block custom_header %}
 {% assets "user_css" %}
@@ -25,7 +26,7 @@
     {{ box_top_panel(extra_buttons) }}
 
     <div class="table-box">
-        <table id="user-table">
+        <table id="user-table" data-total-pages="{{ pagination.total_pages }}" data-current-page="{{ pagination.page }}">
             <thead>
                 <tr>
                     <th data-sort="username">Username</th>
@@ -50,5 +51,6 @@
             </tbody>
         </table>
     </div>
+    {{ render_pagination(pagination) }}
 </div>
 {% endblock %}

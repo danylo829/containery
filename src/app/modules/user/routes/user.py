@@ -6,6 +6,7 @@ from app.modules.user.models import PersonalSettings, User, Role, Permissions
 
 from app.modules.settings.models import GlobalSettings
 from app.core.decorators import permission
+from app.lib.common import paginate_and_sort_list
 
 from app.modules.user import user
 
@@ -62,6 +63,12 @@ def get_list():
     Render the user list page.
     """
     users = User.query.all()
+    users, pagination = paginate_and_sort_list(
+        users, request,
+        search_fields=['username'],
+        default_sort='username',
+        reverse=False
+    )
 
     breadcrumbs = [
         {"name": "Dashboard", "url": url_for('main.dashboard.index')},
@@ -72,7 +79,8 @@ def get_list():
     return render_template('user/table.html', 
                            breadcrumbs=breadcrumbs, 
                            page_title=page_title, 
-                           users=users)
+                           users=users,
+                           pagination=pagination)
 
 @user.route('', methods=['GET', 'POST'])
 @permission(Permissions.USER_VIEW_PROFILE)

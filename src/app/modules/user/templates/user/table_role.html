@@ -1,5 +1,6 @@
 {% extends "main.html" %}
 {% from 'box-top-panel-macros.html' import box_top_panel %}
+{% from 'pagination-macros.html' import render_pagination %}
 
 {% block content %}
 <div class="content-box">
@@ -12,7 +13,7 @@
     {% endset %}
     {{ box_top_panel(extra_buttons) }}
     <div class="table-box">
-        <table id="roles-table">
+        <table id="roles-table" data-total-pages="{{ pagination.total_pages }}" data-current-page="{{ pagination.page }}">
             <thead>
                 <tr>
                     <th data-sort="roles">Role</th>
@@ -31,5 +32,6 @@
             </tbody>
         </table>        
     </div>
+    {{ render_pagination(pagination) }}
 </div>
 {% endblock %}

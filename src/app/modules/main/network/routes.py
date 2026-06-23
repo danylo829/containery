@@ -4,7 +4,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import json
 
 from app.core.extensions import docker
-from app.lib.common import format_docker_timestamp
+from app.lib.common import format_docker_timestamp, paginate_and_sort_list
 from app.lib.hosts import find_on_host
 from app.modules.settings.models import DockerHost
 
@@ -80,14 +80,20 @@ def get_list():
             'gateway': net['IPAM']['Config'][0]['Gateway'] if net['IPAM']['Config'] else 'N/A',
         })
 
-    rows = sorted(rows, key=lambda x: x['name'], reverse=True)
+    # Pagination, Sort, Search
+    rows, pagination = paginate_and_sort_list(
+        rows, request,
+        search_fields=['name', 'id', 'driver', 'subnet', 'gateway'],
+        default_sort='name',
+        reverse=True
+    )
 
     breadcrumbs = [
         {"name": "Dashboard", "url": url_for('main.dashboard.index')},
         {"name": "Networks", "url": None},
     ]
     page_title = "Networks List"
-    return render_template('network/table.html', rows=rows, breadcrumbs=breadcrumbs, page_title=page_title, docker_hosts=docker_hosts, selected_docker_hosts_ids=selected_docker_hosts_ids)
+    return render_template('network/table.html', rows=rows, breadcrumbs=breadcrumbs, page_title=page_title, docker_hosts=docker_hosts, selected_docker_hosts_ids=selected_docker_hosts_ids, pagination=pagination)
 
 
 @network.route('/<id>', methods=['GET'])
