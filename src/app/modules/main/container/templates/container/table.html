@@ -15,8 +15,7 @@
 
 {% block content %}
 <div class="content-box">
-    {% if rows | length > 0 %}
-    {% set extra_buttons %}
+{% set extra_buttons %}
         {% if selected_composes or selected_docker_hosts_ids %}
             <a class="clear-filters-btn" title="Clear filters" style="cursor: pointer;">
                 {% include 'icons/filter_clear.svg' %}
@@ -55,6 +54,8 @@
         {% endif %}
     {% endset %}
     {{ box_top_panel(extra_buttons, extra_inputs) }}
+
+    {% if rows | length > 0 %}
     <div class="table-box">
         {% set columns = container_columns_setting %}
         <table id="container-table" data-total-pages="{{ pagination.total_pages }}" data-current-page="{{ pagination.page }}">
