@@ -12,84 +12,133 @@
 {% endblock %}
 
 {% block content %}
-<div class="content-card">
-    <div class="title">
-        <div class="user-details">
-            <h1>{{ user.username }}</h1>
-        </div>
-        <div class="actions disable-on-load">
-            <a id="delete-btn" data-id="{{ user.id }}" title="Delete User">
-                {% include 'icons/delete.svg' %}
-            </a>
-        </div>
-    </div>
-    <h3>Roles</h3>
-    <div class="role-list" data-user-id="{{ user.id }}">
-        {% for role in user.get_roles() %}
-            <div class="role-item" id="role-item-{{ role.id }}">
-                <span class="badge">{{ role.name }}</span>
-                <div class="actions disable-on-load">
-                    <div>
-                        <a class="delete-role" data-role-id="{{ role.id }}" title="Remove Role">
-                            {% include 'icons/dnd.svg' %} 
-                        </a>
+<div class="profile-grid-split">
+    <!-- Left Column: Combined Profile Info Card -->
+    <div class="profile-left-col">
+        <div class="content-card profile-info-card">
+            <div>
+                <div class="profile-details-header">
+                    <div class="profile-details-left">
+                        <div class="profile-avatar-circle">
+                            {% if user.name %}
+                                {{ user.name[0] }}
+                            {% else %}
+                                {{ user.username[0] }}
+                            {% endif %}
+                        </div>
+                        <div>
+                            <h2 class="profile-display-name profile-display-name-text">{{ user.name or user.username }}</h2>
+                            <p class="profile-username-handle profile-username-handle-text">@{{ user.username }}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Header Actions -->
+                    <div class="actions disable-on-load">
+                        <div>
+                            {% if current_user.id == user.id %}
+                                <a href="{{ url_for('user.profile') }}" title="Edit Your Profile">
+                                    {% include 'icons/edit.svg' %}
+                                </a>
+                            {% else %}
+                                <a id="delete-btn" data-id="{{ user.id }}" title="Delete User">
+                                    {% include 'icons/delete.svg' %}
+                                </a>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
+
+                <ul class="profile-meta-details profile-meta-details-list">
+                    <li class="profile-meta-item">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="var(--accent-color)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        <span class="profile-meta-value"><strong>Created:</strong> {{ common.format_unix_timestamp(user.created_at) }}</span>
+                    </li>
+                    <li class="profile-meta-item">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="var(--accent-color)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                        <span class="profile-meta-value"><strong>Email:</strong> 
+                            {% if user.email %}
+                                <a href="mailto:{{ user.email }}">{{ user.email }}</a>
+                            {% else %}
+                                <span class="placeholder-text">Not set</span>
+                            {% endif %}
+                        </span>
+                    </li>
+                </ul>
             </div>
-        {% endfor %}
+        </div>
     </div>
-    <form class="add-role" method="POST" action="{{ url_for('user.view_profile', id=user.id) }}">
-        {{ role_form.hidden_tag() }}
 
-        {{ role_form.role(class="form-control", id="role-select") }}
+    <!-- Right Column: Roles & Security -->
+    <div class="profile-right-col">
+        <!-- Roles -->
+        <div class="content-card profile-settings-card">
+            <div>
+                <h3 class="profile-card-title">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="var(--accent-color)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    Roles
+                </h3>
+                <div class="role-list roles-container" data-user-id="{{ user.id }}">
+                    {% set user_roles = user.get_roles() %}
+                    {% if user_roles %}
+                        {% for role in user_roles %}
+                            <div class="role-badge" id="role-item-{{ role.id }}">
+                                <span class="role-badge-text">{{ role.name }}</span>
+                                <span class="actions disable-on-load">
+                                    <a class="delete-role role-badge-remove" data-role-id="{{ role.id }}" title="Remove Role" style="cursor: pointer;">
+                                        {% include 'icons/clear.svg' %}
+                                    </a>
+                                </span>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="roles-placeholder">
+                            No roles assigned to this user.
+                        </div>
+                    {% endif %}
+                </div>
+                <form class="add-role profile-add-role-form" method="POST" action="{{ url_for('user.view_profile', id=user.id) }}">
+                    {{ role_form.hidden_tag() }}
+                    <div class="flex-grow-1">
+                        {{ role_form.role(class="form-control", id="role-select") }}
+                    </div>
+                    {{ role_form.submit(class="btn-primary", id="add-role-btn") }}
+                </form> 
+            </div>
+        </div>
 
-        {{ role_form.submit(class="btn-primary", id="add-role-btn") }}
-    </form> 
-    {% if current_user.id == user.id %}
-        <p><a href="{{ url_for('user.profile') }}">Edit Your Profile</a></p>
-    {% endif %}
-</div>
-
-{% if current_user.id != user.id %}
-    <div class="content-card">
-        <h3>Security</h3>
-        <h3>Change user's password</h3>
-        <form method="POST" action="{{ url_for('user.view_profile', id=user.id) }}">
-            {{ password_form.csrf_token(id = 'password_csrf') }}
-            
-            <div class="table-box">
-                <table>
-                    <tr>
-                        <td><strong>New password</strong></td>
-                        <td>
-                            <label for="new_password" style="display:none;">New Password</label>
-                            {{ password_form.new_password() }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>Confirm password</strong></td>
-                        <td>
-                            <label for="confirm_new_password" style="display:none;">Confirm New Password</label>
-                            {{ password_form.confirm_new_password() }}
-                        </td>
-                    </tr>
+        <!-- Change Password (if not viewing self) -->
+        {% if current_user.id != user.id %}
+        <div class="content-card profile-settings-card">
+            <div>
+                <h3 class="profile-card-title">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="var(--accent-color)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    Change User's Password
+                </h3>
+                <form method="POST" action="{{ url_for('user.view_profile', id=user.id) }}">
+                    {{ password_form.csrf_token(id = 'password_csrf') }}
+                    
+                    <div class="form-group">
+                        <label for="new_password">New Password</label>
+                        {{ password_form.new_password() }}
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm_new_password">Confirm New Password</label>
+                        {{ password_form.confirm_new_password() }}
+                    </div>
+                    
                     {% for error in password_form.confirm_new_password.errors %}
-                        <tr>
-                            <td colspan="2">
-                                <div class="form-validate-error">
-                                    <span>{{ error }}</span>
-                                </div>
-                            </td>
-                        </tr>
+                        <div class="form-validate-error">
+                            <span>{{ error }}</span>
+                        </div>
                     {% endfor %}
-                </table>
+                
+                    <div class="submit-box margin-top-1">
+                        {{ password_form.submit(class="btn-primary profile-form-submit") }}
+                    </div>
+                </form>
             </div>
-        
-            <div class="submit-box">
-                {{ password_form.submit(class="btn-primary") }}
-            </div>
-        </form>
+        </div>
+        {% endif %}
     </div>
-{% endif %}
-
+</div>
 {% endblock %}

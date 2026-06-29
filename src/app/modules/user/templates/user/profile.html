@@ -12,94 +12,180 @@
 {% endblock %}
 
 {% block content %}
-<div class="content-card">
-    <div class="user-header">
-        <div class="user-details">
-            <h3>{{ current_user.username }}</h3>
-            <div class="role-badge-container">
-                {% for role in current_user.get_roles() %}
-                    <span class="badge">{{ role.name }}</span>
+<div class="profile-grid-split">
+    <!-- Left Column: Combined Profile Info Card -->
+    <div class="profile-left-col">
+        <div class="content-card profile-info-card">
+            <div>
+                <div class="profile-details-header">
+                    <div class="profile-details-left">
+                        <div class="profile-avatar-circle">
+                            {% if current_user.name %}
+                                {{ current_user.name[0] }}
+                            {% else %}
+                                {{ current_user.username[0] }}
+                            {% endif %}
+                        </div>
+                        <div>
+                            <h2 class="profile-display-name profile-display-name-text">{{ current_user.name or current_user.username }}</h2>
+                            <p class="profile-username-handle profile-username-handle-text">@{{ current_user.username }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Header Actions (Top Right) -->
+                    <div class="actions disable-on-load">
+                        <div>
+                            <a id="open-edit-profile-btn" title="Edit Profile Details">
+                                {% include 'icons/edit.svg' %}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <ul class="profile-meta-details profile-meta-details-list">
+                    <li class="profile-meta-item">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="var(--accent-color)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        <span class="profile-meta-value"><strong>Created:</strong> {{ common.format_unix_timestamp(current_user.created_at) }}</span>
+                    </li>
+                    <li class="profile-meta-item">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="var(--accent-color)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                        <span class="profile-meta-value"><strong>Email:</strong> 
+                            {% if current_user.email %}
+                                <a href="mailto:{{ current_user.email }}">{{ current_user.email }}</a>
+                            {% else %}
+                                <span class="placeholder-text">Not set</span>
+                            {% endif %}
+                        </span>
+                    </li>
+                    <li class="profile-meta-item">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="var(--accent-color)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                        <span class="profile-meta-value"><strong>Roles:</strong>
+                            {% for role in current_user.get_roles() %}
+                                <span class="badge">{{ role.name }}</span>
+                            {% endfor %}
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Settings -->
+    <div class="profile-right-col">
+        <div class="content-card profile-settings-card">
+            <div>
+                <h3 class="profile-card-title">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="var(--accent-color)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    Personal Settings
+                </h3>
+                
+                <form id="settings-form" method="POST" action="{{ url_for('user.profile') }}">
+                    {{ settings_form.csrf_token(id = 'settings_csrf') }}
+                    
+                    <div class="table-box">
+                        <table class="personal-settings-table">
+                            <tr>
+                                <td><strong>Theme</strong></td>
+                                <td>
+                                    {{ settings_form.theme(id="theme-select") }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Glassmorphism</strong></td>
+                                <td>
+                                    {{ settings_form.glassmorphism(id="glassmorphism-toggle") }}
+                                    <label for="glassmorphism-toggle"></label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Background</strong></td>
+                                <td>{{ settings_form.glass_background(id="glass-bg-select") }}</td>
+                            </tr>
+                            <tr id="glass-custom-url-row">
+                                <td><strong>Custom URL</strong></td>
+                                <td>{{ settings_form.glass_background_url(id="glass-bg-url", placeholder="https://example.com/image.jpg") }}</td>
+                            </tr>
+                        </table>
+                    </div>
+ 
+                    {{ settings_form.submit(class="settings-form-submit") }}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Profile Modal Overlay -->
+<div id="edit-profile-modal" class="modal {% if profile_form.errors %}has-errors{% endif %}" style="display: none;">
+    <div class="modal-content profile-modal-content">
+        <h3 class="profile-card-title profile-modal-title">
+            <span class="profile-modal-title-text">
+                {% include 'icons/user.svg' %}
+                Edit Profile & Security
+            </span>
+            <span id="close-edit-profile-modal" class="profile-modal-close-btn">&times;</span>
+        </h3>
+        
+        <form method="POST" action="{{ url_for('user.profile') }}">
+            {{ profile_form.csrf_token(id = 'profile_csrf') }}
+            
+            <!-- Section 1: Details -->
+            <h4 class="profile-modal-section-title">Profile Details</h4>
+            <div class="form-group">
+                <div class="floating-input-container">
+                    {{ profile_form.name(placeholder=" ") }}
+                    {{ profile_form.name.label }}
+                </div>
+                {% for error in profile_form.name.errors %}
+                    <span class="form-validate-error">{{ error }}</span>
                 {% endfor %}
             </div>
-        </div>
-    </div>
-    <div class="user-info">
-        <p><strong>Created At:</strong> {{ common.format_unix_timestamp(current_user.created_at) }}</p>
-    </div>
-</div>
-
-<div class="content-card">
-    <h3>Security</h3>
-    <h4>Change password</h4>
-    <form method="POST" action="{{ url_for('user.profile') }}">
-        {{ password_form.csrf_token(id = 'password_csrf') }}
-
-        <div class="table-box">
-            <table>
-                <tr>
-                    <td><strong>{{ password_form.current_password.label }}</strong></td>
-                    <td>
-                        {{ password_form.current_password() }}
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>{{ password_form.new_password.label }}</strong></td>
-                    <td>
-                        {{ password_form.new_password() }}
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>{{ password_form.confirm_new_password.label }}</strong></td>
-                    <td>
-                        {{ password_form.confirm_new_password() }}
-                    </td>
-                </tr>
-            </table>
-        </div>
-        
-        {% for error in password_form.confirm_new_password.errors %}
-            <div class="form-validate-error">
-                <span>{{ error }}</span>
+            <div class="form-group bordered-bottom">
+                <div class="floating-input-container">
+                    {{ profile_form.email(type="email", placeholder=" ") }}
+                    {{ profile_form.email.label }}
+                </div>
+                {% for error in profile_form.email.errors %}
+                    <span class="form-validate-error">{{ error }}</span>
+                {% endfor %}
             </div>
-        {% endfor %}
-        
-        {{ password_form.submit() }}
-    </form>
+
+            <!-- Section 2: Password -->
+            <h4 class="profile-modal-section-title password">Change Password</h4>
+            <div class="form-group">
+                <div class="floating-input-container">
+                    {{ profile_form.current_password(placeholder=" ") }}
+                    {{ profile_form.current_password.label }}
+                </div>
+                {% for error in profile_form.current_password.errors %}
+                    <span class="form-validate-error">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <div class="floating-input-container">
+                    {{ profile_form.new_password(placeholder=" ") }}
+                    {{ profile_form.new_password.label }}
+                </div>
+                {% for error in profile_form.new_password.errors %}
+                    <span class="form-validate-error">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group margin-large">
+                <div class="floating-input-container">
+                    {{ profile_form.confirm_new_password(placeholder=" ") }}
+                    {{ profile_form.confirm_new_password.label }}
+                </div>
+                {% for error in profile_form.confirm_new_password.errors %}
+                    <span class="form-validate-error">{{ error }}</span>
+                {% endfor %}
+            </div>
+
+            <!-- Single submit button footer -->
+            <div class="profile-modal-footer">
+                <button type="button" id="cancel-edit-profile" class="btn cancel btn-modal-cancel">Cancel</button>
+                {{ profile_form.submit(class="profile-form-submit btn-modal-submit") }}
+            </div>
+        </form>
+    </div>
 </div>
-
-<div class="content-card">
-    <h3>Personal settings</h3>
-    <form method="POST" action="{{ url_for('user.profile') }}">
-        {{ settings_form.csrf_token(id = 'settings_csrf') }}
-        
-        <div class="table-box">
-            <table class="personal-settings-table">
-                <tr>
-                    <td><strong>Theme</strong></td>
-                    <td>
-                        {{ settings_form.theme(id="theme-select") }}
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>Glassmorphism</strong></td>
-                    <td>
-                        {{ settings_form.glassmorphism(id="glassmorphism-toggle") }}
-                        <label for="glassmorphism-toggle"></label>
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>Background</strong></td>
-                    <td>{{ settings_form.glass_background(id="glass-bg-select") }}</td>
-                </tr>
-                <tr id="glass-custom-url-row">
-                    <td><strong>Custom URL</strong></td>
-                    <td>{{ settings_form.glass_background_url(id="glass-bg-url", placeholder="https://example.com/image.jpg") }}</td>
-                </tr>
-            </table>
-        </div>
-
-        {{ settings_form.submit() }}
-    </form>
-</div>
-
 {% endblock %}

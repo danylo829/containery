@@ -292,3 +292,12 @@ a.action:hover {
 #chevron-right-icon:hover #arrow {
     transform: translateX(3px);
 }
+
+/* Edit icon pencil transform on hover */
+#edit-icon path:nth-child(2) {
+    transform-origin: 6px 18px;
+}
+
+#edit-icon:hover path:nth-child(2) {
+    transform: rotate(-12deg);
+}
