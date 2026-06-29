@@ -1,6 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import current_user
 
+from app.core.db import db
 from app.modules.user.forms import *
 from app.modules.user.models import PersonalSettings, User, Role, Permissions
 
@@ -17,31 +18,63 @@ def profile():
     """
     password_min_length = int(GlobalSettings.get_setting('password_min_length'))
 
+    profile_form = EditProfileForm()
     settings_form = PersonalSettingsForm()
-    password_form = ChangeOwnPasswordForm(password_min_length=password_min_length)
+
+    if profile_form.submit.data and profile_form.validate_on_submit():
+        # Check if the user is trying to change their password
+        new_password = profile_form.new_password.data
+        if new_password:
+            current_password = profile_form.current_password.data
+            confirm_new_password = profile_form.confirm_new_password.data
+            
+            # Validate current password
+            if not current_user.check_password(current_password):
+                flash('Current password is incorrect.', 'error')
+                return redirect(url_for('user.profile'))
+                
+            # Validate confirmation matching
+            if new_password != confirm_new_password:
+                flash('New passwords do not match.', 'error')
+                return redirect(url_for('user.profile'))
+                
+            # Validate min length
+            if len(new_password) < password_min_length:
+                flash(f'Password must be at least {password_min_length} characters long.', 'error')
+                return redirect(url_for('user.profile'))
+                
+            # Update password
+            current_user.update_password(new_password)
+            flash('Password updated successfully!', 'success')
+
+        # Update profile details
+        current_user.name = profile_form.name.data
+        current_user.email = profile_form.email.data
+        db.session.commit()
+        
+        flash('Profile updated successfully!', 'success')
+        return redirect(url_for('user.profile'))
 
     if settings_form.submit.data and settings_form.validate_on_submit():
         PersonalSettings.set_setting(current_user.id, 'theme', settings_form.theme.data)
         PersonalSettings.set_setting(current_user.id, 'glassmorphism', 'true' if settings_form.glassmorphism.data else 'false')
-        PersonalSettings.set_setting(current_user.id, 'glass_background', settings_form.glass_background.data)
-        PersonalSettings.set_setting(current_user.id, 'glass_background_url', settings_form.glass_background_url.data or '')
+        if 'glass_background' in request.form:
+            PersonalSettings.set_setting(current_user.id, 'glass_background', settings_form.glass_background.data)
+        if 'glass_background_url' in request.form:
+            PersonalSettings.set_setting(current_user.id, 'glass_background_url', settings_form.glass_background_url.data or '')
         
         flash('Settings updated successfully!', 'success')
         return redirect(url_for('user.profile'))
-
-    if password_form.submit.data and password_form.validate_on_submit():
-        if User.check_password(current_user.username, password_form.current_password.data):
-            User.update_password(current_user.username, password_form.new_password.data)
-            flash('Password updated successfully!', 'success')
-        else:
-            flash('Current password is incorrect.', 'error')
-        return redirect(url_for('user.profile'))
     
     # Set form data based on current settings
-    settings_form.theme.data = PersonalSettings.get_setting(current_user.id, 'theme')
-    settings_form.glassmorphism.data = PersonalSettings.get_setting(current_user.id, 'glassmorphism') == 'true'
-    settings_form.glass_background.data = PersonalSettings.get_setting(current_user.id, 'glass_background') or 'image:mountains'
-    settings_form.glass_background_url.data = PersonalSettings.get_setting(current_user.id, 'glass_background_url') or ''
+    if request.method == 'GET':
+        profile_form.name.data = current_user.name
+        profile_form.email.data = current_user.email
+
+        settings_form.theme.data = PersonalSettings.get_setting(current_user.id, 'theme')
+        settings_form.glassmorphism.data = PersonalSettings.get_setting(current_user.id, 'glassmorphism') == 'true'
+        settings_form.glass_background.data = PersonalSettings.get_setting(current_user.id, 'glass_background') or 'image:mountains'
+        settings_form.glass_background_url.data = PersonalSettings.get_setting(current_user.id, 'glass_background_url') or ''
 
     breadcrumbs = [
         {"name": "Dashboard", "url": url_for('main.dashboard.index')},
@@ -53,8 +86,8 @@ def profile():
     return render_template('user/profile.html', 
                            breadcrumbs=breadcrumbs, 
                            page_title=page_title, 
-                           settings_form=settings_form, 
-                           password_form=password_form)
+                           profile_form=profile_form,
+                           settings_form=settings_form)
 
 @user.route('/list', methods=['GET'])
 @permission(Permissions.USER_VIEW_LIST)
@@ -157,7 +190,12 @@ def add():
             flash(f'Minimal password length is {password_min_length} characters', 'error')
             return redirect(url_for('user.add'))
 
-        user = User.create_user(add_user_form.username.data, add_user_form.password.data)
+        user = User.create_user(
+            username=add_user_form.username.data,
+            password=add_user_form.password.data,
+            name=str(add_user_form.name.data).strip() if add_user_form.name.data else None,
+            email=str(add_user_form.email.data).strip() if add_user_form.email.data else None
+        )
 
         if not isinstance(user, User):
             flash(user, 'error')

@@ -14,7 +14,9 @@ class AdminSetupForm(FlaskForm):
             Length(min=min_length, max=50)
         )
 
-    username = StringField('Username', validators=[DataRequired()])
+    username = StringField('Username', validators=[DataRequired(), Length(max=150)])
+    name = StringField('Full Name (optional)', validators=[Length(max=150)])
+    email = StringField('Email (optional)', validators=[Length(max=150)])
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[
         DataRequired(),

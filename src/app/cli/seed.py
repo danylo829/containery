@@ -120,11 +120,17 @@ def seed_command(users, roles, permissions_per_role, personal_settings, sql_file
         # Ensure admin user
         admin_user = User.query.filter_by(username='admin').first()
         if not admin_user:
-            admin_user = User(username='admin', password_hash=generate_password_hash('Admin123!'))
+            admin_user = User(
+                username='admin',
+                password_hash=generate_password_hash('Admin123!'),
+                name='Administrator',
+                email='admin@example.com'
+            )
             db.session.add(admin_user)
             db.session.flush()
             sql_statements.append(
-                f"INSERT INTO usr_user (username, password_hash, created_at) VALUES ('admin', '{_def_escape(admin_user.password_hash)}', strftime('%s','now'));"
+                f"INSERT INTO usr_user (username, password_hash, created_at, name, email) VALUES "
+                f"('admin', '{_def_escape(admin_user.password_hash)}', strftime('%s','now'), 'Administrator', 'admin@example.com');"
             )
             ur = UserRole(user_id=admin_user.id, role_id=admin_role.id)
             db.session.add(ur)
@@ -140,11 +146,17 @@ def seed_command(users, roles, permissions_per_role, personal_settings, sql_file
             if User.query.filter_by(username=username).first():
                 continue
             pw_hash = generate_password_hash(password_plain)
-            u = User(username=username, password_hash=pw_hash)
+            u = User(
+                username=username,
+                password_hash=pw_hash,
+                name=fake.name(),
+                email=fake.unique.email()
+            )
             db.session.add(u)
             db.session.flush()
             sql_statements.append(
-                f"INSERT INTO usr_user (username, password_hash, created_at) VALUES ('{_def_escape(username)}', '{_def_escape(pw_hash)}', strftime('%s','now'));"
+                f"INSERT INTO usr_user (username, password_hash, created_at, name, email) VALUES "
+                f"('{_def_escape(username)}', '{_def_escape(pw_hash)}', strftime('%s','now'), '{_def_escape(u.name)}', '{_def_escape(u.email)}');"
             )
             # Assign 1-2 random roles
             if all_role_ids:

@@ -14,6 +14,8 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(150), unique=True, nullable=False)
     password_hash = db.Column(db.String(150), nullable=False)
     created_at = db.Column(db.Integer, default=lambda: int(time()), nullable=False)
+    name = db.Column(db.String(150), nullable=True)
+    email = db.Column(db.String(150), nullable=True)
 
     personal_settings = db.relationship('PersonalSettings', backref='user', cascade="all, delete-orphan")
     user_roles = db.relationship('UserRole', back_populates='user', cascade='all, delete-orphan')
@@ -26,11 +28,16 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     @classmethod
-    def create_user(cls, username, password):
+    def create_user(cls, username, password, name=None, email=None):
         if cls.query.filter_by(username=username).first():
             return "Username already exists"
 
-        user = cls(username=username, password_hash=generate_password_hash(password))
+        user = cls(
+            username=username,
+            password_hash=generate_password_hash(password),
+            name=name,
+            email=email
+        )
         db.session.add(user)
         db.session.commit()
         

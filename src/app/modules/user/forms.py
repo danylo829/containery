@@ -1,6 +1,14 @@
 from flask_wtf import FlaskForm
-from wtforms import BooleanField, SubmitField, SelectField, PasswordField, StringField, FieldList, FormField, HiddenField
+from wtforms import BooleanField, SubmitField, SelectField, PasswordField, StringField, FieldList, FormField, HiddenField, TextAreaField
 from wtforms.validators import DataRequired, EqualTo, Length
+
+class EditProfileForm(FlaskForm):
+    name = StringField('Full Name', validators=[Length(max=150)])
+    email = StringField('Email', validators=[Length(max=150)])
+    current_password = PasswordField('Current')
+    new_password = PasswordField('New')
+    confirm_new_password = PasswordField('Confirm')
+    submit = SubmitField('Save Changes', name='submit_profile')
 
 class PersonalSettingsForm(FlaskForm):
     theme = SelectField(
@@ -83,6 +91,16 @@ class AddUserForm(FlaskForm):
     username = StringField(
         'Username',
         validators=[DataRequired(), Length(max=24, min=1)],
+        render_kw={'autocomplete': 'off'}
+    )
+    name = StringField(
+        'Full Name (optional)',
+        validators=[Length(max=150)],
+        render_kw={'autocomplete': 'off'}
+    )
+    email = StringField(
+        'Email (optional)',
+        validators=[Length(max=150)],
         render_kw={'autocomplete': 'off'}
     )
     password = PasswordField(

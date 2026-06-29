@@ -31,6 +31,18 @@
                     </td>
                 </tr>
                 <tr>
+                    <td><strong>{{ add_user_form.name.label }}</strong></td>
+                    <td>
+                        {{ add_user_form.name() }}
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>{{ add_user_form.email.label }}</strong></td>
+                    <td>
+                        {{ add_user_form.email() }}
+                    </td>
+                </tr>
+                <tr>
                     <td><strong>{{ add_user_form.password.label.text }}</strong></td>
                     <td>
                         {{ add_user_form.password() }}

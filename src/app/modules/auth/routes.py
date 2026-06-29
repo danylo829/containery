@@ -57,7 +57,12 @@ def install():
             return redirect(url_for('auth.install'))
 
         try:
-            user = User.create_user(username=username, password=password)
+            user = User.create_user(
+                username=username,
+                password=password,
+                name=str(form.name.data).strip() if form.name.data else None,
+                email=str(form.email.data).strip() if form.email.data else None
+            )
             if not user or not isinstance(user, User):
                 flash("User creation failed. Please try again.", 'error')
                 return redirect(url_for('auth.install'))
