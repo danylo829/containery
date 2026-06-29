@@ -147,3 +147,86 @@ select {
     animation: none !important;
     transform: none !important;
 }
+
+/* Universal Floating Labels (Google UI style) */
+.floating-input-container {
+    position: relative;
+    width: 100%;
+}
+
+.floating-input-container input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 1.1rem 0.75rem 0.3rem 0.75rem;
+    height: 2.8rem;
+    font-size: 0.95rem;
+    outline: none;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border-radius: 10px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.floating-input-container input:focus {
+    border-color: var(--accent-color);
+}
+
+.floating-input-container label {
+    display: inline-block !important;
+    position: absolute !important;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: 500;
+    font-size: 0.95rem;
+    opacity: 0.65;
+    color: var(--text-color);
+    pointer-events: none;
+    transition: 0.2s cubic-bezier(0.25, 0.8, 0.25, 1) all;
+    background: transparent;
+    padding: 0;
+    margin-bottom: 0;
+}
+
+.floating-input-container input:focus ~ label,
+.floating-input-container input:not(:placeholder-shown) ~ label {
+    top: 0.3rem;
+    transform: none;
+    font-size: 0.72rem;
+    opacity: 1;
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+/* Global input/select disabled styling fixes (especially for Dark/Mixed themes) */
+input[disabled],
+select[disabled],
+textarea[disabled],
+.ss-main.ss-disabled {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+    background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+body.dark input[disabled],
+body.dark select[disabled],
+body.dark textarea[disabled],
+body.dark .ss-main.ss-disabled,
+body.dark_mixed input[disabled],
+body.dark_mixed select[disabled],
+body.dark_mixed textarea[disabled],
+body.dark_mixed .ss-main.ss-disabled {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+    body.system input[disabled],
+    body.system select[disabled],
+    body.system textarea[disabled],
+    body.system .ss-main.ss-disabled {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+}

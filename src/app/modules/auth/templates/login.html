@@ -7,13 +7,31 @@
             <form method="POST" action="">
                 {{ form.csrf_token() }}
                 
-                {{ form.username.label }}
-                {{ form.username() }}
+                <div class="form-group">
+                    <div class="floating-input-container">
+                        {{ form.username(placeholder=" ") }}
+                        {{ form.username.label }}
+                    </div>
+                    {% for error in form.username.errors %}
+                        <div class="form-validate-error">
+                            <span>{{ error }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
     
-                {{ form.password.label }}
-                {{ form.password() }}
+                <div class="form-group">
+                    <div class="floating-input-container">
+                        {{ form.password(placeholder=" ") }}
+                        {{ form.password.label }}
+                    </div>
+                    {% for error in form.password.errors %}
+                        <div class="form-validate-error">
+                            <span>{{ error }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
     
-                {{ form.submit() }}
+                {{ form.submit(class="btn-primary") }}
             </form>
         </div>
     

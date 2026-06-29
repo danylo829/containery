@@ -25,13 +25,24 @@ main {
 h2 {
     color: var(--accent-color);
     text-align: center;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
 }
 
 .auth-container, .flash {
     background: var(--bg-color-box);
-    border-radius: 10px;
-    box-shadow: 2px 0 8px 4px rgba(0, 0, 0, 0.1);
-    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    box-sizing: border-box;
+    width: 24rem;
+    max-width: 90vw;
+}
+
+body.dark .auth-container,
+body.dark_mixed .auth-container {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
 }
 
 .error-container {
@@ -41,14 +52,30 @@ h2 {
 .flash {
     text-align: center;
     margin-top: 1rem;
+    padding: 1rem;
 }
 
 .flash.error {
     background-color: var(--error-bg);
+    color: var(--error-text);
 }
 
-.auth-container > form > input {
-    margin-bottom: 15px;
+.flash.success {
+    background-color: var(--success-bg);
+    color: var(--success-text);
+}
+
+/* Vertical spacing between inputs */
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+
+
+/* Make sure the submit button sits nicely */
+.auth-container input[type="submit"] {
+    margin-top: 0.5rem;
+    width: 100%;
 }
 
 label {

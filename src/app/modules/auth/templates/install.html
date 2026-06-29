@@ -3,29 +3,80 @@
 {% block content %}
     <main>       
         <div class="auth-container">
-        <h2>Admin Setup</h2>
-        <form method="POST" action="">
-            {{ form.csrf_token() }}
+            <h2>Admin Setup</h2>
+            <form method="POST" action="">
+                {{ form.csrf_token() }}
 
-            {{ form.username.label }}
-            {{ form.username() }}
+                <div class="form-group">
+                    <div class="floating-input-container">
+                        {{ form.username(placeholder=" ") }}
+                        {{ form.username.label }}
+                    </div>
+                    {% for error in form.username.errors %}
+                        <div class="form-validate-error">
+                            <span>{{ error }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
 
-            {{ form.password.label }}
-            {{ form.password() }}
+                <div class="form-group">
+                    <div class="floating-input-container">
+                        {{ form.name(placeholder=" ") }}
+                        {{ form.name.label }}
+                    </div>
+                    {% for error in form.name.errors %}
+                        <div class="form-validate-error">
+                            <span>{{ error }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
 
-            {{ form.confirm_password.label }}
-            {{ form.confirm_password() }}
+                <div class="form-group">
+                    <div class="floating-input-container">
+                        {{ form.email(placeholder=" ") }}
+                        {{ form.email.label }}
+                    </div>
+                    {% for error in form.email.errors %}
+                        <div class="form-validate-error">
+                            <span>{{ error }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
 
-            {{ form.submit() }}
-        </form>
-    </div>
+                <div class="form-group">
+                    <div class="floating-input-container">
+                        {{ form.password(placeholder=" ") }}
+                        {{ form.password.label }}
+                    </div>
+                    {% for error in form.password.errors %}
+                        <div class="form-validate-error">
+                            <span>{{ error }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="flash {{ category }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
+                <div class="form-group">
+                    <div class="floating-input-container">
+                        {{ form.confirm_password(placeholder=" ") }}
+                        {{ form.confirm_password.label }}
+                    </div>
+                    {% for error in form.confirm_password.errors %}
+                        <div class="form-validate-error">
+                            <span>{{ error }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                {{ form.submit(class="btn-primary") }}
+            </form>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
     </main>
 {% endblock %}
