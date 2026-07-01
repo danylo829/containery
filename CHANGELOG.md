@@ -1,4 +1,19 @@
 
+<a name="v1.3.3"></a>
+## [v1.3.3](https://github.com/danylo829/containery/compare/v1.3.2...v1.3.3)
+
+### Bug Fixes
+
+- **container:** Keep top action panel visible in container table with all filters
+- **core:** Fix black/white background blinking on page navigation
+
+### Features
+
+- **container:** Make exposed ports clickable links in container list
+- **core:** Add server-side pagination, sorting, and searching for tables with client-side fallback
+- **user:** Add support for optional Full Name and Email fields in user profiles
+
+
 <a name="v1.3.2"></a>
 ## [v1.3.2](https://github.com/danylo829/containery/compare/v1.3.1...v1.3.2)
 

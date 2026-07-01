@@ -1,21 +1,21 @@
-# Containery 1.3.2 is out!
+# Containery 1.3.3 is out!
 
-This release introduces new features like dynamic healthchecks, persistent list filters, and a redesigned terminal execution interface, along with several UI improvements and bug fixes.
+This release introduces pagination and filters layout stability, optional Full Name and Email user details, modern floating label auth screens, and cleaner profile settings layouts.
 
 ### Features
 
-- **core:** Add ping route and dynamic healthcheck for Docker containers
-- **core:** Add docker host filter to all lists and refactor filter logic
-- **container:** Persist list filters and add animated clear filters button
+- **user:** Add support for optional Full Name and Email fields in user profiles
+- **core:** Add server-side pagination, sorting, and searching for tables with client-side fallback
+- **container:** Make exposed ports clickable links in container list
 
 ### Bug Fixes
 
-- **dashboard:** Add hover effect to dashboard buttons in dark theme
-- **user:** Correctly process and validate user permissions
+- **core:** Fix black/white background blinking on page navigation
+- **container:** Keep top action panel visible in container table with all filters
 
 ### Improvements
 
-- **container:** Redesign terminal execution interface into a modal and support dynamic exec flags
-- **container:** Add light theme support for terminal and logs interfaces
+- **auth:** Overhaul login and install pages with floating labels and clean layouts
+- **user:** Redesign profile metadata, roles capsules, and action buttons
 
 Feedback, issues, and contributions are welcome.
