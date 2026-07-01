@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="{{ PersonalSettings.get_setting(current_user.id, 'theme').lower() }}{{ ' glass' if PersonalSettings.get_setting(current_user.id, 'glassmorphism') == 'true' else '' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

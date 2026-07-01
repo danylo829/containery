@@ -30,7 +30,7 @@
 
 /* System theme - respects OS preference */
 @media (prefers-color-scheme: dark) {
-    body.system {
+    body.system, html.system {
         --bg-color: var(--bg-dark);
         --bg-color-darker: var(--bg-dark);
         --bg-color-box: var(--bg-box-dark);
@@ -51,7 +51,7 @@
 }
 
 @media (prefers-color-scheme: light) {
-    body.system {
+    body.system, html.system {
         --bg-color: var(--bg-light);
         --bg-color-darker: var(--bg-darker-light);
         --bg-color-box: var(--bg-light);
@@ -72,7 +72,7 @@
 }
 
 /* Manual theme overrides */
-body.light {
+body.light, html.light {
     --bg-color: var(--bg-light);
     --bg-color-darker: var(--bg-darker-light);
     --bg-color-box: var(--bg-light);
@@ -91,7 +91,7 @@ body.light {
     --ss-font-color: var(--text-color) !important;
 }
 
-body.dark {
+body.dark, html.dark {
     --bg-color: var(--bg-dark);
     --bg-color-darker: var(--bg-dark);
     --bg-color-box: var(--bg-box-dark);
@@ -110,7 +110,7 @@ body.dark {
     --ss-font-color: var(--text-color) !important;
 }
 
-body.dark_mixed {
+body.dark_mixed, html.dark_mixed {
     --bg-color: var(--bg-mixed);
     --bg-color-darker: var(--bg-dark);
     --bg-color-box: var(--bg-box-mixed);
@@ -130,7 +130,7 @@ body.dark_mixed {
 }
 
 /* Status colors - consistent across all themes */
-body {
+body, html {
     --success-bg: var(--success);
     --error-bg: var(--error);
     --success-text: var(--status-text);
