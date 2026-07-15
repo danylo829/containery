@@ -10,8 +10,6 @@ function updateUrlParams(params) {
     window.location.href = url.toString();
 }
 
-
-
 function initServerSideTable(tableElement) {
     // Set initial sort direction based on URL
     const urlParams = new URLSearchParams(window.location.search);

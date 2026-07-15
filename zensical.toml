@@ -1,0 +1,65 @@
+[project]
+site_name = "Containery"
+site_description = "A fast, lightweight, and intuitive web-based container management tool."
+site_url = "https://danylo829.github.io/"
+repo_url = "https://github.com/danylo829/containery"
+repo_name = "danylo829/containery"
+edit_uri = "edit/master/docs/"
+extra_css = [
+  "stylesheets/extra.css"
+]
+nav = [
+    { "Home" = "index.md" },
+    { "Installation & Deployment" = "installation.md" },
+    { "Usage Guide" = "usage.md" }
+]
+
+[project.theme]
+name = "material"
+custom_dir = "docs/overrides"
+favicon = "https://raw.githubusercontent.com/danylo829/containery/master/src/app/static/icons/favicon.svg"
+logo = "https://raw.githubusercontent.com/danylo829/containery/master/src/app/static/icons/favicon.svg"
+features = [
+  "navigation.tabs",
+  "navigation.sections",
+  "navigation.top",
+  "search.suggest",
+  "search.highlight",
+  "content.code.copy"
+]
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+primary = "custom"
+accent = "custom"
+toggle.icon = "material/brightness-7"
+toggle.name = "Switch to dark mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+primary = "custom"
+accent = "custom"
+toggle.icon = "material/brightness-4"
+toggle.name = "Switch to light mode"
+
+[project.markdown_extensions.pymdownx.highlight]
+anchor_linenums = true
+line_spans = "__span"
+pygments_lang_class = true
+
+[project.markdown_extensions.pymdownx.inlinehilite]
+
+[project.markdown_extensions.pymdownx.snippets]
+
+[project.markdown_extensions.pymdownx.superfences]
+
+[project.markdown_extensions.admonition]
+
+[project.markdown_extensions.pymdownx.details]
+
+[project.markdown_extensions.pymdownx.tabbed]
+alternate_style = true
+
+

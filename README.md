@@ -6,6 +6,7 @@
   </picture>
 
   ![Version](https://img.shields.io/github/v/tag/danylo829/containery?label=version)
+  [![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://danylo829.github.io/containery/)
   ![Image Size](https://img.shields.io/badge/image%20size-170MB-blue)
   ![Python](https://img.shields.io/badge/python-3.12-blue)
   ![Last Commit](https://img.shields.io/github/last-commit/danylo829/containery)
@@ -154,6 +155,18 @@ If you need to connect to a Docker daemon accessible via a Unix socket (e.g. a s
 ## Roadmap
 - **OIDC Authentication**
 - **Remote Docker host support**
+
+## Documentation
+
+Detailed documentation is available at [danylo829.github.io/containery](https://danylo829.github.io/containery/).
+
+To run the live-reloading documentation server locally:
+
+```bash
+docker compose -f docs/docker-compose.yml up
+```
+
+Once running, open your browser to `http://localhost:8000/`.
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

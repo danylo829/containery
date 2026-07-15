@@ -1,0 +1,381 @@
+/* Custom font and scrollbar customization */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+html {
+  scroll-behavior: smooth;
+}
+
+:root {
+  --md-text-font: 'Roboto', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+}
+
+/* Scrollbar styling matching Containery app */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(128, 128, 128, 0.25);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 128, 128, 0.4);
+}
+
+/* Light Theme Color Palettes (Containery Blue) */
+:root [data-md-color-scheme="default"] {
+  --md-primary-fg-color:            #0077ff; /* --accent-light */
+  --md-primary-fg-color--light:     #3392FF; /* --accent-light-darken */
+  --md-primary-fg-color--dark:      #0055cc;
+  --md-accent-fg-color:             #0077ff;
+  
+  --md-default-bg-color:            #f5f5f5; /* --bg-light */
+  --md-default-fg-color:            #333333; /* --text-light */
+}
+
+/* Dark Theme Color Palettes (Containery Deep Space / Glass Dark) */
+:root [data-md-color-scheme="slate"] {
+  --md-primary-fg-color:            #1b1f26; /* --bg-mixed */
+  --md-primary-fg-color--light:     #30343a; /* --bg-box-mixed */
+  --md-primary-fg-color--dark:      #121212; /* --bg-dark */
+  --md-accent-fg-color:             #66bfff; /* --accent-dark */
+  
+  --md-default-bg-color:            #121212; /* --bg-dark */
+  --md-default-fg-color:            #f5f5f5; /* --text-dark */
+  --md-card-bg-color:               #1b1f26;
+}
+
+/* Glassmorphic Header & Search Bar customizations */
+.md-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+  transition: background-color 0.25s, border-color 0.25s;
+}
+
+[data-md-color-scheme="slate"] .md-header {
+  background-color: rgba(27, 31, 38, 0.8) !important; /* --bg-mixed with opacity */
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+[data-md-color-scheme="default"] .md-header {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  color: #333;
+}
+
+.md-header__title {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* Search bar styling */
+.md-search__form {
+  border-radius: 8px !important;
+  background-color: rgba(0, 0, 0, 0.15) !important;
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+[data-md-color-scheme="default"] .md-search__form {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+.md-search__form:hover {
+  background-color: rgba(0, 0, 0, 0.25) !important;
+}
+
+.md-search__input:focus ~ .md-search__form {
+  box-shadow: 0 0 0 2px var(--md-accent-fg-color) !important;
+}
+
+/* Tab navigation glassmorphism styling */
+.md-tabs {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+[data-md-color-scheme="slate"] .md-tabs {
+  background-color: rgba(18, 18, 18, 0.6) !important;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+}
+
+[data-md-color-scheme="default"] .md-tabs {
+  background-color: rgba(240, 240, 240, 0.6) !important;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+}
+
+/* Sleek card and content box styling */
+.md-content__inner {
+  padding-top: 1.5rem;
+}
+
+/* Admonitions (Note, Tip, Info boxes) rounded borders */
+.md-typeset .admonition, 
+.md-typeset details {
+  border-radius: 8px;
+  border-left-width: 4px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* Content headings */
+.md-typeset h1, 
+.md-typeset h2, 
+.md-typeset h3 {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* Subtle branding: left accent bar on H2 headers to match developer dashboard styling */
+.md-typeset h2 {
+  border-left: 3px solid var(--md-accent-fg-color);
+  padding-left: 0.6rem;
+}
+
+.md-typeset h1 {
+  color: var(--md-accent-fg-color);
+}
+
+/* Visibility classes for light/dark mode elements (e.g. logos) */
+[data-md-color-scheme="default"] .only-dark {
+  display: none !important;
+}
+
+[data-md-color-scheme="slate"] .only-light {
+  display: none !important;
+}
+
+/* Landing Page Styles */
+.landing-page {
+  font-family: 'Roboto', sans-serif;
+  margin: 0 auto;
+  max-width: 960px;
+  padding: 0.5rem 1rem 2rem !important; /* Reduced top padding to move it up */
+}
+
+/* Titles should not have vertical line on the left on index/landing page */
+.landing-page h1,
+.landing-page h2,
+.landing-page h3 {
+  border-left: none !important;
+  padding-left: 0 !important;
+}
+
+.landing-page section {
+  margin-bottom: 1.5rem;
+}
+
+.landing-hero {
+  text-align: center;
+}
+
+.hero-headline {
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.2rem;
+  color: var(--md-default-fg-color);
+}
+
+[data-md-color-scheme="slate"] .hero-headline {
+  background: linear-gradient(135deg, #ffffff 30%, #a2d6ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+[data-md-color-scheme="default"] .hero-headline {
+  background: linear-gradient(135deg, #111111 30%, #0055cc 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subline {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  max-width: 700px;
+  margin: 0 auto 2.5rem;
+  color: var(--md-default-fg-color);
+  opacity: 0.8;
+}
+
+.hero-ctas {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.cta-btn {
+  display: inline-block;
+  min-width: 200px;
+  text-align: center;
+  padding: 10px 24px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: 10px;
+  text-decoration: none !important;
+  transition: background-color 0.2s, border-color 0.2s;
+  background-color: var(--md-default-fg-color);
+  border: 1px solid var(--md-default-fg-color);
+  color: var(--md-default-bg-color) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+[data-md-color-scheme="slate"] .cta-btn:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.9);
+}
+
+[data-md-color-scheme="default"] .cta-btn:hover {
+  background-color: rgba(0, 0, 0, 0.85);
+  border-color: rgba(0, 0, 0, 0.85);
+}
+
+/* Features Grid */
+.landing-features {
+  border-top: 1px solid rgba(128, 128, 128, 0.12);
+}
+
+.section-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 3rem;
+  color: var(--md-default-fg-color);
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.feature-card {
+  padding: 1.5rem;
+  border-radius: 10px;
+  border: 1px solid rgba(128, 128, 128, 0.15);
+  background: var(--md-card-bg-color, #ffffff);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+
+.feature-icon {
+  margin-bottom: 0.4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.feature-icon svg {
+  width: 48px; /* Bigger icon size */
+  height: 48px;
+  color: var(--md-default-fg-color); /* Automatically white on slate (dark) and black on default (light) */
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.feature-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+  margin-top: 0;
+  color: var(--md-default-fg-color);
+}
+
+.feature-card p {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  opacity: 0.85;
+  margin: 0;
+}
+
+/* Quick Start Block */
+.landing-start {
+  border-top: 1px solid rgba(128, 128, 128, 0.12);
+}
+.section-sub {
+  text-align: center;
+  margin-bottom: 2rem;
+  opacity: 0.8;
+  font-size: 0.95rem;
+}
+
+.start-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+.start-method-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.start-method-col h3 {
+  font-weight: 700;
+  margin: 0;
+  color: var(--md-default-fg-color);
+  text-align: center;
+}
+
+.start-method-col .section-sub {
+  margin-bottom: 0.8rem;
+  text-align: center;
+}
+
+.landing-start-footer {
+  text-align: center;
+  margin-top: 2.5rem;
+}
+
+/* Responsiveness overrides */
+@media (max-width: 768px) {
+  .hero-headline {
+    font-size: 1.8rem;
+  }
+  .hero-ctas {
+    flex-direction: column;
+    align-items: stretch;
+    max-width: 280px;
+    margin: 0 auto 2rem;
+  }
+  .cta-btn {
+    text-align: center;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr; /* Single column on mobile */
+  }
+}
+
+/* High contrast styles for dark (slate) mode */
+[data-md-color-scheme="slate"] .md-typeset a {
+  color: #66bfff;
+}
+[data-md-color-scheme="slate"] .md-typeset a:hover {
+  color: #99d5ff;
+}
+
+[data-md-color-scheme="slate"] .md-nav__link--active {
+  color: #66bfff !important;
+}
+
+

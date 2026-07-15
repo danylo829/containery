@@ -1,0 +1,128 @@
+{% extends "main.html" %}
+
+{% block content %}
+<div class="landing-page">
+  <!-- Hero Section -->
+  <section class="landing-hero">
+    <div class="landing-hero-content">
+      <img alt="Containery Logo" src="https://raw.githubusercontent.com/danylo829/containery/master/src/app/static/images/Containery-black.png" height="110" class="only-light hero-logo">
+      <img alt="Containery Logo" src="https://raw.githubusercontent.com/danylo829/containery/master/src/app/static/images/Containery-white.png" height="110" class="only-dark hero-logo">
+      
+      <h1 class="hero-headline">Fast, Lightweight & Intuitive Container Management</h1>
+      <p class="hero-subline">A clean, self-hosted web UI to monitor status, view logs, and access container terminals directly from any device. Built for developers, homelabs, and teams.</p>
+      
+      <div class="hero-ctas">
+        <a href="#deploy" class="cta-btn">Deploy in 60s</a>
+        <a href="usage/" class="cta-btn">Usage Guide</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Grid Section -->
+  <section class="landing-features">
+    <h2 class="section-title">Why Containery?</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg id="processes-icon" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2">
+            <rect id="frame" x="4" y="2" width="16" height="20" rx="1"/>
+            <g id="text" stroke="none" fill="currentColor">
+              <rect x="8" y="6" width="8" height="2" rx="1" ry="1"/>
+              <rect x="8" y="11" width="8" height="2" rx="1" ry="1"/>
+              <rect x="8" y="16" width="8" height="2" rx="1" ry="1"/>
+            </g>
+          </svg>
+        </div>
+        <h3>Lightweight Footprint</h3>
+        <p>Built with efficiency in mind. Running on less than 170MB, with no heavy cloud dependencies, telemetry, or bloat.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg id="networks-icon" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M2 8c5.5-5 14.5-5 20 0"/>
+            <path d="M5 12c3.5-3 10.5-3 14 0"/>
+            <path d="M8 16c2-2 6-2 8 0"/>
+            <circle cx="12" cy="20" r="1" />
+          </svg>
+        </div>
+        <h3>Multi-Host Support</h3>
+        <p>Manage multiple Docker environments securely. Connect via local UNIX sockets, remote TCP, or secure socket proxies.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg id="terminal-icon" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="4" width="20" height="16" rx="1"/>
+            <polyline points="6,10 10,12 6,14"/>
+            <line x1="12" y1="16" x2="18" y2="16"/>
+          </svg>
+        </div>
+        <h3>In-Browser Terminal & Logs</h3>
+        <p>Triage containers instantly. Stream real-time logs and open raw SSH terminal panels straight inside your browser.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg id="roles-icon" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="10" y="1" width="4" height="4" rx="1" ry="1" stroke-width="0" fill="currentColor"/>
+            <rect id="frame" x="2" y="4" width="20" height="16" rx="1" ry="1"/>
+            <g id="text" fill="currentColor" stroke="none">
+              <rect x="12" y="8" width="7" height="2" rx="1" ry="1"/>
+              <rect x="12" y="14" width="7" height="2" rx="1" ry="1"/>
+            </g>
+            <g id="person" fill="currentColor" stroke="none">
+              <circle id="head" cx="7" cy="10" r="2"/>
+              <path d="M4.5 16 C5 11, 9 11, 9.5 16" />
+            </g>
+          </svg>
+        </div>
+        <h3>Role-Based Access</h3>
+        <p>Define granular user privileges. Ensure team members only have access to specific hosts, containers, or commands.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Get Started Code Snippet -->
+  <section class="landing-start" id="deploy">
+    <h2 class="section-title">Get Started Instantly</h2>
+    
+    <div class="start-methods">
+      <div class="start-method-col">
+        <h3>Try it now</h3>
+        <p class="section-sub">Run the automatic installer script instantly via curl:</p>
+        <div class="highlight">
+          <pre><span></span><code><span class="nb">curl</span> <span class="s1">-sSL</span> https://raw.githubusercontent.com/danylo829/containery/master/install.sh <span class="p">|</span> <span class="nb">sh</span></code></pre>
+        </div>
+      </div>
+      
+      <div class="start-method-col">
+        <h3>Production Deploy</h3>
+        <p class="section-sub">Or configure a persistent deployment using Docker Compose:</p>
+        <div class="highlight">
+          <pre><span></span><code><span class="nt">services</span><span class="p">:</span>
+  <span class="nt">app</span><span class="p">:</span>
+    <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ghcr.io/danylo829/containery:latest</span>
+    <span class="nt">container_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">containery</span>
+    <span class="nt">restart</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+    <span class="nt">ports</span><span class="p">:</span>
+      <span class="p">-</span> <span class="s2">&quot;5000:5000&quot;</span>
+    <span class="nt">volumes</span><span class="p">:</span>
+      <span class="p">-</span> <span class="l l-Scalar l-Scalar-Plain">containery_data:/containery_data</span>
+      <span class="p">-</span> <span class="l l-Scalar l-Scalar-Plain">containery_static:/containery/app/static/dist</span>
+      <span class="p">-</span> <span class="l l-Scalar l-Scalar-Plain">/var/run/docker.sock:/var/run/docker.sock:ro</span>
+
+<span class="nt">volumes</span><span class="p">:</span>
+  <span class="nt">containery_data</span><span class="p">:</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">containery_data</span>
+  <span class="nt">containery_static</span><span class="p">:</span>
+    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">containery_static</span></code></pre>
+        </div>
+      </div>
+    </div>
+    <div class="landing-start-footer">
+      <a href="installation/" class="cta-btn">Complete Installation Guide</a>
+    </div>
+  </section>
+</div>
+{% endblock %}
