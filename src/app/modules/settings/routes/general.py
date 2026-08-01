@@ -59,7 +59,7 @@ def update_setting():
     field_name = next(iter(data))
     field_value = data[field_name]
     
-    form = GlobalSettingsForm(csrf_enabled=False)
+    form = GlobalSettingsForm()
     
     if field_name not in form._fields:
         return jsonify({'error': f"Field '{field_name}' not found"}), 400
