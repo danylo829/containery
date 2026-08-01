@@ -1,9 +1,26 @@
+import shlex
+from functools import wraps
 from flask import request
+from flask_login import current_user
 from flask_socketio import emit
+
 from app.core.extensions import socketio, docker
+from app.modules.user.models import Permissions
 from app.modules.main.container.helpers import get_container_host
 
+def socket_permission(permission):
+    def decorator(f):
+        @wraps(f)
+        def decorated(*args, **kwargs):
+            if not current_user.is_authenticated or not current_user.has_permission(permission):
+                emit('output', {'data': 'Unauthorized: Access denied.\r\n'})
+                return
+            return f(*args, **kwargs)
+        return decorated
+    return decorator
+
 @socketio.on('start_session')
+@socket_permission(Permissions.CONTAINER_EXEC)
 def handle_start_session(data):
     container_id = data.get('container_id')
     command = data.get('command')
@@ -24,12 +41,13 @@ def handle_start_session(data):
     tty = data.get('tty', True)
 
     exec_create_endpoint = f"/containers/{container_id}/exec"
+    cmd_list = shlex.split(command) if isinstance(command, str) else command
     payload = {
         "AttachStdin": interactive,
         "AttachStdout": True,
         "AttachStderr": True,
         "Tty": tty,
-        "Cmd": command.split(),
+        "Cmd": cmd_list,
     }
     
     if user:
@@ -52,6 +70,7 @@ def handle_start_session(data):
                                    tty=tty)
 
 @socketio.on('input')
+@socket_permission(Permissions.CONTAINER_EXEC)
 def handle_command(data):
     command = data.get('command')
     if not command:
@@ -63,6 +82,7 @@ def handle_command(data):
         emit('output', {'data': response})
 
 @socketio.on('resize_session')
+@socket_permission(Permissions.CONTAINER_EXEC)
 def handle_resize_session(data):
     exec_id = data.get('exec_id')
     cols = data.get('cols')
