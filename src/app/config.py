@@ -9,4 +9,5 @@ class Config:
     DEBUG = getenv('DEBUG', 'False') == 'True'
     DOCKER_SOCKET_PATH = getenv('DOCKER_SOCKET_PATH', '/var/run/docker.sock')
     VERSION = getenv('CONTAINERY_VERSION', '0.1.0-dev')
+    ALLOW_SELF_EXEC = getenv('ALLOW_SELF_EXEC', getenv('CONTAINERY_ALLOW_SELF_EXEC', 'False')).lower() in ('true', '1', 't')
     # ASSETS_DEBUG = True

@@ -129,6 +129,7 @@ If you need to connect to a Docker daemon accessible via a Unix socket (e.g. a s
 - **`SQLALCHEMY_DATABASE_URI`**: The database connection URI. Defaults to `sqlite:////containery_data/containery.db` for local development.
 - **`SQLALCHEMY_TRACK_MODIFICATIONS`**: A flag to enable or disable SQLAlchemy's event system. Defaults to `False`.
 - **`DEBUG`**: Enables or disables debug mode. Defaults to `False`.
+- **`ALLOW_SELF_EXEC`**: Allows or forbids executing terminal commands on the Containery container itself. Defaults to `False`.
 
 ## Screenshots
 

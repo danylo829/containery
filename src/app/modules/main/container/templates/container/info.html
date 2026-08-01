@@ -35,9 +35,11 @@
                     </div>
                     <div>
                         <!-- Terminal -->
+                        {% if not is_self or allow_self_exec %}
                         <a class="terminal-btn" href="{{ url_for('main.container.terminal', id=container.general_info.id) }}" title="Open Terminal">
                             {% include 'icons/terminal.svg' %}
                         </a>
+                        {% endif %}
                         <!-- Processes -->
                         <a class="processes-btn" href="{{ url_for('main.container.processes', id=container.general_info.id) }}" title="View Processes">
                             {% include 'icons/processes.svg' %}

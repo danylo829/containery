@@ -111,15 +111,19 @@
                         {% elif col_property == 'quick_actions' %}
                             <td>
                                 <div class="quick-actions actions disable-on-load">
-                                    {% for action in container_quick_actions_setting if action.enabled %}
+                                     {% for action in container_quick_actions_setting if action.enabled %}
                                         {% set action_name = action.name | lower | replace(' ', '-') %}
-                                        {% if action_name in ['logs', 'terminal', 'processes'] %}
+                                        {% if action_name == 'terminal' and row.is_self and not allow_self_exec %}
+                                            {# Terminal disabled for self container #}
+                                        {% elif action_name in ['logs', 'terminal', 'processes'] %}
                                         <a class="{{ action_name }}-btn" href="{{ url_for('main.container.' ~ action_name, id=row.id) }}">
-                                        {% else %}
-                                        <a class="{{ action_name }}-btn" data-id="{{ row.id }}">
-                                        {% endif %}
                                             {% include 'icons/' ~ action_name ~ '.svg' %}
                                         </a>
+                                        {% else %}
+                                        <a class="{{ action_name }}-btn" data-id="{{ row.id }}">
+                                            {% include 'icons/' ~ action_name ~ '.svg' %}
+                                        </a>
+                                        {% endif %}
                                     {% endfor %}
                                 </div>
                             </td>

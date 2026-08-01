@@ -1,4 +1,4 @@
-from flask import render_template, url_for, request, jsonify
+from flask import render_template, url_for, request, jsonify, current_app
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from flask_login import current_user
 
@@ -8,7 +8,7 @@ from app.modules.settings.models import DockerHost
 from app.core.extensions import docker
 from app.lib.common import format_unix_timestamp, paginate_and_sort_list
 from app.modules.main.container import container
-from app.modules.main.container.helpers import container_info, container_name, get_container_host
+from app.modules.main.container.helpers import container_info, container_name, get_container_host, is_self_container
 
 @container.route('/list', methods=['GET'])
 @permission(Permissions.CONTAINER_VIEW_LIST)
@@ -70,6 +70,7 @@ def get_list():
             host_ip = request.host.split(':')[0] if c_host and c_host.scheme == 'unix' else (c_host.address[0] if c_host else 'localhost')
             row = {
                 'id': container.get('Id', 'Unknown'),
+                'is_self': is_self_container(container.get('Id', '')),
                 'name': container.get('Names', ['Unknown'])[0].strip('/') if container.get('Names') else 'Unknown',
                 'status': container.get('Status', 'Unknown'),
                 'created': format_unix_timestamp(container.get('Created', '0')),
@@ -100,6 +101,7 @@ def get_list():
         {"name": "Containers", "url": None},
     ]
     page_title = "Container List"
+    allow_self_exec = current_app.config.get('ALLOW_SELF_EXEC', False)
 
     return render_template('container/table.html', 
                         rows=rows, 
@@ -109,6 +111,7 @@ def get_list():
                         selected_docker_hosts_ids=selected_docker_hosts_ids,
                         container_columns_setting=container_columns_setting,
                         container_quick_actions_setting=container_quick_actions_setting,
+                        allow_self_exec=allow_self_exec,
                         breadcrumbs=breadcrumbs, 
                         page_title=page_title,
                         pagination=pagination)

@@ -1,12 +1,12 @@
 import shlex
 from functools import wraps
-from flask import request
+from flask import request, current_app
 from flask_login import current_user
 from flask_socketio import emit
 
 from app.core.extensions import socketio, docker
 from app.modules.user.models import Permissions
-from app.modules.main.container.helpers import get_container_host
+from app.modules.main.container.helpers import get_container_host, is_self_container
 
 def socket_permission(permission):
     def decorator(f):
@@ -30,6 +30,13 @@ def handle_start_session(data):
 
     if not container_id or not command:
         emit('output', {'data': 'Invalid session data.\r\n'})
+        return
+
+    is_self = is_self_container(container_id)
+    allow_self_exec = current_app.config.get('ALLOW_SELF_EXEC', False)
+
+    if is_self and not allow_self_exec:
+        emit('output', {'data': 'Error: Executing commands on the Containery container itself is disabled.\r\n'})
         return
 
     host = get_container_host(container_id)

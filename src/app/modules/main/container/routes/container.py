@@ -1,10 +1,10 @@
-from flask import render_template, url_for, request
+from flask import render_template, url_for, request, current_app
 
 from app.modules.user.models import Permissions
 from app.core.decorators import permission
 from app.core.extensions import docker
 from app.modules.main.container import container
-from app.modules.main.container.helpers import container_info, container_name, get_container_host
+from app.modules.main.container.helpers import container_info, container_name, get_container_host, is_self_container
 
 import json
 
@@ -23,6 +23,9 @@ def info(id):
     else:
         container = response
 
+    is_self = is_self_container(id)
+    allow_self_exec = current_app.config.get('ALLOW_SELF_EXEC', False)
+
     breadcrumbs = [
         {"name": "Dashboard", "url": url_for('main.dashboard.index')},
         {"name": "Containers", "url": url_for('main.container.get_list')},
@@ -30,7 +33,8 @@ def info(id):
     ]
     page_title = 'Container Details'
 
-    return render_template('container/info.html', container=container, breadcrumbs=breadcrumbs, page_title=page_title)
+    return render_template('container/info.html', container=container, breadcrumbs=breadcrumbs, page_title=page_title, is_self=is_self, allow_self_exec=allow_self_exec)
+
 
 
 @container.route('/<id>/logs', methods=['GET'])
@@ -112,6 +116,11 @@ def processes(id):
 @container.route('/<id>/terminal', methods=['GET'])
 @permission(Permissions.CONTAINER_EXEC)
 def terminal(id):
+    is_self = is_self_container(id)
+    allow_self_exec = current_app.config.get('ALLOW_SELF_EXEC', False)
+    if is_self and not allow_self_exec:
+        return render_template('error.html', message='Executing commands on the Containery container itself is disabled', code=403), 403
+
     breadcrumbs = [
         {"name": "Dashboard", "url": url_for('main.dashboard.index')},
         {"name": "Containers", "url": url_for('main.container.get_list')},

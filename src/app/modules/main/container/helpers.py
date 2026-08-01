@@ -76,3 +76,76 @@ def container_name(id):
 def get_container_host(container_id):
     host, _ = _find_container(container_id)
     return host
+
+
+def is_self_container(container_id):
+    import os
+    import socket
+
+    if not container_id:
+        return False
+
+    cid_str = str(container_id).strip().lower().lstrip('/')
+
+    self_ids = set()
+    try:
+        hn = socket.gethostname().strip().lower()
+        if hn:
+            self_ids.add(hn)
+    except Exception:
+        pass
+
+    env_hn = os.getenv('HOSTNAME', '').strip().lower()
+    if env_hn:
+        self_ids.add(env_hn)
+
+    try:
+        if os.path.exists('/etc/hostname'):
+            with open('/etc/hostname', 'r') as f:
+                h = f.read().strip().lower()
+                if h:
+                    self_ids.add(h)
+    except Exception:
+        pass
+
+    try:
+        if os.path.exists('/proc/self/mountinfo'):
+            with open('/proc/self/mountinfo', 'r') as f:
+                for line in f:
+                    if '/docker/containers/' in line:
+                        parts = line.split('/docker/containers/')
+                        if len(parts) > 1:
+                            c_full = parts[1].split('/')[0].strip().lower()
+                            if c_full:
+                                self_ids.add(c_full)
+    except Exception:
+        pass
+
+    self_ids.add('containery')
+
+    if cid_str in self_ids:
+        return True
+
+    for sid in self_ids:
+        if len(sid) >= 12 and (cid_str.startswith(sid) or sid.startswith(cid_str)):
+            return True
+
+    host, response = _find_container(container_id)
+    if host and response and getattr(response, 'status_code', None) == 200:
+        try:
+            details = response.json()
+            full_id = details.get('Id', '').lower()
+            name = details.get('Name', '').lstrip('/').lower()
+            hostname = details.get('Config', {}).get('Hostname', '').lower()
+
+            if name in self_ids or hostname in self_ids or full_id in self_ids:
+                return True
+
+            for sid in self_ids:
+                if len(sid) >= 12 and (full_id.startswith(sid) or sid.startswith(full_id)):
+                    return True
+        except Exception:
+            pass
+
+    return False
+

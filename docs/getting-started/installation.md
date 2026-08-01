@@ -165,3 +165,4 @@ Application security keys, database storage paths, and debugging flags.
 | `DEBUG` | Enable Flask debug mode and interactive reloader. | `False` |
 | `SQLALCHEMY_TRACK_MODIFICATIONS` | Flag for SQLAlchemy event tracking. | `False` |
 | `CONTAINERY_VERSION` | Override application release version string. | `0.1.0-dev` |
+| `ALLOW_SELF_EXEC` | Allow command execution on the Containery container itself. | `False` |
