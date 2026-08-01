@@ -12,7 +12,7 @@ from . import api
 
 
 @api.route('/<id>/delete', methods=['DELETE'])
-@permission(Permissions.NETWORK_INFO)
+@permission(Permissions.NETWORK_DELETE)
 def delete(id):
     host, _ = find_on_host(docker.inspect_network, id)
     if host is None:

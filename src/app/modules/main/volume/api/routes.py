@@ -12,7 +12,7 @@ from . import api
 
 
 @api.route('/<id>/delete', methods=['DELETE'])
-@permission(Permissions.VOLUME_INFO)
+@permission(Permissions.VOLUME_DELETE)
 def delete(id):
     host, _ = find_on_host(docker.inspect_volume, id)
     if host is None:

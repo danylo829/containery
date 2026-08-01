@@ -14,7 +14,7 @@ from . import api
 
 
 @api.route('/<id>/delete', methods=['DELETE'])
-@permission(Permissions.IMAGE_INFO)
+@permission(Permissions.IMAGE_DELETE)
 def delete(id):
     host, _ = find_on_host(docker.inspect_image, id)
     if host is None:

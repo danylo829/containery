@@ -112,7 +112,7 @@ def check_docker_host(host_id):
         return jsonify({'message': f'Error checking docker host connection.'}), 500
 
 @settings.route('/docker-hosts/test-connection', methods=['POST'])
-@permission(Permissions.GLOBAL_SETTINGS_VIEW)
+@permission(Permissions.GLOBAL_SETTINGS_EDIT)
 def test_docker_host_connection():
     data = request.json
     url = data.get('url')
