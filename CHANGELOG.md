@@ -1,4 +1,23 @@
 
+<a name="v1.3.4"></a>
+## [v1.3.4](https://github.com/danylo829/containery/compare/v1.3.3...v1.3.4)
+
+### Bug Fixes
+
+- **container:** Require authentication and permission for container exec Socket.IO sessions
+- **core:** Enforce delete and edit permissions on management API endpoints
+- **settings:** Enable CSRF validation on global settings update endpoint
+
+### Code Refactoring
+
+- **core:** Combine production and development Dockerfiles
+
+### Features
+
+- **docs:** Expand documentation with dedicated feature guides and embedded screenshots
+- **docs:** Set up Zensical docs and GH Actions workflow for GH pages deployment
+
+
 <a name="v1.3.3"></a>
 ## [v1.3.3](https://github.com/danylo829/containery/compare/v1.3.2...v1.3.3)
 

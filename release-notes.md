@@ -1,21 +1,19 @@
-# Containery 1.3.3 is out!
+# Containery 1.3.4 is out!
 
-This release introduces pagination and filters layout stability, optional Full Name and Email user details, modern floating label auth screens, and cleaner profile settings layouts.
-
-### Features
-
-- **user:** Add support for optional Full Name and Email fields in user profiles
-- **core:** Add server-side pagination, sorting, and searching for tables with client-side fallback
-- **container:** Make exposed ports clickable links in container list
+This release includes critical security hardening across Socket.IO and management API endpoints, CSRF protection fixes, Docker build refactorings, and documentation updates.
 
 ### Bug Fixes
 
-- **core:** Fix black/white background blinking on page navigation
-- **container:** Keep top action panel visible in container table with all filters
+- **container:** Require authentication and permission checks for container exec Socket.IO sessions
+- **core:** Enforce delete and edit permissions on management API endpoints
+- **settings:** Enable CSRF validation on global settings update endpoint
+
+### Features
+
+- **docs:** Expand documentation with dedicated feature guides and setup Zensical docs workflow
 
 ### Improvements
 
-- **auth:** Overhaul login and install pages with floating labels and clean layouts
-- **user:** Redesign profile metadata, roles capsules, and action buttons
+- **core:** Combine production and development Dockerfiles and clean up Gunicorn configuration
 
 Feedback, issues, and contributions are welcome.
