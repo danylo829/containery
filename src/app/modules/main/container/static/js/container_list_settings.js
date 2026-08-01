@@ -101,35 +101,18 @@ function closeDraggableListModal() {
 
 // === drag logic ===
 function enableHorizontalDrag(container) {
-    let draggingEl = null;
-
-    container.addEventListener('dragstart', e => {
-        if (!e.target.classList.contains('item')) return;
-        draggingEl = e.target;
-        draggingEl.style.opacity = '0.5';
-    });
-
-    container.addEventListener('dragend', () => {
-        if (draggingEl) draggingEl.style.opacity = '1';
-        draggingEl = null;
-    });
-
-    container.addEventListener('dragover', e => {
-        e.preventDefault();
-        const afterElement = getDragAfterElement(container, e.clientX);
-        if (!draggingEl) return;
-        if (afterElement == null) container.appendChild(draggingEl);
-        else container.insertBefore(draggingEl, afterElement);
-    });
-
-    function getDragAfterElement(container, x) {
-        const draggableElements = [...container.querySelectorAll('.item:not([style*="opacity: 0.5"])')];
-        return draggableElements.reduce((closest, child) => {
-            const box = child.getBoundingClientRect();
-            const offset = x - box.left - box.width / 2;
-            if (offset < 0 && offset > closest.offset) return { offset, element: child };
-            else return closest;
-        }, { offset: Number.NEGATIVE_INFINITY }).element;
+    if (!container) return;
+    if (typeof Sortable !== 'undefined') {
+        Sortable.create(container, {
+            animation: 150,
+            direction: 'horizontal',
+            draggable: '.item',
+            filter: 'input, label',
+            preventOnFilter: false,
+            ghostClass: 'sortable-ghost',
+            chosenClass: 'sortable-chosen',
+            dragClass: 'sortable-drag'
+        });
     }
 }
 

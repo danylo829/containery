@@ -10,6 +10,7 @@
     {% assets "app_css" %}
     <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
     {% endassets %}
+    <script src="{{ url_for('static', filename='dist/lib/sortable/sortable.min.js') }}" defer></script>
     {% assets "app_js" %}
     <script src="{{ ASSET_URL }}" defer></script>
     {% endassets %}
