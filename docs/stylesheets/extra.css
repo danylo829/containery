@@ -369,9 +369,33 @@ html {
 /* High contrast styles for dark (slate) mode */
 [data-md-color-scheme="slate"] .md-typeset a {
   color: #66bfff;
+  font-weight: 500;
 }
+
 [data-md-color-scheme="slate"] .md-typeset a:hover {
   color: #99d5ff;
+  text-decoration: underline;
+}
+
+/* Ensure inline code blocks inside links inherit link text color without rectangular boxes */
+.md-typeset a code {
+  color: inherit !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+[data-md-color-scheme="slate"] .md-typeset a code {
+  color: #66bfff !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+[data-md-color-scheme="slate"] .md-typeset code {
+  color: #e2e8f0;
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 [data-md-color-scheme="slate"] .md-nav__link--active {

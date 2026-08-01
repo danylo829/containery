@@ -1,7 +1,7 @@
 [project]
 site_name = "Containery"
 site_description = "A fast, lightweight, and intuitive web-based container management tool."
-site_url = "https://danylo829.github.io/"
+site_url = "https://danylo829.github.io/containery/"
 repo_url = "https://github.com/danylo829/containery"
 repo_name = "danylo829/containery"
 edit_uri = "edit/master/docs/"
@@ -10,8 +10,21 @@ extra_css = [
 ]
 nav = [
     { "Home" = "index.md" },
-    { "Installation & Deployment" = "installation.md" },
-    { "Usage Guide" = "usage.md" }
+    { "Getting Started" = [
+        { "Installation & Deployment" = "getting-started/installation.md" }
+    ] },
+    { "Core Features" = [
+        { "User Guide Overview" = "features/usage.md" },
+        { "Dashboard & Hosts" = "features/dashboard.md" },
+        { "Container Management" = "features/containers.md" },
+        { "Image Management" = "features/images.md" },
+        { "Volumes & Networks" = "features/volumes_networks.md" }
+    ] },
+    { "Administration & Customization" = [
+        { "User Management & RBAC" = "administration/rbac.md" },
+        { "Settings & Docker Hosts" = "administration/settings.md" },
+        { "Personal Profile & Themes" = "administration/themes.md" }
+    ] }
 ]
 
 [project.theme]
