@@ -34,6 +34,7 @@ html {
   
   --md-default-bg-color:            #f5f5f5; /* --bg-light */
   --md-default-fg-color:            #333333; /* --text-light */
+  --md-code-bg-color:               #e8ebf0;
 }
 
 /* Dark Theme Color Palettes (Containery Deep Space / Glass Dark) */
